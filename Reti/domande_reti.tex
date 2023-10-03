@@ -1,0 +1,93 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.8in]{geometry}
+
+\title{Appunti corso di Reti}
+
+\begin{document}
+\begin{center}
+    \large\textbf{Domande Reti}
+\end{center}
+\subsubsection*{Spiegare brevemente la rete internet e il concetto di protocollo e standard, facendo riferimento alla temporizzazione.}
+Internet è una rete di reti, formata da Internet Service Providers (ISPs) interconnessi, ed una rete di calcolatori, che
+connette miliardi di dispositivi, detti end systems. Gli end systems sono connessi tra di loro da una rete di link di 
+comunicazione, come fibra ottica, rame e onde radio, e packet switches, come router e switches. Dal punto di vista dei 
+servizi, Internet è un'infrastruttura che fornisce servizi alle applicazioni, come il Web, streaming o email, dette applicazioni 
+distribuite; inoltre fornisce un'interfaccia di programmazione per le applicazioni distribuite: queste infatti usano Internet 
+come un servizio di trasporto.\\
+Un protocollo definisce il formato e l'ordine dei messaggi scambiati tra due o più entità in comunicazione tra loro, e definisce 
+le azioni da compiere all'invio e/o alla ricezione di un messaggio o altri eventi. 
+Un protocollo è standard quando tutte le parti coinvolte concordano con la sua implementazione.
+La temporizzazione è un aspetto cruciale nei protocolli di rete in quanto questi impongono rigidi vincoli di tempo per 
+la ricezione ed invio dei messaggi.
+\subsubsection*{Elencare le varie tipologie di accesso alla rete esistenti e spiegare brevemente il concetto di capacità trasmissiva.} 
+La rete d'accesso è ciò che collega fisicamente un end system ad un edge router. Le tipologie di reti d'accesso sono divise 
+in tre principali categorie: domestica, aziendale e mobile.
+I due tipi di accesso domestici più diffusi sono DSL e cavo. L'accesso DSL è di solito ottenuto dalla stessa compagnia 
+telefonica che fornisce servizio telefonico: ogni modem DSL usa la linea telefonica esistente per scambiare dati con il 
+DSL multiplexer presente nella centrale telefonica. L'accesso via cavo utilizza l'infrastruttura televisiva. Esistono inoltre 
+la connessione FTTH e 5G fixed wireless.\\
+In contesti aziendali, un local area network (LAN) viene usato per connettere end systems all'edge router. La tecnologia 
+prevalente è Ethernet, che sfrutta un doppino in rame per connettere un sistema ad uno switch Ethernet, quest'ultimo connesso 
+ad Internet. Sta diventando sempre più prevalente l'accesso wireless: in una LAN wireless, i sistemi trasmettono e ricevono 
+pacchetti da un punto d'accesso.\\
+I dispositivi mobili possono connettersi ad Internet tramite reti d'accesso mobili, come 3G, 4G e 5G.\\
+La capacità trasmissiva si riferisce alla quantità di dati che una connessione può trasmettere in un determinato lasso di 
+tempo ed è solitamente è misurata in byte/secondo. Viene anche chiamata larghezza di banda.
+\subsubsection*{Descrivere la movimentazione dei dati nella rete con il concetto di commutazione a pacchetto e commutazione 
+a circuito con rispettivi vantaggi e svantaggi.}
+La commutazione a circuito è usata prevalentemente nelle reti telefoniche tradizionali ed offre una connessione end-to-end 
+dedicata, nella quale tutte le risorse necessarie per la comunicazione (buffers, larghezza di banda) sono riservate fino 
+al termine della comunicazione stessa. Data questa garanzia, il mittente può trasferire dati al destinatario a velocità 
+costante e senza accodamenti. Un circuito può essere implementato tramite FDM o TDM. Con FDM, le frequenze (elettromagnetiche 
+o ottiche) sono divise in bande, una per ogni connessione. Con TDM, il tempo è diviso in frame, ed ogni frame è diviso in 
+slot; quando la rete stabilisce una connessione, dedica uno slot di tempo in ogni frame a questa connessione. I principali 
+svantaggi sono: spreco delle risorse di rete durante i periodi in cui non vi è comunicazione tra gli end sytem e minor numero 
+di utenti connessi.\\
+La commutazione a pacchetto non offre una connessione dedicata, in quanto non vengono preallocate tutte le risorse necessarie 
+a una connessione, e ciò può causare ritardi dovuti ad accodamenti dei pacchetti nei router. I principali vantaggi sono: 
+facilità di implementazione, maggior numero di utenti connessi contemporaneamente.
+\subsubsection*{Elencare e descrivere in modo accurato i ritardi che sono presenti all'interno della rete.}
+I tipi di ritardo presenti all'interno della rete sono quattro: trasmissione, accodamento, processamento e propagazione.\\
+Il ritardo di trasmissione è pari a lunghezza pacchetto/velocità di trasmissione: questo è il tempo necesssario per trasmettere 
+tutti i bit di un pacchetto su un collegamento.\\
+Il ritardo di accodamento si verifica quando i pacchetti attendono di essere trasmessi su un collegamento, e dipende dalla 
+congestione del router (quanti pacchetti sono contenuti nei buffer).\\
+Il ritardo di processamento è dato dal tempo richiesto per esaminare l'header di un pacchetto e determinare dove debba 
+essere inviato.\\
+Il ritardo di propagazione è il tempo impegato da un bit per propagarsi da un router ad un altro, e dipende dal medium 
+fisico utilizzato.\\
+Il ritardo nodale è dato dalla somma di questi quattro ritardi; il ritardo end-to-end è dato dalla somma dei ritardi nodali.
+\subsubsection*{Descrivere la struttura ISO e OSI con tutte le loro caratteristiche e specificare quale delle due sia meglio.}
+La struttura ISO è un modello di riferimento a 5 livelli: applicazione, trasporto, rete, collegamento e fisico.
+Il livello applicazione fornisce supporto per le applicazioni di rete (HTTP, SMTP, ...); le applicazioni si scambiano messaggi. 
+Il livello trasporto è adibito al trasferimento dati tra gli endpoint delle applicazioni di rete; i protocolli del livello 
+trasporto incapsulano i messaggi in un segmento. Il livello rete trsferisce il segmento de un host ad un altro; i segmenti 
+sono incapsulati in un datagramma. Il livello collegamento trasferisce il datagramma da un host ad un host vicino ad esso 
+(routing da router a router); il datagramma è incapsulato in una trama (frame). Il lavoro dell livello fisico è quello di 
+muovere i bit in un frame da un nodo ad un altro del percorso.\\
+La struttura OSI è un modello di riferimento a 7 livelli. I due livelli aggiuntivi rispetto al modello ISO si trovano tra 
+il livello applicazione ed il livello trasporto e sono il livello prestazione ed il livello sessione. Quest'ultimo è il 
+migliore in quanto pià esaustivo ed accurato.
+\subsubsection*{Elencare le architetture che possono essere presenti all'interno delle reti, accennare anche alla versione Bit-torrent per quanto riguarda P2P.}
+I due tipi di architetture presenti all'interno delle reti sono l'architettura client-server e l'architettura P2P.
+Nell'architettura client-server, il server è un host sempre online, con un indirizzo IP fisso, mentre il client è un host 
+non sempre online che contatta e comunica con il server. I client non comunicano direttamente tra loro, comunicano tramite 
+un server.\\
+Nell'architettura P2P, gli host comunicano direttamente tra loro, fornendosi reciprocamente servizi. Quest'architettura 
+è scalabile, ossia nuovi host (detti anche peers) aumentano la capacità di servizio.\\
+Bit-Torrent è il protocollo P2P più diffuso. Una gruppo di peer che partecipano nella distribuzione di un file è detta 
+torrent; i peer in un torrent scaricano/caricano chunk (di solito 256 kb) di un file tra loro. Ogni torrent ha un nodo 
+detto tracker che viene contattato dai peer per informarlo della loro presenza nel torrent. Periodicamente, un peer chiede 
+ad oogni peer la lista dei chunk che posseggono e ne richiesde uno che gli manca, scegliendo per primo il più raro.
+\subsubsection*{TCP, quale servizi offre? E' un protocollo definito affidabile e orientato alla connessione, spiegare cosa significa, descriverlo e dire quando un protocollo può essere definito ideale.}
+TCP è un protocollo che offre trasferimento dati affidabile e controllo della congestione. Con trasferimento affidabile 
+si intende avere certezza che tutti i dati inviati da una applicazione su un host vengano ricevuti dall'applicazione presente 
+su un altro host, e che questi vengano ricevuti in ordine e senza errori. TCP assicura trasporto affidabile tramite l'invio 
+di conferme di ricezione (ACKs) da parte del destinatario e ritrasmissione in caso i segmenti vengano persi o danneggiati
+durante il trasporto.\\
+Con orientato alla connessione si intende un 
+protocollo che si assicuri di avere una connessione stabile ad un host (in questo caso, da client a server) prima di iniziare 
+l'invio dei dati. TCP assicura una connessione tramite un three-way handshake: prima di inviare dati, il client invia un 
+segnale di sincronizzazione al server, il quale (eventualmente) riscontra il messaggio di sincronizzazione; ricevuto il 
+riscontro, il client invia a sua volta un riscontro al server e la connessione viene così stabilita.
+\end{document}
