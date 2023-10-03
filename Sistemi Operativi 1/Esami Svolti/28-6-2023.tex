@@ -1,0 +1,51 @@
+\documentclass[12pt]{article}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{listings}
+
+\lstdefinestyle{mystyle}{
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                    
+    keepspaces=true,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{Esame 28/6/2023}
+
+\begin{document}
+\begin{center}
+    \large\textbf{Esame 28/6/2023}
+\end{center}
+\subsection*{Esercizio 1}
+Le funzioni di libreria esistono per svolgere operazioni tramite codice scritto in precedenza, in modo da evitare di 
+riscrivere una funzione ogni volta che si vuole eseguire una determinata operazione. Le chiamate di sistema permettono di 
+interagire con dispositivi e parti del sistema operativo non altrimenti accedibili in modalità utente, in maniera controllata. 
+I programmi ottengono quanto desiderato senza dover conoscere come comandare i dispositivi o le specifiche del sistema 
+operativo, e senza poterli modificare a piacimento.\\\\
+Il passaggio da Running a Ready è causato dallo scadere del quanto di tempo ed è realizzato tramite l'interruzione da timer; 
+se un processo CPU bound non fa operazioni sospensive o non ci sono altri interrupt, l'interruzione da timer è l'unico 
+modo per far intervenire il sistema operativo e dare la CPU ad un altro processo.
+\subsection*{Esercizio 2}
+Con la paginazione, ad ogni processo è assegnato uno spazio di indirizzi virtuali, diviso in parti di ugual dimensione dette 
+pagine. La memoria fisica è divisa in porzioni di dimensione prefissate dette frame. 
+Gli indirizzi virtuali non vanno direttamente sul bus di memoria ma vanno alla MMU che mappa indirizzi virtuali a fisici. 
+Non tutte le pagine appartenenti ad un processo devono essere presenti in memoria contemporaneamente: esse vengono caricate 
+in memoria a seconda delle richieste del processo. La tabella delle pagine contiene il mapping tra pagine virtuali e fisiche.
+Una voce nella tabella delle pagine contiene: numero di page frame, bit che identifica se la pagina è valida o meno, bit 
+che indicano i tipi di accesso permessi, bit modifica e riferimento che tengono traccia dell'uso della pagina. Per aumentare 
+la velocità di traduzione degli indirizzi, viene usata una componente hw chiamata TLB.\\\\
+Per indirizzare i byte all'interno di una pagina servono 12 bit in quanto $4K=2^{12}$. Negli indirizzi logici e fisici, 
+i 12 bit meno significativi rappresentano l'offset all'interno della pagina/frame, mentre i restanti bit indicizzano la 
+specifica pagina/frame. In particolare, negli indirizzi logici $48-12=36$ bit servono per specificare la pagina logica e 
+negli indirizzi fisici $36-12=24$ bit servono ad identificare il frame. La tabella delle pagine è indicizzata rispetto al 
+numero di pagina logica e ciascuna sua entry mantiene l'identificativo del frame dove è memorizzata in RAM la pagina logica.
+L'occupazione di ciascuna entry è complessivamente di 4 byte: 3 byte per memorizzare l'indice del frame più un byte aggiuntivo 
+per i bit d'utilità. Il numero totale di entry è uguale al numero totale di pagine logiche ossia $2^{36}$. L'occupazione 
+totale è quindi $4*2^{36}$ byte.
+\subsection{}
+\end{document}
