@@ -1,0 +1,335 @@
+\documentclass[11pt]{article}
+\usepackage[margin=.8in]{geometry}
+\usepackage[italian]{babel}
+\usepackage{tikz}
+\usepackage{amsfonts} 
+\usepackage{amsthm}
+\usepackage[Algoritmo]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{float}
+
+\title{Appunti Algoritmi 2}
+
+\newtheorem*{theorem}{Teorema}
+\newtheorem*{proprietà}{Proprietà}
+\newtheorem*{lemma}{Lemma}
+\theoremstyle{remark}
+\newtheorem*{remark}{Proprietà}
+
+\begin{document}
+\section{Grafi come strutture dati}
+\subsection{Introduzione e terminologia}
+Un grafo è una coppia di elementi (insiemi) \textbf{G=(V,E)} e consiste in:
+\begin{itemize}
+    \item un insieme $V$ di \textbf{vertici} (o \textbf{nodi})
+    \item un insieme $E$ ($E$ sottoinsieme del prodotto cartesiano $V\times V$) di coppie di vertici, detti \textbf{archi}
+    o \textbf{spigoli}; ogni arco connette due vertici
+\end{itemize}
+I grafi possono essere:
+\begin{itemize}
+    \item \textbf{orientati}: relazioni asimmetriche, insieme di coppie ordinate
+    \item \textbf{non orientati}: relazioni simmetriche, insieme di coppie non ordinate
+\end{itemize}
+Un arco è \textbf{incidente} per i nodi che si toccano.\\
+Il \textbf{grado} di un vertice è dato dal numero di archi incidenti.\\
+Un vertice $B$ è \textbf{adiacente} ad $A$ se da $B$ si può percorrere un solo arco e giungere ad $A$.\\
+Un \textbf{sottografo} è una porzione di grafo (notazione $H\subseteq G$): i vertici di $H$ sono sottoinsieme dei vertici di $G$ 
+e gli archi di $H$ sono sottoinsieme degli archi di $G$.\\
+Un \textbf{cammino} è una sequenza ordinata di archi che collegano due nodi. I cammini devono rispettare l'orientamento 
+degli archi. La \textbf{lunghezza} è il numero di archi di cui è composto un cammino.\\ Un cammino si dice \textbf{semplice} 
+se non passa due volte per lo stesso vertice. Se esiste almeno un cammino $p$ tra i vertici $v$ e $w$, si dice che $w$ è 
+\textbf{raggiungibile} da $v$. Inoltre $v$ è un \textbf{antenato} di $w$ e $w$ è un \textbf{discendente} di $v$.\\ 
+Un cammino tra due nodi $v$ e $w$ si dice \textbf{minimo} se tra $v$ e $w$ non esiste nessun altro cammino di lunghezza 
+minore. La lunghezza del cammino minimo è detta \textbf{distanza} ($\delta (v,w)$).\\
+Un grafo può essere \textbf{pesato}. La funzione peso è definita come $W:E\rightarrow \mathbb{R}$; per ogni arco
+$(v,w)\in E,W(v,w)$ definisce il \textbf{peso} di $(v,w)$. In un grafo pesato, la lunghezza/peso di un cammino si calcola 
+sommando i pesi degli archi che contiene.\\
+I grafi non orientati possono essere:
+\begin{itemize}
+    \item \textbf{connessi}: esiste un cammino da ogni vertice verso ogni altro vertice
+    \item \textbf{non connessi}
+\end{itemize}
+I grafi orientati possono essere:
+\begin{itemize}
+    \item \textbf{fortemente connessi}: esiste un cammino da ogni vertice verso ogni altro vertice
+    \item \textbf{debolmente connessi}: ignorando il verso degli archi
+\end{itemize}
+Un cammino $\langle w_1,w_2,...,w_n \rangle$ si dice \textbf{chiuso} se $w_1=w_n$. Un cammino chiuso, semplice, di lunghezza 
+almeno 1 si dice \textbf{ciclo}. Se un grafo non contiene cicli, si dice \textbf{aciclico}.\\
+Un \textbf{grafo completo} è un grafo con un arco per ogni coppia di vertici. Un grafo completo ha numero di archi $E$ pari 
+a $|E| = \frac{|V|(|V|-1)}{2}$.\\
+Un grafo non orientato, connesso e aciclico è definito \textbf{albero libero}. Se un vertice è designato ad essere radice, 
+si definisce \textbf{albero radicato}. Un grafo non orientato, aciclico ma non connesso è definito \textbf{foresta}.
+\subsection{Rappresentazione}
+Per valutare un approccio di rapppresentazione, bisogna considerare lo \textbf{spazio} occupato dalla struttura dati e il 
+\textbf{costo computazionale} delle operazioni da effettuare su di essa.
+\subsubsection{Lista di archi}
+Dati $n$ (numero di vertici) e $m$ (numero di archi), lo spazio occupato è $\mathcal{O}(n+m)$: è una rappresentazione 
+inefficiente, in quanto bisogna percorrere tutto il grafo per scandire la lista di archi. Introdurre un vertice o arco ha 
+costo $\mathcal{O}(1)$, ma la rimozione ha costo $\mathcal{O}(m)$.
+\subsubsection{Liste di adiacenza}
+Ogni vertice $v$ ha una lista contenente i vertici ad esso adiacenti. Calcolare il grado di un vertice è un'operazione 
+semplice, in quanto basta scorrere la lista di adiacenza. Occupa spazio $\mathcal{O}(n+m)$, ed è adatta per grafi \textbf{sparsi} 
+(il numero di archi è molto minore del numero di vertici).
+\subsubsection{Liste di incidenza}
+Ogni vertice $v$ ha una lista contenente un riferimento agli archi ad esso incidenti. Occupa spazio $\mathcal{O}(n+m)$.
+\subsubsection{Matrici di adiacenza}
+Il grafo è rappresentato tramite una matrice di interi di grandezza $n \times n$ (spazio occupato $\mathcal{O}(n^2)$); è 
+adatta per grafi \textbf{densi}. Calcolare il grado e archi incidenti ha costo $\mathcal{O}(n)$ (basta scorrere la matrice). 
+La modifica dei vertici ha costo $\mathcal{O}(n^2)$ in quanto bisogna ricostruire completamente la matrice.
+Una matrice di adiacenza rappresenta anche la presenza di un cammino di lunghezza 1 tra ogni coppia di vertici $v$ e $w$. 
+In particolare, $v \rightarrow_1 w$ se e solo se $M[v,w]\neq 0$: moltiplicando la matrice per sè stessa, il risultato è 
+diverso da 0 solo se esiste un cammino di lunghezza 2 (e via dicendo).
+\subsubsection{Matrici di incidenza}
+Il grafo è rappresentato tramite una matrice di interi di grandezza $n \times m$ (spazio occupato $\mathcal{O}(n \times m)$), 
+in cui le righe indicizzano i vertici e le colonne indicizzano gli archi.
+\section{Visite}
+\subsection{Visita generica}
+Una \textbf{visita} di un grafo $G$ permette di esaminare i nodi e gli archi in maniera sistematica, senza passare due 
+volte per lo stesso nodo.
+\subsubsection{Inizializzazione}
+Una tattica per evitare di visitare un nodo più volte è quella di mappare lo stato della visita ad un colore:
+\begin{itemize}
+    \item \textbf{bianco} (o \textbf{nodi inesplorati}): vertice non ancora esplorato
+    \item \textbf{grigio} (o \textbf{nodi aperti}): vertice visitato, ma con nodi adiacenti ancora inesplorati
+    \item \textbf{nero} (o \textbf{nodi chiusi}): vertice visitato, con adiacenti esplorati
+\end{itemize}
+Dati $n$ nodi, si utilizza un vettore \textit{color} di colori, di grandezza $n$: all'inizio della visita, tutte le celle 
+del vettore \textit{color} sono impostate a \textit{white}.
+\begin{algorithm}[H]
+    \caption{INIZIALIZZA(G)}
+    \begin{algorithmic}
+        \State color $\gets$ vettore di lunghezza n
+        \For{ogni $u\in V$}
+        \algstore{1}
+    \end{algorithmic}
+\end{algorithm}
+\begin{algorithm}[h]
+    \begin{algorithmic}
+        \algrestore{1}
+            \State color[$u$] $\gets$ white
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+La visita parte da un nodo $s$, detto \textbf{nodo sorgente}.
+\begin{algorithm}[H]
+    \caption{VISITA(G,s)}
+    \begin{algorithmic}
+        \State INIZIALIZZA(G)
+        \State color $\gets$ gray
+        \State \{visita $s$\}
+        \While{ci sono vertici grigi}
+            \State $u \gets$ scegli un vertice grigio
+            \If{esiste $v$ bianco adiacente ad $u$}
+                \State color[$v$] $\gets$ gray
+                \State \{visita $v$\}
+            \Else{ color[$v$] $\gets$ black}
+            \EndIf
+        \EndWhile
+    \end{algorithmic}
+\end{algorithm}
+Il cambiamento di colore è \textbf{monotono} (bianco $\rightarrow$ grigio $\rightarrow$ nero).
+\subsubsection{Invarianti}
+Un'\textbf{invariante} è una condizione che è verificabile come vera sia all'inizio sia alla fine di un ciclo:
+\begin{itemize}
+    \item Invariante 1: se esiste un arco $(u,v)\in E$ ed $u$ è nero, allora $v$ è grigio o nero 
+    \item Invariante 2: tutti i vertici grigi o neri sono raggiungibili dalla sorgente 
+    \item Invariante 3: qualunque cammino dalla sorgente ad un vertice bianco deve contenere almeno un vertice grigio 
+\end{itemize}
+\begin{theorem}
+    Al termine dell'algoritmo di visita, $v$ è nero se e solo se $v$ è raggiungibile dalla sorgente.
+\end{theorem}
+\begin{proof}
+    Per l'invariante 2, all'uscita dal ciclo tutti i vertici neri sono raggiungibili da $s$. Dall'invariante 
+    3 si ricava che tra $s$ e $v$ esiste almeno un vertice grigio, oppure $v$ non è bianco. Dato che la condizione di uscita 
+    dal ciclo è quella che non esistano più vertici grigi, si ricava che $v$ non è bianco (cambiamento monotono) e non può 
+    essere grigio. Quindi, all'uscita dal ciclo, tutti i vertici raggiungibili dalla sorgente sono neri.
+\end{proof}
+\subsubsection{Predecessori}
+L'algoritmo può essere modificato in modo da ricordare, per ogni vertice che viene scoperto, quale vertice grigio ha permesso 
+di scoprirlo, ossia ricordare l'arco percorso. Ad ogni vertice $u$ si associa un attributo $\pi[u]$ che rappresenta il 
+vertice che ha permesso di scoprirlo.
+\begin{algorithm}[H]
+    \caption{VISITA(G,s)}
+    \begin{algorithmic}
+        \State INIZIALIZZA(G)
+        \State color $\gets$ gray
+        \State \{visita $s$\}
+        \While{ci sono vertici grigi}        
+        \algstore{3}
+    \end{algorithmic}
+\end{algorithm}
+\begin{algorithm}[H]
+    \begin{algorithmic}
+        \algrestore{3}
+        \State $u \gets$ scegli un vertice grigio
+            \If{esiste $v$ bianco adiacente ad $u$}
+                \State color[$v$] $\gets$ gray
+                \State $\pi[v] \gets u$
+                \State \{visita $v$\}
+            \Else{ color[$v$] $\gets$ black}
+            \EndIf
+        \EndWhile
+    \end{algorithmic}
+\end{algorithm}
+\begin{remark}
+    Al termine dell'esecuzione di VISITA(G,s), tutti e soli i vertici neri diversi da $s$ hanno predecessore diverso da 
+    NULL.
+\end{remark}
+Il sottografo dei predecessori è un albero (\textbf{albero dei predecessori}) di radice $s$.\\
+Se il grafo non è connesso:
+\begin{algorithm}[H]
+    \caption{VISITA TUTTI I VERTICI(G)}
+    \begin{algorithmic}
+        \State INIZIALIZZA(G)
+        \For{ogni $u\in V$}
+            \If{color[$u$] = white} 
+            \State VISITA(G,u)
+            \EndIf
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+\subsubsection{Gestione dei vertici grigi}
+Per gestire i nodi grigi si usa una struttura dati ordinata $D$ (\textbf{frangia}). Sulla frangia è possibile eseguire le 
+seguenti operazioni:
+\begin{itemize}
+    \item \textbf{Create()}: restituisce una $D$ vuota
+    \item \textbf{Add(D,x)}: aggiunge un elemento x a $D$
+    \item \textbf{First(D)}: restituisce il primo elemento di $D$
+    \item \textbf{RemoveFirst(D)}: elimina il primo elemento di $D$
+    \item \textbf{NotEmpty(D)}: restituisce vero se D contiene almeno un elemento, falso altrimenti
+\end{itemize}
+$D$ è una \textbf{coda} se Add(D,x) aggiunge l'elemento in coda a $D$, uno \textbf{stack} se Add(D,x) aggiunge l'elemento 
+in testa a $D$.
+\begin{algorithm}[H]
+    \caption{VISITA(G,s)}
+    \begin{algorithmic}
+        \State INIZIALIZZA(G)
+        \State Create() 
+        \State color[$s$] $\gets$ gray
+        \State \{visita $s$\}
+        \State Add(D,s)
+        \While{NotEmpty(D)}
+        \State $u \gets$ First(D)
+        \If{esiste $v$ bianco adiacente ad $u$}
+            \State color[$v$] $\gets$ gray
+        \algstore{5}
+    \end{algorithmic}
+\end{algorithm}
+\begin{algorithm}[h]
+    \begin{algorithmic}
+        \algrestore{5}
+            \State $\pi[v] \gets u$
+            \State \{visita $v$\}
+            \State Add(D,v)
+        \Else
+            \State color[$v$] $\gets$ black
+            \State RemoveFirst(D)
+        \EndIf
+    \EndWhile
+    \end{algorithmic}
+\end{algorithm}
+\subsubsection{Complessità}
+Il costo di visita è $\mathcal{O}(n+adj)$: $adj$ è il tempo impiegato a controllare se esiste un nodo $v$ bianco adiacente 
+ad $u$, e dipende dalla rappresentazione; $n$ è il numero di vertici, che vengono inseriti e rimossi da $D$.\\
+Il costo di $adj$ è:
+\begin{itemize}
+    \item con lista di archi: bisogna scandire l'intera lista ($\mathcal{O}(m)$) per $n$ volte ($\mathcal{O}(n)$), quindi 
+    $\mathcal{O}(n)+\mathcal{O}(n*m)=\mathcal{O}(mn)$
+    \item con matrice di adiacenza: bisogna scandire l'intera riga della matrice ($\mathcal{O}(n)$), quindi $\mathcal{O}(n)+\mathcal{O}(n*n)=\mathcal{O}(n^2)$
+    \item con liste di adiacenza: si possono ottimizzare le prestazioni utilizzando dei puntatori che puntano all'inizio 
+    delle liste di adiacenza. Se l'elemento è grigio, il puntatore è spostato all'elemento successivo; quando il puntatore 
+    giunge alla fine della lista, il primo elemento è colorato di nero. Ogni lista è percorsa una volta sola, in tutte le 
+    iterazioni del ciclo. Complessità: $\mathcal{O}(n+m)$.
+\end{itemize}
+\subsection{Visita in ampiezza}
+\subsubsection{Inizializzazione}
+La \textbf{visita in ampiezza} (\textbf{BFS}, Breadth First Search), esamina i vertici del grafo in un ordine ben preciso,
+costruendo un albero di visita chiamato \textbf{albero BFS}. Nell'albero BFS, ogni vertice si trova il più vicino possibile 
+alla radice. La visita è realizzata usando la frangia come coda: quando un nodo grigio ha tutti gli adiacenti grigi, esso 
+è rimosso dalla cosa (il vertice in testa rimane nella coda finchè non diventa nero).
+\begin{algorithm}[h]
+    \caption{VISITA BFS(G,s)}
+    \begin{algorithmic}
+        \State INIZIALIZZA(G)
+        \State queue() 
+        \State color[$s$] $\gets$ gray
+        \State \{visita $s$\}
+        \State enqueue(D,s)
+        \While{NotEmpty(D)}
+        \State $u \gets$ head(D)
+        \If{esiste $v$ bianco adiacente ad $u$}
+            \State color[$v$] $\gets$ gray
+            \State $\pi[v] \gets u$
+            \State \{visita $v$\}
+            \State enqueue(D,v)
+            \algstore{6}
+    \end{algorithmic}
+\end{algorithm}
+\begin{algorithm}[h]
+    \begin{algorithmic}
+        \algrestore{6}
+        \Else
+            \State color[$v$] $\gets$ black
+            \State dequeue(D)
+        \EndIf
+    \EndWhile
+    \end{algorithmic}
+\end{algorithm}
+\subsubsection{Albero di visita}
+L'albero BFS viene costruito a livelli; l'albero rappresenta i cammini minimi. Anche se le liste di adiacenza vengono 
+invertite, i nodi per livello non cambiano.
+Si può inizializzare un \textbf{vettore di distanze} (stimate) $d$, inizializzato ad infinito: se un determinato vertice non
+è stato trovato (distanza $\infty$ a fine BFS), allora non è raggiungibile da $s$.
+\subsubsection{Proprietà}
+\begin{proprietà}[1]
+    In D ci sono tutti e soli i vertici grigi.
+\end{proprietà}
+\begin{proprietà}[2]
+    Se $\langle v_1,v_2,\dots ,v_n \rangle$ è il contenuto di D, allora:
+    \begin{itemize}
+        \item[i] $d[v_i] \leq d[v_{i+1}]$: i vertici sono ordinati per livelli nella coda
+        \item[ii] $d[v_n] \leq d[v_1]+1$: la coda contiene al massimo due livelli
+    \end{itemize}
+\end{proprietà}
+\begin{proof}
+    Nel caso base, in $D$ è presente solo la sorgente. La proprietà 2 è vera.\\
+    Il passo ha due casi:
+    \begin{itemize}
+        \item dequeue(D): o $D$ rimane vuota (banalmente vera), o rimangono $\langle v_2,\dots ,v_n \rangle$, e 
+        \begin{itemize}
+            \item[i.] le disuguaglianze sono ancora vere e quindi
+            \item[ii.] anche $d[v_n] \leq d[v_1]+1 \leq d[v_2]+1$
+        \end{itemize}
+        \item enqueue(D,v): $v$ è reso figlio di $v_1$ e accodato, quindi $d[v]=d[v_1]+1$ e
+        \begin{itemize}
+            \item[i.] $d[v_n] \leq d[v_1]+1=d[v]$
+            \item[ii.] $d[v]=d[v_1]+1 \leq d[v_1]+1$
+        \end{itemize}
+    \end{itemize}
+\end{proof}
+\subsubsection{Dimostrazione $d[v]=\delta(s,v)$}
+\begin{lemma}[Invariante 4]
+    $d[v]=\delta(s,v)$ per tutti i vertici grigi o neri.
+\end{lemma}
+\textit{\textbf{Dimostrazione $d[v] \geq \delta(s,v)$.}} Dato che l'albero dei predecessori $\pi$ contiene solo archi appartenenti 
+a $G$, il cammino da $s$ a $v$ è un cammino che appartiene anche a $G$, quindi la lunghezza del cammino da $s$ a $v$ 
+nell'albero è maggiore o uguale alla distanza tra $s$ e $v$.
+
+\textit{\textbf{Dimostrazione $d[v] \leq \delta(s,v)$.}} Definiamo l'insieme dei vertici a distanza $k$ dalla sorgente nel grafo 
+come $V_k={v\in V|\delta(s,v)=k}$ ($v_0$ contiene solo la sorgente).\\ Nel caso base, $d[v_0]\leq \delta(s,v)$ (distanza di 
+$s$ da sè stesso: $0\leq 0$). Sia $v\in V_k$: allora $\delta(s,v)=k$ (per definizione).\\ Con $k>0$ (passo), esisterà almeno 
+un vertice $w$ tale che $\delta(s,w)=k-1$ e $(w,v)\in E$, ovvero un arco che va da $v$ a $w$. Definiamo l'insieme dei vertici 
+appartenenti a $V_{k-1}$ con arco entrante in $v$ come $U_{k-1}={w\in V_{k-1}|(w,v)\in E}$. Tra questi, sia $u$ il primo 
+vertice di $U_{k-1}$ ad essere scoperto ed inserito nella coda: per politica FIFO, $u$ sarà anche il primo ad essere estratto
+dalla coda. Quando guarderò i vertici adiacenti a $u$, $v$ sarà ancora bianco (perchè più lontano), e $v$ verrà inserito 
+nell'albero come figlio di $u$, con $d[v]=d[u]+1$. Inoltre, per ipotesi induttiva, $d[u]\leq k-1$.\\
+Quindi, quando inseriremo $v$ nell'albero:
+\begin{itemize}
+    \item $d[v]=d[u]+1$
+    \item ma $d[u]\leq k-1$, quindi $d[v]\leq (k-1)+1$
+    \item $d[v]\leq k$
+\end{itemize}
+
+
+\end{document}
