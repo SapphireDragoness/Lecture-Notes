@@ -330,6 +330,170 @@ Quindi, quando inseriremo $v$ nell'albero:
     \item ma $d[u]\leq k-1$, quindi $d[v]\leq (k-1)+1$
     \item $d[v]\leq k$
 \end{itemize}
+\subsubsection{Distanza nell'albero BFS}
+\begin{theorem}
+    Al termine dell'esecuzione della visita BFS, si ha $d[v]=\delta(s,v)$ per tutti i vertici $v\in V$.
+\end{theorem}
+\begin{proof}
+    caso base: se $v$ non è raggiungibile da $s$, allora $d[v]$ rimane $\infty$.\\
+    altrimenti, $v$ è nero (per invariante 2). Per ogni vertice $v$ raggiungibile da $s$, il cammino da $s$ a $v$ sull'albero 
+    ottenuto dalla visita è un \textbf{cammino minimo}.
+\end{proof}
+\subsection{Visita in profondità}
+\subsubsection{Inizializzazione}
+La \textbf{visita in profondità} (\textbf{DFS}, Depth First Search), esamina i vertici del grafo partendo dall'ultimo 
+vertice incontrato. Si ottiene dall'algoritmo di visita generico, implementando la frangia come \textbf{stack}.
+\begin{algorithm}
+    \caption{VISITA DFS (ottimizzata)}
+    \begin{algorithmic}
+        \State D $\gets$ emptyStack(D)
+        \State color[$s$] $\gets$ gray
+        \State \{visita $s$\}
+        \State push(D)
+        \While{esiste $v$ non considerato adiacente a top(D)}
+            \If{color[$v$] = white}
+                \State color[$v$] = gray 
+                \State $\pi[v] \gets$ top(D) 
+                \State \{visita $s$\}
+                \State push(D,s)
+            \EndIf 
+            \State color[top(D)] $\gets$ black
+            \State pop(D)
+        \EndWhile
+    \end{algorithmic}
+\end{algorithm}
+\subsubsection{Caratteristiche dell'albero DFS}
+Un vertice viene chiuso (colorato di nero) solo quando tutti i suoi discendenti sono stati chiusi.\\
+Gli intervalli di attivazione di una qualunque coppia di vertici sono o \textbf{disgiunti} o \textbf{uno contenuto interamente 
+nell'altro}. Questo è l'ordine delle attivazioni delle chiamate di una procedura ricorsiva, ed è quindi possibile costruire 
+un algoritmo DFS ricorsivo. Inoltre, è possibile introdurre un contatore per ricordare l'ordine delle attivazioni.
+\begin{algorithm}[H]
+    \caption{VISITA DFS RICORSIVA(G,u)}
+    \begin{algorithmic}
+        \State color[$u$] $\gets$ gray
+        \State \{visita $s$\}
+        \algstore{8}
+    \end{algorithmic}
+\end{algorithm}
+\begin{algorithm}[H]
+    \begin{algorithmic}
+        \algrestore{8}
+        \State d[$u$] $\gets$ time
+        \State time++
+        \For{ogni $v$ adiacente ad $u$}
+            \If{color[$v$] = white}
+                \State $\pi[v] \gets$ $u$
+                \State VISITA DFS RICORSIVA(G,v)
+            \EndIf 
+            \State color[$u$] $\gets$ black
+            \State f[$u$] $\gets$ time
+            \State time++
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+\subsubsection{Teorema delle parentesi e corollari}
+\begin{theorem}[Parentesi]
+    In ogni visita DFS di un grafo, per ogni coppia di vertici $u$, $v$, una ed una sola delle seguenti condizioni è soddisfatta: 
+    \begin{itemize}
+        \item $d[u]<d[v]<f[v]<f[u]$ ed $u$ è un \textbf{antenato} di $v$ in un albero della foresta DFS 
+        \item $d[v]<d[u]<f[u]<f[v]$ ed $u$ è un \textbf{discendente} di $v$ in un albero della foresta DFS
+        \item $d[u]<f[u]<d[v]<f[v]$ e tra $u$ e $v$ non esiste relazione (non sono adiacenti)
+    \end{itemize}
+\end{theorem}
+\begin{theorem}[Annidamento degli intervalli]
+    Una visita DFS di un grafo colloca un vertice $v$ come discendente proprio di un vertice $u$ in un albero della foresta 
+    DFS se e solo se $d[u]<d[v]<f[v]<f[u]$.
+\end{theorem}
+\begin{theorem}[Cammino bianco]
+    In una foresta DFS, un vertice $v$ è discendente del vertice $u$ se e solo se al tempo d[$u$] $v$ è raggiungibile da 
+    $u$ con un cammino contenente solo vertici bianchi.
+\end{theorem}
+La complessità della visita DFS è $\mathcal(O)(m+n)$ (come la visita generica).
+\section{Aciclicità}
+È possibile verificare la presenza di un ciclo tramite una visita DFS.
+\subsection{Grafi orientati}
+Un arco $\langle u,v \rangle$ viene \textbf{percorso} quando si incontra $v$ nella lista degli adiacenti ad $u$. Durante 
+la DFS di un grafo orientato, ogni arco è percorso una volta sola. Definiamo:
+\begin{itemize}
+    \item \textbf{Arco dell'albero}: arco inserito nella foresta DFS
+    \item \textbf{Arco all'indietro}: arco che collega un vertice ad un suo antenato
+    \item \textbf{Arco in avanti}: arco che collega un vertice ad un suo discendente 
+    \item \textbf{Arco di attraversamento}: arco che collega due vertici che non sono in relazione 
+\end{itemize}
+Durante la visita di un grafo orientato, un arco $\langle u,v \rangle$ viene percorso quando si incontra $v$ nella lista 
+degli adiacenti ad $u$. In quel momento, color[$v$] può essere:
+\begin{itemize}
+    \item \textbf{bianco}: $\langle u,v \rangle$ è un \textbf{arco dell'albero}
+    \item \textbf{grigio}: $u$ è un discendente di $v$, $\langle u,v \rangle$ è un \textbf{arco all'indietro} 
+    \item \textbf{nero}: $\langle u,v \rangle$ è un arco
+    \begin{itemize}
+        \item \textbf{in avanti} se $v$ è discendente di $u$
+        \item \textbf{di attraversamento} altrimenti
+    \end{itemize}
+\end{itemize}
+\subsection{Grafi non orientati}
+Durante la DFS di un grafo orientato, ogni arco è percorso esattamente due volte. Definiamo:
+\begin{itemize}
+    \item \textbf{Arco dell'albero}: arco inserito nella foresta DFS
+    \item \textbf{Arco all'indietro}: arco che collega un vertice ad un suo antenato
+\end{itemize}
+Durante la visita di un grafo orientato, un arco $\langle u,v \rangle$ viene percorso quando si incontra $v$ nella lista 
+degli adiacenti ad $u$. In quel momento, color[$v$] può essere:
+\begin{itemize}
+    \item \textbf{bianco}: $(u,v)$ è un \textbf{arco dell'albero}
+    \item \textbf{grigio}: $u$ è un discendente di $v$, $\langle u,v \rangle$ è un \textbf{arco all'indietro} 
+    \item \textbf{nero}: $\langle u,v \rangle$ è un \textbf{arco all'indietro}
+\end{itemize}
+\subsection{Test di aciclicità}
+\begin{theorem}[Grafo aciclico]
+    Se un grafo (orientato o non orientato) contiene un ciclo, allora esiste un arco all'indietro. Viceversa, se una visita 
+    in profondità produce un arco all'indietro, il grafo contiene un ciclo. Quindi, un grafo è aciclico se e solo se una 
+    visita DFS non produce archi all'indietro.
+\end{theorem} 
+\begin{algorithm}[H]
+    \caption{CICLICO(G)}
+    \begin{algorithmic}
+        \State INIZIALIZZA(G)
+        \For{ogni nodo $u$ di $G$}
+            \If{color[$u$] = white \textbf{and} VISITA RICORSIVA CICLO(G,u)}
+                \State \textbf{return} true
+            \EndIf 
+        \EndFor
+        \State \textbf{return} false
+    \end{algorithmic}
+\end{algorithm}
+\begin{algorithm}[H]
+    \caption{VISITA RICORSIVA CICLO(G,u)}
+    \begin{algorithmic}
+        \State color[$u$] $\gets$ gray
+        \For{ogni $v$ adiacente ad $u$}
+            \If{color[$v$ = white]}
+                \State $\pi[v] \gets u$
+                \If{VISITA RICORSIVA CICLO(G,v)}
+                    \State \textbf{return} true
+                \EndIf
+                \ElsIf{$v\neq \pi[u]$ (color[$v$] = gray \textit{per grafi orientati})}
+                    \State \textbf{return} true
+            \EndIf 
+        \EndFor 
+        \State color[$u$] $\gets$ black 
+        \State \textbf{return} false
+    \end{algorithmic}
+\end{algorithm}
+\section{Ordinamento topologico}
+Dato un \textbf{grafo orientato aciclico} (DAG) è sempre possibile ordinare i nodi in un \textbf{ordine topologico}, cioè 
+in modo che non ci sia nessun arco all'indietro nell'ordinamento.
+\subsection{Relazioni d'ordine parziale, totale e di raggiungibilità}
+Una relazione di \textbf{ordine parziale}, su un insieme $I$, è definita come una relazione binaria $\leq$:
+\begin{itemize}
+    \item \textbf{riflessiva}
+\end{itemize}
+In un DAG, la relazione di \textbf{raggiungibilità} è una relazione di ordine parziale:
+\begin{itemize}
+    \item è riflessiva: ogni vertice è raggiungibile da se stesso 
+    \item è antisimmetrica: se $v$ è raggiungibile da $u$ ed $u$ è raggiugibile da $v$, allora $v$ e $u$ sono coincidenti
+    \item è transitiva: se $v$ è raggiungibile da $u$ e $w$ è raggiungibile da $v$, allora $w$ è raggiungibile da $u$
+\end{itemize}
 
-
+\section{}
 \end{document}
