@@ -727,6 +727,44 @@ Il problema richiede di valorizzare $x_i$ per ogni $1\leq i \leq n$ in modo che 
 \begin{itemize}
     \item \textbf{Ottimalità}. Tutte le soluzioni che massimizzano il valore totale dello zaino (la \textbf{funzione obiettivo}) 
     sono soluzioni ottime. 
-    \item \textbf{Ammissibilità}.
+    \item \textbf{Ammissibilità}. Tutte le valorizzazioni dei vari $x_i$ tali che il peso sia minore di $P$ e che $x_i$ 
+    sia compreso tra 0 e 1 sono soluzioni ammissibili.
 \end{itemize}
+\subsection{Sottostruttura ottima e scelta greedy}
+Un problema ha la proprietà della \textbf{sottostruttura ottima} se una soluzione ottima del problema include le soluzioni 
+ottime dei suoi sottoproblemi.\\
+Se un problema di ottimizzazione gode delle proprietà della sottostruttura ottima, in genere può essere risolto con tecniche 
+di tipo \textbf{greedy} i di \textbf{programmazione dinamica}.
+
+Un problema gode della proprietà della \textbf{scelta greedy} se è sempre possibile scegliere in esso una variabile decisionale, 
+attribuirle un valore ammissibile e localmente ottimo, toglierla dal problema ed ottenere un sottoproblema la cui soluzione, 
+unita al valore di questa variabile, sia una soluzione ottima per il problema originario.
+
+Viene definito un \textbf{criterio di appetibilità}, che permette di effettuare efficientemente la scelta greedy. L'appetibilità 
+ordina le variabili in maniera che in ogni sottoproblema sia possibile effettuare efficientemente la scelta greedy.
+\subsection{Schema di algoritmo greedy}
+Passi di un algoritmo greedy:
+\begin{enumerate}
+    \item scegli la variabile del problema con appetibilità maggiore 
+    \item attribuisci ad essa il valore ammissibile più promettente a livello locale 
+    \item ottieni il sottoproblema risultante dall'eliminazione della variabile al punto 1
+    \item se il problema è risolto, restituisci i valori delle variabili assegnati al punto 2, altrimenti vai al punto 1 
+\end{enumerate}
+Nella maggior parte dei casi, gli algoritmi greedy affrontano problemi dove, dato un insieme di elementi $A$, è necessario 
+selezionare un sottoinsieme $S$ di elementi ammissibile e ottimo.
+\begin{algorithm}
+        \caption{GREEDY(A)}
+    \begin{algorithmic}
+        \State $S \gets$ insieme vuoto
+        \While{$S$ non è una soluzione}
+            \State estrai da $A$ l'elemento più appetibile $a$
+            \If{$S\cup {a}$ è ammissibile}
+                \State aggiungi $a$ all'insieme $S$
+            \EndIf 
+        \EndWhile
+    \end{algorithmic}
+\end{algorithm}
+Le appetibilità possono essere fisse o modificabili.
+\subsection{Massimo numero di intervalli disgiunti}
+
 \end{document}
