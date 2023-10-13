@@ -4,19 +4,36 @@
 \usepackage{tikz}
 \usepackage{amsfonts} 
 \usepackage{amsthm}
+\usepackage{thmtools}
 \usepackage[Algoritmo]{algorithm}
 \usepackage{algpseudocode}
 \usepackage{float}
+\usepackage{hyperref}
+
 
 \title{Appunti Algoritmi 2}
 
 \newtheorem*{theorem}{Teorema}
 \newtheorem*{proprietà}{Proprietà}
 \newtheorem*{lemma}{Lemma}
-\theoremstyle{remark}
-\newtheorem*{remark}{Proprietà}
+\theoremstyle{proprietà}
+\renewcommand{\listalgorithmname}{Algoritmi}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    }
+
+\urlstyle{same}
 
 \begin{document}
+\pagenumbering{roman}
+\tableofcontents
+\listofalgorithms
+\newpage
+\pagenumbering{arabic}
 \section{Grafi come strutture dati}
 \subsection{Introduzione e terminologia}
 Un grafo è una coppia di elementi (insiemi) \textbf{G=(V,E)} e consiste in:
@@ -172,10 +189,10 @@ vertice che ha permesso di scoprirlo.
         \EndWhile
     \end{algorithmic}
 \end{algorithm}
-\begin{remark}
+\begin{proprietà}
     Al termine dell'esecuzione di VISITA(G,s), tutti e soli i vertici neri diversi da $s$ hanno predecessore diverso da 
     NULL.
-\end{remark}
+\end{proprietà}
 Il sottografo dei predecessori è un albero (\textbf{albero dei predecessori}) di radice $s$.\\
 Se il grafo non è connesso:
 \begin{algorithm}[H]
@@ -483,17 +500,233 @@ degli adiacenti ad $u$. In quel momento, color[$v$] può essere:
 \section{Ordinamento topologico}
 Dato un \textbf{grafo orientato aciclico} (DAG) è sempre possibile ordinare i nodi in un \textbf{ordine topologico}, cioè 
 in modo che non ci sia nessun arco all'indietro nell'ordinamento.
-\subsection{Relazioni d'ordine parziale, totale e di raggiungibilità}
-Una relazione di \textbf{ordine parziale}, su un insieme $I$, è definita come una relazione binaria $\leq$:
-\begin{itemize}
-    \item \textbf{riflessiva}
-\end{itemize}
+\subsection{Raggiungibilità}
 In un DAG, la relazione di \textbf{raggiungibilità} è una relazione di ordine parziale:
 \begin{itemize}
     \item è riflessiva: ogni vertice è raggiungibile da se stesso 
     \item è antisimmetrica: se $v$ è raggiungibile da $u$ ed $u$ è raggiugibile da $v$, allora $v$ e $u$ sono coincidenti
     \item è transitiva: se $v$ è raggiungibile da $u$ e $w$ è raggiungibile da $v$, allora $w$ è raggiungibile da $u$
 \end{itemize}
+\subsection{Ordine topologico}
+Dato un DAG, un \textbf{ordine topologico} è un ordine lineare dei suoi nodi tale che, se nel grafo vi è un arco $(u,v)$, 
+allora $u$ precede $v$ nell'ordine. Un grafo aciclico possiede sempre un ordine topologico; un DAG può possedere diversi 
+ordini topologici.
+\subsubsection{Algoritmo astratto}
+Il metodo più semplice ma meno efficiente per trovare un'ordinamento topologico. Si definiscono: \textbf{nodo sorgente} 
+come nodo che non ha archi entranti, e \textbf{nodo pozzo} come nodo che non ha archi uscenti. Questo algoritmo funziona
+rimuovendo nodi sorgente dal grafo $G'$ (memorizzandoli in una lista, $ord$) e sviluppando un sottoproblema.
+\begin{theorem}
+    $ord$ è un'ordinamento topologico di $G$. Denotiamo con $ord_i$ e $G'$ (copia del grafo $G$) il contenuto di $ord$ e
+    $G'$ all'iterazione i-esima: ad ogni istante del ciclo, non può esserci nessun cammino in $G$ che porta da un vertice 
+    in $G'$ ad uno in $ord$ ("all'indietro").
+\end{theorem}
+\begin{proof}
+    Caso base: con $i=0$, la condizione è banalmente verificata ($ord$ non contiene vertici).
+    Passo induttivo: ad un istante $k$, non c'è alcun cammino in $G$ dai vertici $G'_k$ ai vertici in $ord_k$, quindi 
+    ad un istante $k+1$, non c'è alcun cammino in $G$ dai vertici $G'_{k+1}$ ai vertici in $ord_{k+1}$.\\
+    Al passo k-esimo, si sceglie un vertice sorgente $u$ in $G'_k$: non ci sono cammini in $G$ che raggiungono $u$ passando solo 
+    per i vertici di $G'_k$. Per ipotesi induttiva, aggiungendo $u$ ad $ord_k$ all'istante $k$, all'istante $k+1$ non ci 
+    sarà alcun cammino in $G$ dai vertici di $G'_{k+1}$ ai vertici in $ord_{k+1}$.
+\end{proof}
+La complessità dell'algoritmo semplice è $\mathcal{O}(m*n)$.
+\subsubsection{Ordinamento topologico basato su DFS}
+\begin{theorem}[Ordinamento topologico]
+    In una qualunque visita DFS, $f[v]<f[u]$ per ogni arco $\langle u,v \rangle$.
+\end{theorem}
+\begin{proof}
+    Supponiamo per assurdo che si abbia $f[u]<f[v]$; quindi, apro e chiudo $u$ e poi apro e chiudo $v$, oppure apro $u$ 
+    e $v$ e poi chiudo $u$ e $v$. Il primo caso è impossibile, perchè $u$ non può diventare nero prima che $v$ diventi 
+    grigio, ossia prima che tutti i suoi adiacenti siano stati scoperti. Il secondo caso è impossibile perchè $u$ sarebbe 
+    discendente di $v$ e l'arco $\langle u,v \rangle$ sarebbe un arco all'indietro, ma il grafo è aciclico.
+\end{proof}
+Per ottenere l'ordinamento topologico, basta tenere traccia dei vertici chiusi con una lista, che conterrà i vertici chiusi, 
+dal più al meno recente.
+\begin{algorithm}[H]
+    \caption{TOPOLOGICAL SORT(G)}
+    \begin{algorithmic}
+        \State INIZIALIZZA(G)
+        \State $ord \gets$ vettore di lunghezza n 
+        \State $t \gets$ n-1
+        \For{ogni $u \in V$}
+            \If{color[$u$] = white}
+                \State TOPOLOGICAL DFS(G,u,ord,t)
+            \EndIf
+        \EndFor\\
+        \Return $ord$
+    \end{algorithmic}
+\end{algorithm}
+\begin{algorithm}[H]
+    \caption{TOPOLOGICAL DFS(G,u,ord,t)}
+    \begin{algorithmic}
+        \State color[$u$] $\gets$ gray 
+        \State d[$u$] $\gets$ time $\gets$ time+1
+        \For{ogni $v$ adiacente ad $u$}
+            \If{color[$v$] = white}
+                \State $\pi gets u$
+                \State TOPOLOGICAL DFS(G,v,ord,t)
+            \EndIf 
+        \EndFor 
+        \State color[$u$] $\gets$ black 
+        \State f[$u$] $\gets$ time $\gets$ time+1
+        \State $ord[t] \gets u$
+        \State t--
+    \end{algorithmic}
+\end{algorithm}
+La complessità è $\mathcal{O}(m+n)$.
+\section{Componenti connesse e fortemente connesse}
+\subsection{Componenti connesse}
+In un grafo non orientato, la relazione di raggiungibilità è una relazione di equivalenza:
+\begin{itemize}
+    \item è \textbf{riflessiva}: per definizione, ogni vertice è raggiungibile da se stesso con un cammino degenere di 
+    lunghezza 0
+    \item è \textbf{simmetrica}: se $v$ è raggiungibile da $u$ tramite un cammino $p$, allora $u$ è raggiungibile da $v$ 
+    percorrendo all'indietro lo stesso cammino
+    \item è \textbf{transitiva}: se $v$ è raggiungibile da $u$ e $w$ è raggiungibile da $v$, allora $w$ è raggiungibile 
+    da $u$, percorrendo il cammino da $u$ a $v$ e da $v$ a $w$.
+\end{itemize}
+In un grafo non orientato, le componenti connesse sono le classi di equivalenza della relazione di raggiungibilità. Una 
+visita di un grafo restituisce esattamente una componente connessa di quel grafo (l'albero di visita).
+\begin{algorithm}[H]
+    \caption{COMPONENTI CONNESSE(G)}
+    \begin{algorithmic}
+        \State INIZIALIZZA(G)
+        \State $\Pi \gets$ foresta vuota 
+        \For{ogni $u \in V$}
+            \If{color[$u$] = white}
+                \State $\pi_u \gets$ VISITA(G,u) ($\pi_u$ è l'albero di visita)
+                \State $\Pi \gets \Pi+{\pi_u}$
+            \EndIf 
+        \EndFor\\
+        \Return $\Pi$
+    \end{algorithmic}
+\end{algorithm}
+Il grafo è connesso se e solo se nell'albero di visita tutti i vertici hanno un predecessore eccetto il nodo sorgente.
+\begin{algorithm}
+    \caption{CONNESSIONE(G)}
+    \begin{algorithmic}
+        \State INIZIALIZZA(G)
+        \State scegli vertice $s$ appartenente a $G$
+        \State $\pi \gets$ VISITA(G,s)
+        \For{ogni $u$ appartenente a $G$}
+            \If{$u\neq s$ e $\pi[u]$=NULL}
+            \Return false 
+            \EndIf
+        \EndFor\\ 
+        \Return true
+    \end{algorithmic}
+\end{algorithm}
+La complessità è $\mathcal{O}(m+n)$.
+\subsection{Componenti fortemente connesse}
+In un grafo orientato $G$, due nodi, $u$ e $v$ si dicono mutualmente raggiungibili o \textbf{fortemente connessi} se 
+ognuno dei due è raggiungibile dall'altro, cioè esiste un cammino da $u$ a $v$ e da $v$ a $u$ ($u \leftrightarrow v$).
+La connessione forte è una relazione di equivalenza.
+Una \textbf{cfc} di un grafo orientato $G$ è un sottografo $G'$ di $G$ fortemente connesso e massimale: i nodi di $G'$ sono 
+tutti fra loro fortemente connessi e nessun altro nodo di $G$ è fortemente connesso con nodi di $G'$. Ogni vertice del grafo 
+fa parte di una cfc, in quanto ogni nodo è almeno fortemente connesso con se stesso. Da un grafo fortemente connesso è possibile 
+ricavare un DAG (e quindi un ordinamento topologico). 
 
-\section{}
+Per trovare la cfc contenente un vertice $x$:
+\begin{itemize}
+    \item calcoliamo i \textbf{discendenti} di $x$ (D($x$)), ossia i vertici di $G$ raggiungibili da $x$
+    \item calcoliamo gli \textbf{antenati} di $x$ (A($x$)), ossia i vertici che raggiungono $x$
+    \item cfc[$x$] è data dall'\textbf{intersezione} tra l'insieme degli antenati e dei discendenti ($D(x)\cap A(x)$)
+\end{itemize}
+Questo algoritmo è molto costoso, $\mathcal{O}(n^2+m)$.
+\begin{lemma}[Cammino fortemente connesso]
+    Se due vertici $x,y$ di un grafo sono in una stessa cfc, allora nessun cammino tra di essi può abbandonare tale cfc.
+\end{lemma}
+\begin{proof}
+    Sia $z$ tale che $x\rightarrow z$ e $z\rightarrow y$. $z$ è banalmente raggiungibile da $x$ per ipotesi ($x\rightarrow z$); 
+    siccome $x,y$ appartengono alla stessa cfc, esisterà un cammino $y\rightarrow x$. Esiste anche $z\rightarrow y$ per 
+    ipotesi. Quindi, per concatenazione, esisterà anche un cammino $z\rightarrow y\rightarrow x$.
+\end{proof}
+\begin{theorem}[Sottoalbero fortemente connesso]
+    In una qualunque DFS di un grafo $G$ orientato, tutti i vertici di una cfc vengono collocati in uno stesso sottoalbero.
+\end{theorem}
+\begin{proof}
+    Sia $r$ il primo vertice di una data cfc che viene scoperto dalla DFS: da $r$ sono raggiungibili tutti gli altri vertici 
+    della cfc (per definizione). Poichè $r$ è il primo vertice ad essere stato scoperto, al momento della sua scoperta tutti 
+    gli altri vertici della cfc saranno bianchi. Per il lemma precedente, tutti i cammini da $r$ agli altri vertici della 
+    cfc conterranno solo vertici bianchi che fanno parte della cfc. Allora, per il \textbf{teorema del cammino bianco}, 
+    tutti i vertici appartenenti alla cfc di $r$ saranno discendenti di $r$ nell'albero DFS.
+\end{proof}
+\begin{proprietà}[1]
+    Esiste sempre, per ogni grafo diretto, almeno un ordine di visita DFS dei suoi nodi tale per cui le cfc sono già 
+    separate nella foresta di visita.
+\end{proprietà}
+\begin{proprietà}[2]
+    Un grafo $G$ ed il suo trasposto $G^T$ hanno le stesse cfc.
+\end{proprietà}
+Siano $x$ e $y$ due vertici di un grafo $G$; assumiamo che $x$ non sia sulla stessa cfc di $y$. Dopo la DFS su $G$ si possono 
+presentare i seguenti casi:
+\begin{enumerate}
+    \item \textbf{$y$ è discendente di $x$} in un albero della foresta DFS di $G$. Esiste un cammino da $x$ a $y$, ma non
+    il contrario, quindi non esisterà un cammino da $x$ a $y$ in $G^T$ ($d[x]<d[y]<f[y]<f[x]$).
+    \item \textbf{$x$ e $y$ non sono uno discendente dell'altro} nella foresta DFS di $G$. Non può esistere nessun cammino 
+    da $y$ a $x$, altrimenti $x$ sarebbe nel sottoalbero di $y$. Quindi, non eeisterà il cammino da $x$ a $y$ in $G^T$ 
+    ($d[y]<f[y]<d[x]<f[x]$).
+\end{enumerate}
+In entrambi i casi, ($f[x]>f[y]$), quindi nella seconda visita i vertici saranno considerati in ordine decrescente di tempo 
+di fine visita.
+
+Da queste osservazioni, si ricava l'\textbf{algoritmo di Kosaraju}: 
+\begin{enumerate}
+    \item visita $G$ con l'algoritmo VISITA TUTTI I VERTICI DFS e costruisci una lista di vertici in ordine decrescente 
+    dei tempi di fine visita 
+    \item costruisci $G^T$
+    \item visita $G^T$ con l'algoritmo VISITA TUTTI I VERTICI DFS, considerando i vertici nell'ordine trovato al passo 1 
+\end{enumerate}
+La complessità è pari a $\mathcal{O}(n+m)$.
+Per dimostrare la correttezza dell'algoritmo, ci si avvale del \textbf{teorema del sottoalbero fortemente connesso} e dei 
+lemmi seguenti.
+\begin{lemma}[2]
+    Un grafo orientato e il suo trasposto hanno le stesse cfc.
+\end{lemma}
+\begin{lemma}[3]
+    Sia $A^T$ un albero ottenuto con la visita in profondità $G^T$, considerando i vertici in ordine decrescente dei tempi 
+    di fine visita su $G$, e sia $u$ la sua radice. Per ogni vertice $v$ discendente di $u$ in $A^T$, $v$ e $u$ appartengono 
+    alla stessa cfc.
+\end{lemma}
+\begin{proof}
+    Dimostriamo che ogni discendente di $u$ in $A^T$ è anche un discendente di $u$ in un albero della foresta costruita 
+    dalla DFS su $G$. La dimostrazione è fatta per assurdo.\\
+    Consideriamo un cammino sull'albero $A^T$ a aprtire dalla radice $u$; sia $v$ il primo vertice sul cammino per cui il 
+    lemma non vale (cioè $v$ non è discendente di $u$ nella visita di $G$) e sia $w$ il suo predecessore sul cammino. 
+    L'enunciato è valido per $w$: $d[u]\leq d[w]<f[w]\leq f[u]$.\\
+    Siccome la visita DFS di $G^T$ considera i vertici in ordine decrescente di fine visita, vale $f[v]<f[u]$.
+    Per il \textbf{teorema delle parentesi}, se $v$ non è discendente di $u$ nella prima visita, deve valere $d[v]<f[v]<d[u]<f[u]$.
+    Ma questo è impossibile, in quanto $v$ è adiacente a $w$ in $G$, e la visita di $v$ non può terminare prima che sia 
+    iniziata la visita di un suo adiacente.\\
+    Quindi in $G$ esiste un cammino da $u$ a $v$. Siccome $v$ è discendente di $u$ in $A^T$, esiste anche un cammino da 
+    $u$ a $v$ in $G^T$, e quindi da $v$ a $u$ in $G$.
+\end{proof}
+L'algoritmo è quindi corretto.
+\section{Tecnica greedy}
+\subsection{Problemi}
+Un \textbf{problema P} è definito come una relazione $P\subseteq I\times S$: $I$ è l'insieme delle possibili \textbf{istanze}
+del problema e l'insieme $S$ è l'insieme delle possibili \textbf{soluzioni} del problema.
+Tipi di problemi:
+\begin{itemize}
+    \item \textbf{problemi di decisione}: problemi che richiedono di verificare una certa proprietà sull'input (risultato 
+    o vero o falso)
+    \item \textbf{problemi di ricerca}: data un'istanza del problema, restituire una soluzione ammissibile
+    \item \textbf{problemi di ottimizzazione}: data un'istanza di un problema ed una funzione obiettivo valuta(Sol), che per 
+    ogni soluzione Sol restituisce un valore di tale soluzione Sol ottima
+\end{itemize}
+Una soluzione di un problema di ottimizzazione è anche una soluzione di un equivalente problema di ricerca (ma non viceversa).
+\subsection{Problema dello zaino frazionario}
+\subsubsection{Definizione}
+Un ladro entra in un magazzino e trova $n$ oggetti. L'i-esimo oggetto $o_i$ ha un valore di $c_i$ euro e pesa $p_i$ chilogrammi.
+$v_i=c_i/p_i$ è il valore per unità di peso. Gli oggetti sono frazionabili, quindi il ladro ne può prendere anche solo una 
+frazione $x_1$, $0\leq x_i \leq 1$. In tal caso, il valore della parte presa sarà $c_ix_i$. Il ladro ha un solo zaino, che 
+può contenere oggetti per un peso massimo di $P$ chilogrammi.
+
+Quali oggetti e in quale quantità dovrà prendere il ladro per ottenere il massimo guadagno dal furto?
+\subsubsection{Formalizzazione}
+Il problema richiede di valorizzare $x_i$ per ogni $1\leq i \leq n$ in modo che $\sum x_ic_i$ sia massima. Due proprietà: 
+\begin{itemize}
+    \item \textbf{Ottimalità}. Tutte le soluzioni che massimizzano il valore totale dello zaino (la \textbf{funzione obiettivo}) 
+    sono soluzioni ottime. 
+    \item \textbf{Ammissibilità}.
+\end{itemize}
 \end{document}
