@@ -766,5 +766,20 @@ selezionare un sottoinsieme $S$ di elementi ammissibile e ottimo.
 \end{algorithm}
 Le appetibilità possono essere fisse o modificabili.
 \subsection{Massimo numero di intervalli disgiunti}
+\subsubsection{Problema}
+Dato un insieme di intervalli, trovare il massimo numero di intervalli disgiunti significa trovare un sottoinsieme costituito 
+da intervalli tutti disgiunti, tale che il numero di intervalli sia massimo.
 
+La soluzione ottimale si ottiene scandendo l'insieme di intervalli scegliendo ogni volta l'intervallo che finisce prima:
+\begin{enumerate}
+    \item orina l'insieme degli intervalli in una sequenza $S$ ordinata secondo l'istante finale
+    \item inizializza la soluzione Sol come sequenza vuota 
+    \item scandisci $S$ in ordine, e per ogni suo elemento $A$:
+    \begin{enumerate}
+        \item se $A$ inizia dopo la fine dell'ultimo elemento di Sol, aggiungilo in fondo a Sol 
+        \item altrimenti, non aggiungerlo 
+    \end{enumerate}
+\end{enumerate}
+La complessità è quella dell'ordinamento del passo 1 più quella della scansione di $S$ al passo 3, $\mathcal{O}(n\log n)$.
+\subsubsection{Correttezza}
 \end{document}
