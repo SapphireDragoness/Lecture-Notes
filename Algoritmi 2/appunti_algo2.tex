@@ -782,4 +782,139 @@ La soluzione ottimale si ottiene scandendo l'insieme di intervalli scegliendo og
 \end{enumerate}
 La complessità è quella dell'ordinamento del passo 1 più quella della scansione di $S$ al passo 3, $\mathcal{O}(n\log n)$.
 \subsubsection{Correttezza}
+Definiamo le invarianti ($S$ è l'insieme di intervalli esaminati ad un passo intermedio $k$): 
+\begin{itemize}
+    \item \textbf{Max}: la sequenza $A_1,A_2,\dots,A_k$ di intervalli disgiunti scelti è, per l'insieme $S$, una \textbf{sequenza massimale}
+    \item \textbf{PrimaMax}: la sequenza $A_1,A_2,\dots,A_k$ è, fra le sequenze massimali, quella che finisce prima 
+    \item \textbf{PrimaVisti}: ogni intervallo $\in S$ termina prima della fine di qualunque intervallo $\notin S$
+\end{itemize}
+L'invariante da dimostrare è \textbf{Max}.
+\begin{proof}
+    \textbf{Caso base}. Inizialmente, $S$ è l'insieme vuoto, la sequenza massimale per $S$ è la sequenza vuota. Tutte e 
+    tre le invarianti sono vere.\\
+    \textbf{Passo}. Sia $A$ l'intervallo che termina prima tra quelli ancora da esaminare (ossia fra quelli $\notin S$).
+    Consideriamo allora l'insieme $S'\equiv S \cup \{A\}$ e cerchiamo di stabilire qual è per $S'$ la sequenza massimale 
+    (\textbf{Max}) che finisce prima (\textbf{PrimaMax}).\\
+    \textbf{Caso 1}: $A$ inizia \textbf{prima} della fine della sequenza $A_1,A_2,\dots,A_k$, quindi $A$ interseca $A_k$; quindi, 
+    ogni sequenza avente $A$ come ultimo elemento non può avere più di $k$ elementi. Non inserendo $A$ nella soluzione, 
+    l'invariante Max si mantiene.\\
+    \textbf{Caso 2}: $A$ inizia \textbf{dopo} la fine della sequenza $A_1,A_2,\dots,A_k$; allora, la sequenza $A_1,A_2,\dots,A_k,A$: 
+    \begin{itemize}
+        \item è per $S'$ una sequenza massimale, perchè una sequenza massimale per $S'$ non può avere più di $k+1$ elementi 
+        \item è per $S'$ la sequenza massimale che finisce prima, perchè in $S'$ non ci sono sequenze massimali non includenti 
+        $A$
+    \end{itemize}
+    Anche in questo caso, le invarianti si mantengono. 
+\end{proof}
+\subsection{Algoritmo di Moore}
+\subsubsection{Problema dello scheduling e algoritmo risolvente}
+Una \textbf{sequenza di shceduling}, o semplicemente \textbf{scheduling}, è una sequenza di lavori $L_1,L_2,\dots,L_n$ che 
+devono essere eseguiti uno dopo l'altro consecutivamente. L'algoritmo è greedy, l'appetibilità è data dalla scadenza. 
+Descrizione informale:
+\begin{enumerate}
+    \item ordina la sequenza dei lavori per ordine crescente di istante di scadenza 
+    \item scandisci tale sequenza in ordine, aggiungendo ogni volta il successivo lavoro alla fine della sequenza di scheduling 
+    provvisoria; se così facendo il lavoro considerato termina dopo la scadenza, si elimina dalla sequenza di scheduling 
+    il lavoro di durata massima 
+\end{enumerate}
+\begin{algorithm}
+    \caption{MOORE()}
+    \begin{algorithmic}
+        \State $Sol \gets$ sequenza vuota
+        \For{i=n to n}
+        \State aggiungi $L_i$ a $Sol$
+        \State $t=t+$durata di $L_i$
+            \If{$t>$scadenza di $L_i$}
+                \State togli da $Sol$ il lavoro $L_{max}$ di durata massima 
+                \State $t=t-$durata di $L_{max}$
+            \EndIf 
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+\subsubsection{Correttezza}
+L'algoritmo di Moore è corretto, si dimostra per induzione.
+\begin{proof}
+    \textbf{Invariante}. Sia $S$ l'insieme di tutti i job finora esaminati:
+    \begin{enumerate}
+        \item $Sol$ è uno \textbf{scheduling massimale} $L_1,L_2,\dots,L_k$ di job di $S$ che rispetta le scadenze, cioè 
+        quello con il numero massimo di elementi 
+        \item $Sol$ è, fra tutti gli scheduling massimali di job di $S$, quello di durata totale minima 
+        \item $Sol$ è ordinato per tempi di scadenza crescenti
+        \item ogni job non in $S$ ha una scadenza posteriore o uguale alle scadenze dei job in $S$ 
+    \end{enumerate}
+    \textbf{Passo}. Sia $t_k$ l'istante di fine dello scheduling $Sol=L_1,L_2,\dots,L_k$. Sia $L$ il primo job non ancora 
+    esaminato, cioè non in $S$, che ha scadenza prima di tutti gli altri job non esaminati. Siano $s$ la scadenza di $L$ 
+    e $d$ la durata di $L$. Considerando l'insieme $S'=S\cup \{L\}$, si possono verificare due casi:
+    \begin{enumerate}
+        \item $L$ aggiunto ad $S$ è eseguibile entro la sua scadenza 
+        \item $L$ non è eseguibile
+    \end{enumerate}
+    \textbf{Caso 1}. Lo scheduling così ottenuto è uno scheduling massimale. $\{L\}$ ha cardinalità 1; quindi, se esistesse 
+    uno scheduling per $S\cup \{L\}$ con più di $k+1$ elementi, vi sarebbe uno scheduling per $S$ con più di $k$ elementi,
+    il che è assurdo. Inoltre $S\cup \{L\}$ è di durata minima.\\ 
+    \textbf{Caso 2}. Lo scheduling $L_1,L_2,\dots,L_k,L$ non è una soluzione. Se $L$ è il processo di durata massima, sostituendolo 
+    ad un job già presente $S$, si otterrebbe uno scheduling di durata maggiore o uguale (violando punto 2). Se in $S$ 
+    esiste un job $L_{max}$ di durata maggiore di $L$, eliminando $L_{max}$ ed aggiungendo $L$ ad $S$, si ottiene uno 
+    scheduling di ancora $k$ elementi, di durata minore (minima).\\
+    Quindi, $L_1,L_2,\dots,L_k$ è uno scheduling massimale e di durata minima.
+\end{proof}
+\subsection{Codici di Huffman}
+\subsubsection{Codifica}
+Una \textbf{codifica} associa un insieme di caratteri o simboli ad un insieme di altri elementi, detti \textbf{parole in codice}.
+Le codifiche possono avere lunghezza fissa o variabile. La codifica deve essere non ambigua, cioè che nessuna codifica di 
+di un carattere sia prefisso di un'altra. Un codice binario prefisso può essere rappresentato tramite un albero binario 
+in cui le foglie rappresentano i caratteri ed i cammini dalla radice alle foglie rappresentano la codifica dei caratteri. 
+L'albero prende il nome di \textbf{albero di codifica}.
+\subsubsection{Codifica ottima}
+Il problema affrontato dall'algoritmo di Huffman è il seguente: dato un testo scritto secondo un certo alfabeto $C$, trovare 
+una codifica che sia minimale, cioè renda minima la lunghezza del testo codificato (è una tecnica di compressione). 
+
+Una codifica a lunghezza fissa usa parole in codice tutte della stessa dimensione. Con questa codifica servono almeno 
+$\lceil \log_2 n\rceil$ bit per rappresentare ogni parola in codice per un alfabeto di $n$ elementi.
+
+Un albero avente nodi interni con un solo figlio non è ottimale: può essere eliminato attaccando i suoi figli direttamente 
+al padre. Un albero binario in cui ogni nodo interno ha esattamente due figli si chiama \textbf{albero pieno}.
+
+Per ottenere la maggior compressione possibile, i caratteri più frequenti devono avere le codifiche più corte, cioè comparire 
+a livelli più alti dell'albero.
+\subsubsection{Algoritmo di Huffman}
+L'algoritmo di Huffman ha come input: un alfabeto, cioè un insieme $C$ di caratteri; una funzione $f$ che da' la frequenza 
+di ciascun carattere in un dato testo $t$.
+Produce in output un codice binario ottimo per la compressione di quel testo $t$.
+
+L'algoritmo di Huffman è un'applicazione della tecnica greedy \textbf{con appetibilità modificabili}:
+\begin{enumerate}
+    \item Per ciascun carattere, crea un albero formato solo da una foglia contenente il carattere e la frequenza del carattere 
+    \item Fondi i due alberi che hanno due frequenze minime e costruisci un nuovo albero che ha come frequenza la somma 
+    delle frequenze degli alberi fusi 
+    \item Ripeti la fusione finchè si ottiene un unico albero 
+\end{enumerate}
+\begin{algorithm}
+    \caption{HUFFMAN(C,f)}
+    \begin{algorithmic}
+        \State $n\gets |C|$ (insieme di caratteri)
+        \State $Q\gets$ coda di priorità (heap) vuota
+        \For{ogni carattere in $C$}
+            \State enqueue(Q,createTreeNode(c,NULL,NULL),f[c])
+        \EndFor 
+        \For{i=0;i<n-1;i++}
+            \State $x\gets$ dequeueMin(Q)
+            \State $y \gets$ dequeueMin(Q)
+            \State $z \gets$ createTreeNode(null,x,y)
+            \State $f[z] \gets f[x]+f[y]$
+            \State enqueue(Q,z,f[z])
+        \EndFor\\
+        \Return dequeueMin(Q)
+    \end{algorithmic}
+\end{algorithm}
+La complessità dell'algoritmo è $\mathcal{O}(\log n)$ se la coda di priorità è realizzata con un heap.
+\subsubsection{Correttezza}
+L'algoritmo restituisce un albero di Huffman, che rende minima la lunghezza media di codifica.
+\begin{proof}
+    \textbf{Foresta di Huffman}. La foresta di Huffman per un alfabeto $C$ con funzione di frequenza $f$ è una foresta i 
+    cui elementi $T_1,T_2,\dots,T_n$ sono sottoalberi di un albero di Huffman $T$ per quell'alfabeto.
+    \textbf{Invariante}. La foresta $\{T_1,T_2,\dots,T_n\}$ costruita dall'algoritmo al passo generico è una foresta di 
+    Huffman per $C$ e $f$, cioè esiste un albero di Huffman $T$ di cui gli alberi $T_1,T_2,\dots,T_n$ sono sottoalberi.
+    \textbf{Passo}. 
+\end{proof}
 \end{document}
