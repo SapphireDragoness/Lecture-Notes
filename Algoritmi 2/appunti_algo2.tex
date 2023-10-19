@@ -4,6 +4,7 @@
 \usepackage{tikz}
 \usepackage{amsfonts} 
 \usepackage{amsthm}
+\usepackage{amsmath}
 \usepackage{thmtools}
 \usepackage[Algoritmo]{algorithm}
 \usepackage{algpseudocode}
@@ -16,7 +17,6 @@
 \newtheorem*{theorem}{Teorema}
 \newtheorem*{proprietà}{Proprietà}
 \newtheorem*{lemma}{Lemma}
-\theoremstyle{proprietà}
 \renewcommand{\listalgorithmname}{Algoritmi}
 
 \hypersetup{
@@ -881,6 +881,16 @@ a livelli più alti dell'albero.
 L'algoritmo di Huffman ha come input: un alfabeto, cioè un insieme $C$ di caratteri; una funzione $f$ che da' la frequenza 
 di ciascun carattere in un dato testo $t$.
 Produce in output un codice binario ottimo per la compressione di quel testo $t$.
+Con $f(c)=$ frequenza con cui il carattere $c$ compare nel testo e $d_c=$ livello del carattere $c$ nell'albero $T$, si 
+chiama lunghezza media di codifica o costo di $T$:
+\begin{equation}*
+    L(T)=\Sigma_{c\in C}d_C\cdot f(c)
+\end{equation}
+Se n è il numero di caratteri che compongono il testo con frequenze date dalla funzione $f$, la lunghezza in bit della 
+codifica del testo è data da:
+\begin{equation}*
+    B(T)=\Sigma_{c\in C}d_C\cdot n\cdot f(c)=n\cdot L(T)
+\end{equation}
 
 L'algoritmo di Huffman è un'applicazione della tecnica greedy \textbf{con appetibilità modificabili}:
 \begin{enumerate}
@@ -897,7 +907,7 @@ L'algoritmo di Huffman è un'applicazione della tecnica greedy \textbf{con appet
         \For{ogni carattere in $C$}
             \State enqueue(Q,createTreeNode(c,NULL,NULL),f[c])
         \EndFor 
-        \For{i=0;i<n-1;i++}
+        \For{$i=0;i<n-1;i++$}
             \State $x\gets$ dequeueMin(Q)
             \State $y \gets$ dequeueMin(Q)
             \State $z \gets$ createTreeNode(null,x,y)
@@ -910,11 +920,43 @@ L'algoritmo di Huffman è un'applicazione della tecnica greedy \textbf{con appet
 La complessità dell'algoritmo è $\mathcal{O}(\log n)$ se la coda di priorità è realizzata con un heap.
 \subsubsection{Correttezza}
 L'algoritmo restituisce un albero di Huffman, che rende minima la lunghezza media di codifica.
+
+\textbf{Foresta di Huffman}. La foresta di Huffman per un alfabeto $C$ con funzione di frequenza $f$ è una foresta i 
+cui elementi $T_1,T_2,\dots,T_n$ sono sottoalberi di un albero di Huffman $T$ per quell'alfabeto.
+
+\textbf{Invariante}. La foresta $\{T_1,T_2,\dots,T_n\}$ costruita dall'algoritmo al passo generico è una foresta di 
+Huffman per $C$ e $f$, cioè esiste un albero di Huffman $T$ di cui gli alberi $T_1,T_2,\dots,T_n$ sono sottoalberi.
+
+\textbf{Caso base}. Prima dell'esecuzione del ciclo, l'invariante vale banalmente, in quanto gli alberi sono tutti 
+nodi singoli, cioè foglie corrispondenti ai caratteri dell'alfabeto $C$.
+
+\textbf{Passo}. Assumiamo che prima della k-esima iterazione del ciclo l'invariante valga, cioè che la foresta 
+$F=\{T_1,T_2,\dots,T_n\}$ sia una foresta di Huffman per il dato alfabeto $C$. Mostriamo che dopo il (k+1)-esimo passo 
+dell'iterazione, che fonde i due alberi $T_a$ e $T_b$ aventi due frequenze minime in un nuovo albero $T_{ab}$, la nuova 
+foresta $F-\{T_a,T_b\}\cup\{T_{ab}\}$ è ancora una foresta di Huffman.
 \begin{proof}
-    \textbf{Foresta di Huffman}. La foresta di Huffman per un alfabeto $C$ con funzione di frequenza $f$ è una foresta i 
-    cui elementi $T_1,T_2,\dots,T_n$ sono sottoalberi di un albero di Huffman $T$ per quell'alfabeto.
-    \textbf{Invariante}. La foresta $\{T_1,T_2,\dots,T_n\}$ costruita dall'algoritmo al passo generico è una foresta di 
-    Huffman per $C$ e $f$, cioè esiste un albero di Huffman $T$ di cui gli alberi $T_1,T_2,\dots,T_n$ sono sottoalberi.
-    \textbf{Passo}. 
+    Mostriamo che fra tutti gli alberi di codifica di cui $T_1,T_2,\dots,T_n$ sono sottoalberi, vi è un albero $(T''')$ 
+    la cui lunghezza media di codifica $L(T''')$ è minima e di cui $T_{ab}$ è un sottoalbero. Quindi l'albero $T_{ab}$ può 
+    essere inserito nella foresta al posto di $T_a$ e $T_b$: la foresta risultante $F-\{T_a,T_b\}$ è ancora una foresta 
+    di Huffman.\\
+    Per ipotesi induttiva, esiste un albero $T'$ di cui gli alberi $T_1,\dots,T_a,\dots,T_b\dots,T_n$ sono sottoalberi, 
+    dove $T_a$ e $T_b$ sono, nella foresta al passo considerato, i due alberi di frequenze minime, $f(T_a)$ e $f(T_b)$. 
+    Mostriamo che esiste un albero di Huffman $T'''$ avente $T_{ab}$ come sottoalbero.\\
+    Consideriamo, fra i nodi interni di $T'$ non appartenenti alla foresta $F$, cioè fra i nodi che nel passo considerato 
+    non sono ancora stati creati, quello di profondità massima. Sia esso $z$. Come ogni nodo interno, $z$ deve avere due 
+    sottoalberi figli non nulli, siano $T_x$ e $T_y$.\\
+    Poichè $T_a$ e $T_b$ sono, al passo considerato, i due alberi di pesi minimi, assumendo $f(T_a)<=f(T_b)$ e $f(T_x)<=f(T_y)$,
+    abbiamo $f(T_a)<=f(T_x)$ e $f(T_b)<=f(T_y)$. Poichè $z$ è un nodo di profondità massima, le radici degli alberi $T_x$ 
+    e $T_y$ si trovano in $T'$ a profondità $d$ non inferiore a quelle di $T_a$ e $T_b$, siano $d_1$ e $d_2$: quindi, 
+    $d_1<=d$ e $d_2<=d$.\\
+    Scambiamo di posizione $T_a$ e $T_x$ per ottenere un albero di lunghezza media non superiore (analogamente per $T_b$
+    e $T_y$).\\
+    Ma $T'$ è un albero di Huffman, cioè avente $L(T')$ minimo. Quindi deve essere $L(T''')=L(T')$, e anche $T'''$, che 
+    ha $T_{ab}$ come sottoalbero, è un albero di Huffman. Dunque, la foresta $F-\{T_a,T_b\}\cup\{T_{ab}\}$ è ancora una 
+    foresta di Huffman.
 \end{proof}
+\section{Tecnica Greedy applicata ai grafi}
+Il teorema della distanza nell'albero BFS visto per i grafi non pesati non vale per un grafo pesato, quindi $d[v]\neq\delta(s,v)$.
+\subsection{}
+
 \end{document}
