@@ -957,6 +957,259 @@ foresta $F-\{T_a,T_b\}\cup\{T_{ab}\}$ è ancora una foresta di Huffman.
 \end{proof}
 \section{Tecnica Greedy applicata ai grafi}
 Il teorema della distanza nell'albero BFS visto per i grafi non pesati non vale per un grafo pesato, quindi $d[v]\neq\delta(s,v)$.
-\subsection{}
+\subsection{Algoritmo di Dijkstra}
+L'algoritmo di Dijkstra è una visita BFS in cui la frangia è gestita come in un algoritmo greedy con appetibilità modificabili.
+L'appetibilità di un vertice $u$ è data da una stima della distanza tra $s$ e $u$ che l'algoritmo ha in un determinato istante.
+Inizialmente, tutti i vertici sono stimati a distanza $\infty$ da $s$, tranne $s$ stesso che ha distanza $d[s]=0$ da se 
+stesso. Ad ogni ciclo, scelgo un vertice $u$ da aggiungere all'albero tra quelli non ancora inseriti ma aggiungi dalla 
+ricerca, e scelgo quello con \textbf{distanza da $s$ stimata minima}.
+\begin{algorithm}[H]
+    \caption{DIJKSTRA(G,W,s)}
+    \begin{algorithmic}
+        \State INIZIALIZZA(G)
+        \State $color[s]\gets$ gray
+        \State $d[s]\gets 0$
+        \While{esistono vertici grigi}
+            \State $u\gets$ vertice grigio con $d[u]$ minore
+            \State $S\gets S\cup\{u\}$
+            \For{ogni $v$ adiacente ad $u$}
+                \If{$color[v]\neq$black}
+                    \State $color[v]\gets$ gray 
+                    \If{$d[v]>d[u]+W(u,v)$}
+                        \State $\pi[v]\gets u$
+                        \State $d[v]\gets d[u]+W(u,v)$
+                    \EndIf
+                \EndIf 
+            \EndFor 
+    \algstore{18}   
+    \end{algorithmic}
+\end{algorithm}
+\begin{algorithm}[t]
+    \begin{algorithmic}
+        \algrestore{18}
+            \State $color[u]\gets$ black
+        \EndWhile
+    \end{algorithmic}
+\end{algorithm}
+\subsubsection{Miglioramenti}
+I nodi grigi sono gestiti con una \textbf{coda di priorità}. È possibile non distiguere nodi bianchi e grigi ed inserire 
+tutti nella coda fin dall'inizio, assegnando loro distanza infinita da $s$: i nodi neri sono detti \textbf{definitivi} e 
+quelli bianchi e grigi \textbf{non definitivi}. Inoltre, non è nemmeno necessario distinguere i nodi neri, poichè non saranno 
+in coda.
+\begin{algorithm}[H]
+    \caption{DIJKSTRA CON PRIORITY QUEUE(G,W,s)}
+    \begin{algorithmic}
+        \State INIZIALIZZA(G)
+        \State $D\gets$ coda di priorità vuota
+        \State $d[s]\gets 0$
+        \For{ogni $v$ in $v[G]$}
+            \State enqueue(D,v,d[v])
+        \EndFor
+        \While{NotEmpty(D)}
+            \State $u\gets$ dequeueMin(D)
+            \State $S\gets S\cup\{u\}$
+            \For{ogni $v$ adiacente ad $u$}
+                \If{$d[v]>d[u]+W(u,v)$}
+                    \State $\pi[v]\gets u$
+                    \State $d[v]\gets d[u]+W(u,v)$
+                    \State decreaseKey(D,v,d[v])
+                \EndIf
+            \EndFor
+        \EndWhile
+    \end{algorithmic}
+\end{algorithm}
+\subsubsection{Complessità}
+Denotiamo con:
+\begin{itemize}
+    \item $t_c$: tempo impiegato dalla costruzione della coda 
+    \item $t_e$: tempo impiegato da una estrazione del minimo 
+    \item $t_d$: tempo impiegato da una decreaseKey
+\end{itemize}
+Ad ogni ciclo della visita bisogna estrarre il minimo dalla coda; per ogni arco trovato potrebbe essere necessario decrementare 
+la chiave di un vertice. La complessità è quindi: $\mathcal{O}(t_c+n*t_e+m*t_d)$.
+
+La complessità totale dipende anche dalle complessità delle operazioni sulla coda:
+\begin{itemize}
+    \item con coda di priorità realizzata come sequenza \textbf{non ordinata}: $\mathcal{O}(n^2+m)$
+    \item con coda di priorità realizzata come sequenza \textbf{ordinata}: $\mathcal{O}(n+n*m)$
+\end{itemize}
+\subsubsection{Versione di Johnson}
+La versione dell'algoritmo di Dijkstra con coda di priorità implementata come \textbf{heap} è chiamata algoritmo di Johnson.
+La complessità è $\mathcal{O}((m+n)\log n)$.
+\subsubsection{Correttezza}
+\begin{proprietà}[1]
+    Un sottocammino di un cammino minimo è un \textbf{cammino minimo}.
+\end{proprietà}
+\begin{proprietà}[2]
+    Siano $S$ l'insieme di vertici già considerati dalla visita e $D$ l'insieme dei vertici ancora da considerare:
+    \begin{itemize}
+        \item[2.1.] il $d[v]$ di ogni vertice in $S$ non viene più modificato
+        \item[2.2.] tutti i predecessori dei nodi nella coda di priorità sono in $S$
+        \item[2.3.] per ogni nodo (eccetto $s$), $d[v]\neq \infty$ se e solo se il predecessore di quel nodo non è nullo 
+        \item[2.4.] per ogni nodo (eccetto $s$), $d[v]\neq \infty$ implica $d[v]=d[\pi[v]]+W(\pi[v],v)$
+    \end{itemize}
+\end{proprietà}
+\begin{proprietà}[3]
+    Se un cammino ha distanza diversa da $\infty$, esiste un cammino tra due nodi nel grafo.
+    \begin{proof}
+        Per ipotesi induttiva, esiste un cammino da $s$ a $\pi[u]$. Allora, il cammino da $s$ a $\pi[u]$ più l'arco 
+        $(\pi[u],u)$ costituisce un cammino da $s$ a $u$.\\
+        Supponiamo, per assurdo, che tra $s$ e $u$ vi sia almeno un cammino $s\equiv v_1\rightarrow v_2 \rightarrow \dots \rightarrow v_{k-1} \rightarrow v_k \equiv u$
+        e che $u$ venga estratto dalla coda con $d[u]=\infty$. $v_{k-1}$ è già stato estratto quindi 
+        $d[u]=d[v_k]=d[v_{k-1}]+W(v_{k-1},v_k)$. Ma $W(v_{k-1},v-k)<\infty$ e $d[u]=\infty$, quindi $d[v_{k-1}]=\infty$.
+        Questo può essere iterato per ciascun vertice del cammino, contraddicendo $d[s]=0$.
+    \end{proof}
+\end{proprietà}
+Il predicato $\forall t \in S : d[t]=\delta(s,t)$ è un'invariante del ciclo while.
+\begin{proof}
+    \textbf{Caso base}. Il predicato è vero perchè all'inizion $S$ è vuoto.
+
+    \textbf{Passo}. Dimostriamo che per il nuovo vertice $u$ estratto da $D$, $d[u]=\delta(s,u)$.
+
+    \textbf{Caso 1}. Il vertice estratto da $D$ ha $d[u]\neq \infty$. Sia $\pi[u]=r\neq NULL$ per proprietà 2.3. Sappiamo 
+    allora che $r$ è nell'albero dei cammini minimi e che $d[u]=d[r]+W(r,u)$ (per proprietà 2.4).\\
+    Supponiamo, per assurdo, che tra $s$ e $u$ esista un cammino di peso minore di $d[u]$: esso deve contenere un arco che 
+    tra un vertice in $s$ e uno in $D$, poniamo siano $x$ il vertice in $S$ e $y$ quello in $D$. Questo cammino può essere 
+    visto come la concatenazione di tre cammini ($s\leadsto x\leadsto y \leadsto u$). Se $s\leadsto x\leadsto y \leadsto u$ 
+    è minimo, anche $s\leadsto x\leadsto y$ è minimo, quindi $d[y]=\delta(s,y)$. Si ottiene quindi $d[y]+W(y\leadsto u)\geq d[y]\geq d[u]$,
+    perchè $u$ è stato estratto e ha $d[u]$ minimo.\\
+    Quindi $W(s,\dots x,\dots y,\dots u)=d[y]+W(y\leadsto u)$ non può essere minore di $d[u]$.
+
+    \textbf{Caso 2}. Se $u$ è estratto con $d[u]=\infty$, allora (proprietà 3) non esiste alcun cammino tra $s$ e $u$.
+\end{proof} 
+\subsubsection{Ulteriori ottimizzazioni}
+L'algoritmo si può ottimizzare nel caso serva solamente trovare un cammino minimo tra due nodi, $s$ e $t$:
+\begin{itemize}
+    \item Ogni volta che si estrae un nodo $u$ da $D$, si può controllare se \textbf{coincide con $t$} e terminare l'algoritmo 
+    \item Poichè l'algoritmo esegue una BFS, si vanno a calcolare prima tutti i cammini di lunghezza inferiore a $\delta(s,u)$:
+    si possono usare le \textbf{euristiche} per individuare i nodi più promettenti.
+\end{itemize}
+Dati $s$ e $t$, si può eseguire l'algoritmo contemporaneamente sul grafo $G$ a partire da $s$ e sul grafo trasposto $G^T$ 
+a partire da $t$, alternando i passi. Quando si ottengono un cammino minimo da $s$ ed uno da $t$ ad uno stesso nodo $v$,
+questo cammino è un cammino da $s$ a $t$ in $G$.
+
+Teniamo in memoria la lunghezza del migior cammino così trovato, inizialmente $d=\infty$. Ogni volta che (in avanti) si percorre 
+un arco $(u,v)$ con nodo $u$ nero (in avanti) e nodo v nero (in indietro), se $d[u]+W(u,v)+d^T[v]<d$ si aggiorna $d$.
+Quando si estraggono un nodo $x$ (in avanti) e un nodo $y$ (in indietro) tali che $\delta(s,x)+\delta(y,t)>d$, allora il 
+cammino trovato di peso $d$ è il cammino minimo.
+\subsection{Minimo albero ricoprente}
+\subsubsection{Definizione}
+Dato un grafo $G$ non orientato e connesso, un albero ricoprente è un \textbf{sottografo} $T\subseteq G$ tale che $T$ è 
+un sottografo connesso aciclico e $T$ contiene tutti i vertici di $G$.
+
+Dato un grafo $G$ connesso, non orientato e pesato, il \textbf{minimo albero ricoprente} (MAR) per $G$ è un albero ricoprente 
+in cui la somma dei pesi degli archi nell'albero è minima.
+\subsubsection{Lemma del taglio}
+Un \textbf{taglio} è una partizione dell'insieme $V$ di tutti i nodi del grafo in due parti non vuote, $S$ e $V-S$. Si dice 
+che un arco $(u,v)$ \textbf{attraversa il taglio} se i suoi estremi $u$ e $v$ appartengono uno ad una parte ed uno all'altra.
+
+Sia $A$ un insieme di archi appartenenti ad un MAR di un grafo $G$. Consideriamo un taglio non attraversato da alcun arco 
+di $A$; siano $S$ e $V-S$ le sue due parti. Sia $(u,v)$ l'arco di peso minimo fra tutti gli archi del grafo che attraversano 
+il taglio (chiamato \textbf{arco leggero}): allora $(u,v)$ appartiene a un MAR che estende $A$, cioè l'insieme $A\cup \{(u,v)\}$
+è anch'esso un sottoinsieme di un MAR del grafo $G$. 
+
+\begin{proprietà}[1]
+    Se in un albero libero si elimina un arco, si ottengono due alberi.
+\end{proprietà}
+\begin{proprietà}[2]
+    Se si connettono due alberi, si ottiene un albero.
+\end{proprietà}
+\begin{proof}
+    Dato un grafo $G$, siano:
+    \begin{itemize}
+        \item $A$: insieme di archi di $G$ che supponiamo siano appartenenti ad uno stesso MAR di $G$
+        \item $(S,V-S)$: un taglio che non taglia nessun arco di $A$ (ma taglia archi di $G$)
+        \item $(u,v)$: arco di peso minimo fra quelli di $G$ tagliati dal taglio $(S,V-S)$
+    \end{itemize}
+    Un MAR di $G$ che estende $A$ è per definizione un albero di peso minimo fra tutti gli alberi ricoprenti  di $G$ che 
+    contengono $A$. Un albero ricoprente $AR$ contenente $A$ deve connettere tutti i nodi di $G$, quindi deve contenere 
+    un cammino tra $u$ e $v$. Poichè $u$ e $v$ si trovano da parti opposte del taglio, un tale cammino deve contenere almeno 
+    un arco $(x,y)$ che attraversa il taglio (possono anche coincidere). Se nell'albero $AR$ sostituiamo l'arco $(x,y)$
+    con l'arco $(u,v)$, si ottiene ancora un albero ricoprente di peso totale minore o uguale al peso di $AR$. 
+\end{proof}
+Poichè l'arco $(u,v)$ non appartiene ad $A$, l'insieme $A\cup \{(u,v)\}$ contiene un arco in più rispetto ad $A$. Aggiungendo 
+un arco alla volta si può quindi costruire un MAR ricoprente $G$.
+\begin{algorithm}
+    \caption{TROVA MAR(G)}
+    \begin{algorithmic}
+        \State $A\gets$ insieme di archi vuoto
+        \While{$A$ non contiene tutti i vertici di $G$}
+            \State trova un taglio non attraversato da alcun arco di $A$
+            \State aggiungi ad $A$ un arco di peso minimo fra quelli che attraversano il taglio 
+        \EndWhile
+    \end{algorithmic}
+\end{algorithm}
+\begin{theorem}[Unicità del MAR]
+    Se i pesi degli archi sono tutti distinti, il MAR è unico.
+\end{theorem}
+\begin{proof}
+    Per assurdo, supponiamo che $G$ abbia due minimi alberi ricoprenti distinti, $M1$ e $M2$. Poichè sono distinti, esiste 
+    almeno un arco in uno dei due alberi che non appartiene anche all'altro. Sia $e$ l'arco di peso minimo che appartiene 
+    solo ad uno dei due MAR (in questo caso, $M1$). Se si aggiunge $e$ ad $M2$, si crea un ciclo $C$. Poichè $M1$ non 
+    contiene cicli, nel ciclo c'è almeno un arco $e'$ che non appartiene a $M1$: questo arco ha peso maggiore di $e$ in 
+    quanto abbiamo scelto $e$ come arco di peso minimo che appartiene as uno dei due alberi ma non all'altro.\\
+    Togliendo $e'$ dal ciclo, si ottiene un albero $M'2$ diverso da $M2$; $M'2$ ha un peso minore di $M2$, fatto che contraddice 
+    l'ipotesi iniziale.
+\end{proof}
+\subsection{Algoritmo di Prim}
+Nei MAR si cerca non il nodo più vicino alla radice, ma il nodo più vicino all'albero già costruito; l'appetibilità è 
+rappresentata dalla stima della distanza del nodo dall'albero di visita.
+
+Non è possibile eliminare la gestione dei nodi neri in quanto bisogna controllare che tra gli adiacenti del nodo $u$ estratto 
+dalla coda non vi sia il genitore di $u$.
+\subsubsection{Confronto con l'algoritmo di Dijkstra}
+Nell'algoritmo di Prim, a differenza di quello di Dijkstra, $d[v]$ è il peso dell'arco minimo tra $v$ e l'albero di visita 
+già costruito nel momento in cui $v$ viene estratto, ma questo non impedisce che in un secondo momento possa esistere un 
+arco da un vertice chiuso a $v$ di peso minore di $d[v]$.
+L'aggiornamento dell'appetibilità è simile a quello di Dijkstra, ma $d[v]\leftarrow W(u,v)$.
+\begin{algorithm}
+    \caption{PRIM(G,W,s)}
+    \begin{algorithmic}
+        \State INIZIALIZZA(G)
+        \State $D\gets$ coda di priorità vuota 
+        \State $d[s]\gets 0$
+        \For{ogni $v$ in $V[G]$}
+            \State enqueue(D,v,d[v])
+            \State $def[v]\gets$ false
+        \EndFor
+        \While{NotEmpty(D)}
+            \State $u\gets$ dequeueMin
+            \State $S\gets S\cup \{u\}$
+            \State $def[v]\gets$ true 
+            \For{ogni $v$ adiacente ad $u$}
+                \If{$def[v]=$false and $d[v]>W(u,v)$}
+                \State $\pi[v]\gets u$
+                \State $d[v]\gets W(u,v)$
+                \State decreaseKey(D,v,d[v])
+                \EndIf 
+            \EndFor 
+        \EndWhile
+    \end{algorithmic}
+\end{algorithm}
+\subsubsection{Complessità}
+La complessità dell'algoritmo di Prim è la stessa di quella dell'algoritmo di Johnson, quindi $\mathcal{O}((m+n)\log n)$. 
+Siccome il grafo è connesso, $m\geq n-1$, quindi $\mathcal{O}(m\log n)$.
+\subsubsection{Correttezza}
+Sia $S$ l'albero di visita costruito. $S$ conterrà i nodi definitivi (quelli nell'albero) e $V-S$ contiene i nodi non 
+definitivi (non nell'albero). 
+
+Invarianti:
+\begin{itemize}
+    \item \textbf{IS}: tutti gli archi dell'albero $S$ appartengono ad un qualche minimo albero ricoprente dell'intero 
+    grafo $G$
+    \item \textbf{ID}: per ogni nodo $x$ non definitivo, $d[x]$ è il peso dell'arco più leggero che collega $x$ ad un nodo 
+    nero 
+\end{itemize}
+
+\begin{proof}
+    \textbf{Caso base}. Dopo la prima iterazione, c'è solo un nodo definitivo, $s$; l'albero $S$ non contiene nessun arco; 
+    ogni nodo $x$ adiacente a $s$ ha distanza $d[x]$ uguale al peso dell'arco $(s,x)$ e ogni altro nodo ha distanza uguale 
+    a $\infty$. Quindi, \textbf{IS} e \textbf{ID} sono soddisfatti.
+
+    \textbf{Passo}. Scegliamo un taglio che separi i nodi neri dagli altri: sicuramente non taglia nessun arco di $S$.
+    Scegliamo $u$ con $d[u]$ minore tra i nodi non neri. $S$ è sottoinsieme di un MAR, e per il lemma del taglio $(y,u)$ 
+    appartiene ad un MAR di $G$ che estende $S$ (IS si mantiene). Per ripristinare ID, basta controllare se il nuovo nodo 
+    $u$ avvicina qualche suo adiacente ad $S$.
+\end{proof}
 
 \end{document}
