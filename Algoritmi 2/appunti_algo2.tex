@@ -17,6 +17,7 @@
 \newtheorem*{theorem}{Teorema}
 \newtheorem*{proprietà}{Proprietà}
 \newtheorem*{lemma}{Lemma}
+\newtheorem*{corollary}{Corollario}
 \renewcommand{\listalgorithmname}{Algoritmi}
 
 \hypersetup{
@@ -1211,5 +1212,68 @@ Invarianti:
     appartiene ad un MAR di $G$ che estende $S$ (IS si mantiene). Per ripristinare ID, basta controllare se il nuovo nodo 
     $u$ avvicina qualche suo adiacente ad $S$.
 \end{proof}
+\subsection{Algoritmo di Kruskal}
+\subsubsection{Introduzione}
+Considerando la definizione di MAR e la struttura generica di un algoritmo greedy, è possibile definire un algoritmo che 
+costruisce iterativamente un MAR, a partire dalla foresta vuota alla quale si aggiungono via via degli archi con i seguenti 
+criteri:
+\begin{itemize}
+    \item \textbf{Appetibilità}: l'appetibilità di un arco è inversamente proporzionale al suo peso 
+    \item \textbf{Criterio di ammissibilità}: posso aggiungere un arco alla soluzione provvisoria solo se non crea cicli 
+    \item \textbf{Criterio per riconoscere la soluzione}: l'albero costruito è una soluzione solo se è connesso 
+\end{itemize}
+\subsubsection{Controllo dei cicli con UnionFind}
+L'algoritmo mantiene una foresta di alberi ($A$) che man mano vengono fusi dall'aggiunta di archi. Si crea un ciclo se 
+viene aggiunto un arco tra due nodi che appartengono allo stesso albero. Si può usare la \textbf{UnionFind} per identificare 
+gli insiemi di vertici che già appartengono allo stesso albero. Ogni qualvolta si vuole aggiungere un arco $(u,v)$, di 
+considera find(u) e find(v): se sono uguali, $u$ e $v$ appartengono allo stesso albero.
+
+\section{Programmazione dinamica}
+\subsection{Tecnica della programmazione dinamica}
+\subsubsection{Memoizzazione}
+La \textbf{memoizzazione} consiste nel memorizzare i valori via via calcolati da un algoritmo in una struttura di supporto.
+È possibile applicare la tecnica della memoizzazione a tutte quelle funzioni che non cambiano comportamento, sugli stessi 
+input, nel tempo.
+\subsubsection{Massimo Sottoinsieme Indipendente}
+Si consideri un grafo $G$ con struttura lineare. Ad ogni nodo $v_i$ è associato un peso non negativo $w_i$. 
+Dato un grafo con questa struttura, si determini il sottoinsieme indipendente di nodi del grafo ($S$) che ha massimo peso. 
+
+Questo problema gode della proprietà della sotostruttura ottima.
+\begin{theorem}[Sottostruttura ottima MSI]
+    Se $S_i$ è una soluzione ottima per $P_i$ (problema ristretto ai primi $i$ nodi), allora vale una delle seguenti affermazioni:
+    \begin{itemize}
+        \item $V_i \notin S_i$ e $S_i$ è anche una soluzione ottima per $P_{i-1}$
+        \item $V_i \in S_i$ e $S_i-\{V_i\}$ è una soluzione attima per $P_{i-2}$
+    \end{itemize}
+\end{theorem}
+\begin{proof}
+    Se $S_i$ è una soluzione ottima per $P_i$, allora sono possibili due casi.
+
+    \textbf{Caso 1}. Nel primo caso, $S_i$ è anche una soluzione ammissibile per il problema $P_{i-1}$, in quanto non contiene 
+    $V_i$. Se non fosse ammissibile per $P_{i-1}$, esisterebbe una soluzione $S'_{i-1}$ con peso maggiore di $S_i$, ma tale 
+    soluzione sarebbe una soluzione anche per $P_i$ e sarebbe migliore di $S_i$, contraddicendo l'ipotesi che $S_i$ sia 
+    la soluzione ottima per $P_i$.
+
+    \textbf{Caso 2}. 
+
+\end{proof}
+
+\begin{corollary}
+    Se $S_{i-1}$ è una soluzione ottima per $P_{i-1}$ e $S_{i-2}$ è una soluzione ottima per $P_{i-2}$, allora la soluzione 
+    per $P_i$ è la soluzione di peso massimo tra $S_{i-1}$ e $S_{i-2}\cup \{V_i\}$.
+\end{corollary}
+\begin{equation*}
+    \begin{split}
+        S_0=\emptyset\\
+        S_1=w_1\\
+        S_i = 
+        \left\{
+            \begin{array}{lr}
+                S_{i-1}&\text{se } W(S_{i-1})> W(S_{i-1})+w_i\\
+                S_{i-2}\cup V_i&\text{altrimenti}
+            \end{array}
+        \right\}
+    \end{split}
+\end{equation*}
 
 \end{document}
