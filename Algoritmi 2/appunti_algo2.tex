@@ -1238,7 +1238,7 @@ input, nel tempo.
 Si consideri un grafo $G$ con struttura lineare. Ad ogni nodo $v_i$ è associato un peso non negativo $w_i$. 
 Dato un grafo con questa struttura, si determini il sottoinsieme indipendente di nodi del grafo ($S$) che ha massimo peso. 
 
-Questo problema gode della proprietà della sotostruttura ottima.
+Questo problema gode della proprietà della sottostruttura ottima.
 \begin{theorem}[Sottostruttura ottima MSI]
     Se $S_i$ è una soluzione ottima per $P_i$ (problema ristretto ai primi $i$ nodi), allora vale una delle seguenti affermazioni:
     \begin{itemize}
@@ -1254,10 +1254,11 @@ Questo problema gode della proprietà della sotostruttura ottima.
     soluzione sarebbe una soluzione anche per $P_i$ e sarebbe migliore di $S_i$, contraddicendo l'ipotesi che $S_i$ sia 
     la soluzione ottima per $P_i$.
 
-    \textbf{Caso 2}. 
-
+    \textbf{Caso 2}. Nel secondo caso, $V_i$ fa parte di $S_i$, quindi $S'=S_i-\{V_i\}$ è una soluzione ottima per il problema 
+    $P_{i-2}$. $V_{i-1}$ non può appartenere a $S_i$ per la condizione di indipendenza sulle soluzioni. Per il problema 
+    $P_{i-2}$, $S'$ è una soluzione ottima: se non lo fosse, esisterebbe una soluzione $S''$ per $P_{i-2}$ di peso maggiore 
+    di $S'$. Allora $S''\cup \{V_i\}$ sarebbe una soluzione per $P_i$ e avrebbe peso maggiore di $S_i$ (assurdo). 
 \end{proof}
-
 \begin{corollary}
     Se $S_{i-1}$ è una soluzione ottima per $P_{i-1}$ e $S_{i-2}$ è una soluzione ottima per $P_{i-2}$, allora la soluzione 
     per $P_i$ è la soluzione di peso massimo tra $S_{i-1}$ e $S_{i-2}\cup \{V_i\}$.
@@ -1275,5 +1276,128 @@ Questo problema gode della proprietà della sotostruttura ottima.
         \right\}
     \end{split}
 \end{equation*}
+Si può calcolare $S_i$ a partire dai sottoproblemi $S_{i-1}$ e $S_{i-2}$.
+La proprietà di sottostruttura ottima è fondamentale per poter esprimere le funzioni in una forma che permetta la memoizzazione.
+\begin{algorithm}
+    \caption{MSI(n,A)}
+    \begin{algorithmic}
+        \State $A[0]\gets \{\}$
+        \State $A[1]\gets \{V_1\}$
+        \For{i=2...n}
+            \State $A[i]\gets$maxPeso($A[i-1], A[i-2]+V_i$)
+        \EndFor\\
+        \Return $A[n]$
+    \end{algorithmic}
+\end{algorithm}
+\subsection{Longest Common Subsequence}
+Data una sequenza $S:a_1,\dots,a_m$, una \textbf{sottosequenza} di $S$ è una qualsiasi sequenza ottenuta da un $S$ togliendo 
+alcuni elementi. La sottosequenza deve rispettare l'ordine degli elementi della sequenza originale.
+\subsubsection{Definizione del problema}
+Date due sequenze $S1$ e $S2$, trovare la più lunga sequenza $S3$ che è sottosequenza sia di $S1$ che di $S2$. Notatione:
+$S3=lcs(S1,S2)$.
+\subsubsection{Sottostruttura ottima}
+Siano $S1:a_1,\dots,a_m$ e $S2:b_1,\dots,b_n$ e $S3:c_1,\dots,c_k$; sono possibili due casi.
+
+\textbf{Caso 1}. Nel primo caso, $a_m=b_n$. $a_m$ sarà contenuto in $S3$, e occuperà l'ultima posizione di $S3$; quindi 
+$c_k=a_m=b_n$. Dato che gli ultimi elementi della sequenze iniziali già appartengono alla lcs, si possono non considerare
+nel confronto con il resto delle sequenze. Quindi $S3=lcs(S1_{m-1},S2_{n-1})+\{a_m\}$.
+
+\textbf{Caso 2}. Nel secondo caso, $a_m\neq b_n$. In questo caso, possiamo dure che $a_m$ o $b_n$ non saranno contenuti 
+in $S3$. Quindi, $S3$ sarà la sequenza più lunga tra $lcs(S1-\{a_m\},S2)$ e $lcs(S1,S2-\{b_n\})$.
+\subsubsection{Struttura per memoizzazione}
+Per memorizzare la soluzione di tutti i sottoproblemi, si usa una \textbf{matrice} (LCS) di $m+1$ righe e $n+1$ colonne. La 
+casella $LCS[i,j]$ contiene la più lunga sottosequenza comune dei due segmenti iniziali di lunghezze rispettive $i$ e $j$.
+La casella 0-esima contiene la più lunga sottosequenza dei prefissi vuoti.
+\subsubsection{Ottimizzazioni}
+Per ottimizzare l'operazione di controllo sulla lunghezza delle lcs memoizzate, si può definire una nuova matrice $L$ che 
+mantenga in $L[i,j]$ la lunghezza delle lcs memoizzate.
+Ogni volta, $LCS[i,j]$ è uguale a $LCS[i-1,j-1]+a[i-1]$ oppure $LCS[i-1,j]$ oppure $LCS[i,j-1]$: è possibile utilizzare 
+semplicemente delle frecce per indicare come si sta costruendo $LCS[i,j]$, senza dover copiare ogni volta l'elemento precendente.
+\begin{algorithm}
+    \caption{LCS(a,b,m,n)}
+    \begin{algorithmic}
+        \State $LCS\gets$ nuova matrice di dimensioni $m+1*n+1$
+        \State $L\gets$ nuova matrice di dimensioni $m+1*n+1$
+        \For{$i=0\dots m$}
+            \State $LCS[i,0]\gets []$  
+            \State $L[i,0]\gets 0$
+        \EndFor 
+        \For{$i=1\dots m$}
+            \For{$j=1\dots m$}
+                \If{$a[i-1]==b[j-1]$}
+                    \State $LCS[i,j]\gets \nwarrow$
+                    \State $L[i,j]\gets L[i-1,j-1]+1$
+                \ElsIf{$L[i-1,j]>L[i,j-1]$}
+                    \State $LCS[i,j]\gets \uparrow$
+                    \State $L[i,j]\gets L[i-1,j]$
+                \Else 
+                    \State $LCS[i,j]\gets \leftarrow$
+                    \State $L[i,j]\gets L[i,j-1]$
+                \EndIf 
+            \EndFor 
+        \EndFor\\
+        \Return $LCS[m,n]$
+    \end{algorithmic}
+\end{algorithm}
+\subsubsection{Complessità}
+Lc costruzione della matrice ha costo $\mathcal{O}(mn)$, così come il suo popolamento. La ricostruzione della soluzione 
+ha costo $\mathcal{O}(m+n)$: in totale, $\mathcal{O}(mn)$.
+\subsection{Zaino 0-1}
+Simile al problema dello zaino frazionario, ma con oggetti non frazionabili.
+\subsubsection{Costruzione di algoritmi di programmazione dinamica}
+Passi da seguire per cotruire un algoritmo di programmazione dinamica:
+\begin{enumerate}
+    \item descrivere la \textbf{struttura dati} necessaria per la \textbf{memoizzazione}
+    \item definire i \textbf{casi base} e le loro soluzioni banali
+    \item scrivere l'algoritmo che inizializzi la struttura di memoizzazione seguendo i casi base e successivamente la 
+    popoli in maniera bottom-up; infine restituire la soluzione 
+\end{enumerate}
+\subsubsection{Costruzione zaino 0-1}
+Equazione ricorsiva per l'algoritmo:
+\begin{equation*}
+    V(i,j)=
+    \left\{
+        \begin{array}{lr}
+            V(i-1,j)&\text{se } j<p_i\\
+            max(V(i-1,j), v(i-1,j-p_i)+v_i)&\text{altrimenti}
+        \end{array}
+    \right\}
+\end{equation*}
+$V(i,j)$ ha due parametri: $i$ è l'ultimo oggetto considerato, $j$ è la capienza. La struttura di memoizzazione è quindi 
+una matrice; la soluzione sarà contenura in $V[n,P]$. La matrice avrà dimensioni $(n+1)*(P+1)$ per includere i casi base. 
+
+Casi base:
+\begin{itemize}
+    \item $i=0$: nessun oggetto considerato, $V[0,j]$ per ogni $0\leq j\leq P$
+    \item $j=0$: capienza 0, $V[i,0]=0$ per ogni $0\leq i\leq n$
+\end{itemize}
+Per sapere quali oggetti appartengono alla soluzione, basta utilizzare una matrice ausiliaria $K$.
+\begin{algorithm}
+    \caption{ZAINO(n,P,v[],p[])}
+    \begin{algorithmic}
+        \State $V[]\gets$ nuova matrice $(n+1)*(P+1)$
+        \State $K[]\gets$ nuova matrice $(n+1)*(P+1)$
+        \For{$i=0\dots n$}
+            \State $V[i,0]=0$
+            \State $K[i,0]=0$
+        \EndFor
+        \For{$j=0\dots n$}
+            \State $V[0,j]=0$
+            \State $K[0,j]=0$
+        \EndFor 
+        \For{$i=1\dots n$}
+            \For{$j=1\dots P$}
+                \State $V[i,j]=V[i-1,j]$
+                \State $K[i,j]=0$
+                \If{$V[i,j]<V[i-1,j-p[i]]+v[i]$}
+                    \State $V[i,j]<V[i-1,j-p[i]]+v[i]$
+                    \State $K[i,j]=1$
+                \EndIf 
+            \EndFor 
+        \EndFor\\
+        \Return $V[n,P]$
+    \end{algorithmic}
+\end{algorithm}
+\section{UnionFind}
 
 \end{document}
