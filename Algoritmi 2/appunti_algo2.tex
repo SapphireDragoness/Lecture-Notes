@@ -1227,6 +1227,28 @@ L'algoritmo mantiene una foresta di alberi ($A$) che man mano vengono fusi dall'
 viene aggiunto un arco tra due nodi che appartengono allo stesso albero. Si può usare la \textbf{UnionFind} per identificare 
 gli insiemi di vertici che già appartengono allo stesso albero. Ogni qualvolta si vuole aggiungere un arco $(u,v)$, di 
 considera find(u) e find(v): se sono uguali, $u$ e $v$ appartengono allo stesso albero.
+\begin{algorithm}
+    \caption{KRUSKAL CON UNIONFIND(G)}
+    \begin{algorithmic}
+        \State $A\gets$ insieme di archi vuoto 
+        \State oridina gli archi in una sequenza $S$ in oridne non decrescente di peso 
+        \State crea una UnionFind contenente i vertici di $G$ come insiemi iniziali 
+        \For{ongi arco $(u,v)\in S$}
+            \If{$find(u)\neq find(v)$}
+                \State aggiungi $(u,v)$ ad $A$
+                \State union(u,v)
+            \EndIf 
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+\subsubsection{Complessità}
+
+\subsubsection{Correttezza}
+\paragraph*{Invariante}
+
+\paragraph*{Caso base}
+
+\paragraph*{Passo}
 
 \section{Programmazione dinamica}
 \subsection{Tecnica della programmazione dinamica}
@@ -1399,5 +1421,110 @@ Per sapere quali oggetti appartengono alla soluzione, basta utilizzare una matri
     \end{algorithmic}
 \end{algorithm}
 \section{UnionFind}
+\subsection{Definizione del problema}
+Il problema è mantenere una collezione di insiemi disgiunti sulla quale siano possobili le seguenti operazioni: 
+\begin{itemize}
+    \item \textbf{union(A,B)}: fonde gli insiemi $A$ e $B$ in un unico insieme $A \cup B$
+    \item \textbf{find(x)}: restituisce il nome dell'insieme contenente l'elemento $x$
+    \item \textbf{makeSet(x)}: crea il nuovo insieme $\{x\}$, avente $x$ come unico elemento
+\end{itemize}
+Gli insiemi rimangono sempre disgiunti. Per distinguere tra diversi insiemi, si può individuare un elemento rappresentante,
+cosicchè union(a,b) fonda i due insiemi rappresentati dagli elementi $a$ e $b$.
+\subsection{Implementazione}
+2 tipi di approcci fondamentali:
+\begin{itemize}
+    \item privilegiare esecuzione efficiente dell'operazione di find (\textbf{QuickFind})
+    \item privilegiare esecuzione efficiente dell'operazione di union (\textbf{QuickUnion})
+\end{itemize}
+\subsubsection{QuickFind}
+Gli approcci di tipo \textbf{QuickFind} utilizzano alberi con due livelli per realizzare la UnionFind. La radice di ogni 
+albero contiene il rappresentante di un insieme, le foglie rappresentano gli elementi dell'insieme. Il rappresentante è 
+contenuto sia nella radice sia in una foglia.
 
+Operazioni su QuickFind:
+\begin{itemize}
+    \item makeSet(x): ccrea un nuovo albero composto da una radice ed una foglia, ed in entrambi posiziona $x$. Costo: 
+    $\mathcal{O}(1)$.
+    \item find(x): accede alla foglia corrispondente all'elemento $x$, risale di un livello incontrando la radice e restituisce 
+    l'elemento contenuto in essa. $\mathcal{O}(1)$.
+    \item union(a,b): considera l'albero $A$ contenente $a$ e $B$ contenente $b$, per ogni forglia di $B$, sostituisce il 
+    puntatore al padre con un puntatore alla radice di $A$ e cancella la radice di $B$. $\mathcal{O}(n)$.
+\end{itemize}
+\subsubsection{QuickUnion}
+Gli approcci di tipo \textbf{QuickUnion} utilizzano alberi con più di 2 livelli per rappresentare le UnionFind. La radice 
+di ogni albero contiene il rappresentante di un insieme. I nodi rappresentano gli elementi dell'insieme. Il rappresentante 
+è conenuto solamente nella radice.
+
+Operazioni su QuickUnion:
+\begin{itemize}
+    \item makeSet(x): crea un nuovo albero composto da un unico nodi contenente $x$. Costo: $\mathcal{O}(1)$.
+    \item find(x): accede alla foglia corrispondente all'elemento $x$, risale fino alla radice dell'albero e restituisce 
+    l'elemento contenuto nella radice. Costo: $\mathcal{O}(n)$.
+    \item union(a,b): considera l'albero $A$ contenente $a$ e $B$ contenente $b$, rende la radice di $B$ figlio della radice 
+    di $A$. Costo: $\mathcal{O}(1)$.
+\end{itemize}
+\subsection{Complessità e costo ammortizzato}
+Senza bilanciamenti sull'albero, bisogna considerare il caso peggiore, $\mathcal{O}(n)$.
+Ciò che interessa è il costo totale delle operazioni, ossia il \textbf{costo ammortizzato}.
+\subsubsection{Metodo dei crediti}
+Il \textbf{metodo dei crediti} viene usato per determinare il costo ammotizzato di una sequenza di operazioni, senza andare 
+nel dettaglio. 1 credito vale $\mathcal{O}(1)$ passi di esecuzione. Le funzioni meno costose depositano crediti sugli oggetti,
+ed i crediti possono essere prelevati dalle funzioni più costose. Il costo ammortizzato è dato dalla somma di tutti i costi 
+diviso per il numero di operazioni.
+
+Vediamo $n$ makeSet e $n-1$ makeUnion analizzati con il metodo dei crediti:
+\begin{itemize}
+    \item \textbf{Numero massimo di cambi padre}. Ad ogni makeUnion, se una foglia cambia padre, il nuovo insieme che la
+    contiene sarà grande almeno il doppio di quello di partenza. Quindi la foglia dopo $k$ cambi di padre apparterrà ad 
+    un insieme di $2^k$ elementi. Siccome il numero totale di elementi è $n$, $2^k\leq n$, quindi $k\leq \log_2n$.
+    \item \textbf{Deposito crediti}. Assegniamo ad ogni makeSet un costo aggiuntivo di $\log_2n$ crediti. Con $n$ makeSet, 
+    si accumulano $n\log_2n$ crediti.
+    \item \textbf{Costo union}. Ogni union consuma 1 credito per il costo dell'operazione d cambio del padre. Poichè i cambi 
+    di padre sono limitati a $\log_2n$ per foglia, si consumano un totale di $n\log_2n$ crediti.
+\end{itemize}
+Costo di $m$ find, $n$ makeSet e $n-1$ makeUnion: $\mathcal{O}(m+n\log_2n)$.
+\subsection{Bilanciamento su QuickFind}
+Per ridurre il costo dell'operazione di union, si considera come insieme primario quello con cardinalità maggiore, e modificare 
+il padre delle foglie dell'altro insieme. Il valore \textbf{size(x)} memorizza la cardinalità dell'insieme $x$: quando 
+viene svolta la union, si controlla size(x) per identificare l'insieme primario.
+\subsection{Bilanciamento su QuickUnion}
+Sono possibili 2 ottimizzazioni sulla QuickUnion:
+\begin{itemize}
+    \item \textbf{Union by rank}: nell'unione degli insiemi $A$ e $B$, rendiamo la radice dell'albero più basso figlia della 
+    radice dell'albero più alto 
+    \item \textbf{Union by size}: nell'unione degli insiemi $A$ e $B$, rendiamo la radice dell'albero con meno nodi figlia 
+    della radice dell'albero con più nodi 
+\end{itemize}
+\subsubsection{QuickUnion by rank}
+Introduciamo un parametro \textbf{rank} che tenga conto dei livelli dell'albero. Quando facciamo una union, se 
+$rank(B)<rank(A)$, rendiamo la radice di $B$ figlio della radice di $A$; per $rank(A)<rank(B)$, viceversa.
+
+Dimostriamo che l'albero con radice $x$ ha almeno $2^{rank(x)}$ nodi.
+\begin{proof}
+    \textbf{Caso base}. $rank(A)=0$ ed un solo nodo. Allora $|A|=1\geq 2^0=2^{rank(A)}$
+
+    \textbf{Passo}. Dopo ogni union:
+    \begin{itemize}
+        \item se $rank(A)>rank(B)$: $|A\cup B|=|A|+|B|=2^{rank(A\cup B)}$
+        \item se $rank(B)>rank(A)$: simmetrico al precedente 
+        \item se $rank(A)=rank(B)$: $|A\cup B|=|A|+|B|=2^{rank(A\cup B)}$
+    \end{itemize}
+    Il numero massimo di nodi è $n$, quindi $2^{rank(x)}\leq n$ e $rank(x)\leq \log_2n$. La find richiede tempo $\mathcal{O}(\log n)$.
+\end{proof}
+\subsubsection{QuickUnion by size}
+Utilizziamo il parametro $size(x)=$numero di nodi dell'albero di cui $x$ è radice.
+Quando eseguiamo una union, se $size(B)\leq size(A)$ rendiamo la radice di $B$ figlio della radice di $A$, invece se 
+$size(B)<size(A)$ rendiamo la radice di $A$ figlio della radice di $B$, e scambiamo le due radici. Infine, $size(A)=size(A)+size(B)$.
+\subsection{Compressione nell'operazione find}
+Le euristiche di compressione vengono applicate durante l'esecuzione di una find, ed hanno lo scopo di diminuire l'altezza
+dell'albero. Ne vediamo tre tipi:
+\begin{itemize}
+    \item \textbf{path compression}: ad ogni find prendiamo il reiferimento di ogni nodo radice e poi li facciamo diventare 
+    figli dell'ultimo nodo radice
+    \item \textbf{path splitting}: rendo un nodo figlio di suo nonno
+    \item \textbf{path halving}: come path halving ma con un solo puntatore
+\end{itemize}
+Combinando le euristiche di bilanciamento e compressione, una qualunque sequenza di $n$ makeSet, $m$ find e $n-1$ union 
+può essere eseguita in $\mathcal{O}((n+m)log^*)$.
+\section{}
 \end{document}
