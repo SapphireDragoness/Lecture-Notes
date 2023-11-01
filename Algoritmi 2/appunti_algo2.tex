@@ -1242,14 +1242,18 @@ considera find(u) e find(v): se sono uguali, $u$ e $v$ appartengono allo stesso 
     \end{algorithmic}
 \end{algorithm}
 \subsubsection{Complessità}
-s
+La complessità è pari a $\mathcal{O}(mlogn)$, come l'algoritmo di Prim.
 \subsubsection{Correttezza}
 \paragraph*{Invariante}
-
+Gli archi in $A$ definiscono una foresta che è sottoinsieme di un certo MAR.
 \paragraph*{Caso base}
-
+L'invariante è banalmente vero all'istante iniziale, quando $A$ non contiene nessun arco.
 \paragraph*{Passo}
-
+\subparagraph*{Caso 1}
+Si sceglie $(u,v)$ come l'arco più leggero non ancora considerato. Nel primo caso, $u$ e $v$ appartengono allo stesso 
+albero; l'aggiunta di $(u,v)$ creerebbe un ciclo, quindi viene scartato.
+\subparagraph*{Caso 2}
+Nel secondo caso, $u$ e $v$ appartengono a due alberi distinti $T_1$ e $T_2$.
 \section{Programmazione dinamica}
 \subsection{Tecnica della programmazione dinamica}
 \subsubsection{Memoizzazione}
