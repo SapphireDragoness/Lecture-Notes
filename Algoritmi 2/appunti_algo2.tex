@@ -1253,7 +1253,10 @@ L'invariante è banalmente vero all'istante iniziale, quando $A$ non contiene ne
 Si sceglie $(u,v)$ come l'arco più leggero non ancora considerato. Nel primo caso, $u$ e $v$ appartengono allo stesso 
 albero; l'aggiunta di $(u,v)$ creerebbe un ciclo, quindi viene scartato.
 \subparagraph*{Caso 2}
-Nel secondo caso, $u$ e $v$ appartengono a due alberi distinti $T_1$ e $T_2$.
+Nel secondo caso, $u$ e $v$ appartengono a due alberi distinti $T_1$ e $T_2$. Consideriamo un taglio che non tagli nessun 
+arco di $A$, e che abbia $T_1$ e $T_2$ da parti opposte, tagliando l'arco $(u,v)$. L'arco $(u,v)$ è l'arco di peso minimo 
+fra tutti gli archi che attraversano il taglio. Quindi, per il lemma del taglio, sappiamo che $(u,v)\cup A$ è un sottoinsieme 
+di un MAR.
 \section{Programmazione dinamica}
 \subsection{Tecnica della programmazione dinamica}
 \subsubsection{Memoizzazione}
@@ -1530,5 +1533,136 @@ dell'albero. Ne vediamo tre tipi:
 \end{itemize}
 Combinando le euristiche di bilanciamento e compressione, una qualunque sequenza di $n$ makeSet, $m$ find e $n-1$ union 
 può essere eseguita in $\mathcal{O}((n+m)log^*)$.
-\section{}
+\section{Programmazione dinamica applicata ai grafi}
+\subsection{Algoritmo di Bellman-Ford}
+\subsubsection{Condizione di Bellman}
+Per ogni arco $(u,v)$ e per ogni vertice $s$ si ha $\delta(s,v)\leq \delta(s,u)+W(u,v)$, per la \textbf{disuguaglianza 
+triangolare delle distanze}.
+\begin{lemma}
+    Un arco $(u,v)$ appartiene ad un cammino minimo da $s$ a $v$ se e solo se $u$ è raggiungibile da $s$ e la condizione 
+    di Bellman è soddisfatta con l'uguaglianza per $(u,v)$, cioè se vale $\delta(s,v)=\delta(s,u)+W(u,v)$.
+\end{lemma}
+\subsubsection{Tecnica del rilassamento}
+Consideriamo una \textbf{stima} $D(s,v)$ \textbf{per eccesso di} $\delta(s,v)$, che sia il peso di un cammino sul grafo 
+tra $s$ e $v$ (quindi, $D(s,v)\geq \delta(s,v)$).
+Supponiamo esista un arco $(u,v)$ per cui valga $D(s,v)>D(s,u)+W(u,v)$. Per rendere vera la disuguaglianza triangolare, 
+possiamo decrementare $D(s,v)$ con l'assegnazione $D(s,v)\gets D(s,u)+W(u,v)$: questa operazione è detta \textbf{rilassamento 
+dell'arco}.
+
+Applicando esaustivamente l'operazione di rilassamento, per grafi senza cicli negativi, $D(s,v)$ converge a $\delta(s,v)$.
+Nel momento in cui $D(s,v)=\delta(s,v)$, l'ultimo arco per cui è stato applicato il rilassamento è quello per cui la condizione
+di Bellman vale con l'uguaglianza e $(u,v)$ appartiene ad un cammino minimo tra $s$ e $v$. 
+\subsubsection{Programmazione dinamica per Bellman-Ford}
+\begin{proprietà}
+    Un sottocammino di un cammino minimo è un cammino minimo.
+\end{proprietà}
+Sia $\langle s,v_1,v_2,\dots,v_k \rangle$ un cammino minimo da $s$ a $v_k$. Grazie alla condizione di Bellman, possiamo 
+scrivere: $\delta(s,v_k)=\delta(s,v_{k-1})+W(v_{k-1},v_k)$.
+
+Sappiamo che il cammino minimo $\langle s,v_1,v_2,\dots,v_{k-1} \rangle$ avrà lunghezza $k-1$, quindi il sottoproblema di 
+trovare $\langle s,v_1,v_2,\dots,v_{k-1} \rangle$ dovrà considerare solo cammini di lunghezza $k-1$ e così via fino a $k=0$.
+
+Usiamo le stime $D(s,v)$ come struttura di memiozzazione, ed inizializziamo $D(s,s)=0$ e $D(s,v)=\infty$ per tutti gli 
+altri vertici $v$ del grafo, rispettando la condizione per cui $D(s,v)\geq \delta(s,v)$.
+
+Applicando il rilassamento su tutti gli archi una sola volta, troveremo: $D(s,v_1)>D(s,s)+W(s,v_1)$ (poichè $W(s,v_1)<\infty$).
+Il rilassamento porrà $D(s,v_1)=D(s,s)+W(s,v_1)$. Ma $D(s,s)=\delta(s,s)$, e $\langle s,v_1 \rangle$ è un cammino minimo, 
+quindi $D(s,v_1)=\delta(s,s)+W(s,v_1)=\delta(s,v_1)$.  
+
+Iterando il processo, al k-esimo passo avremo $D(s,v_k)=\delta(s,v_k)$.
+Un cammino minimo semplice può contenere al massimo tutti i vertici del grafo, quindi $n-1$ archi. Di conseguenza, bastano 
+$n-1$ iterazioni per trovare i cammini minimi da $s$ a tutti i vertici del grafo.
+\begin{algorithm}
+    \caption{BELLMAN-FORD(G,W,s)}
+    \begin{algorithmic}
+        \State INIZIALIZZA(G)
+        \State $d[s]\gets 0$
+        \For{$i=1\dots n-1$}
+            \For{ogni $(u,v)$ in $G$}
+                \If{$d[v]>d[u]+W(u,v)$}
+                    \State $\pi[v]\gets u$
+                    \State $d[v]\gets d[u]+W(u,v)$
+                \EndIf 
+            \EndFor 
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+\subsubsection{Correttezza}
+Sia $\delta(s,v_k)$ a distanza da $s$ a $v_k$.
+
+Definiamo l'invariante \textbf{KPATH}: dopo la k-esima iterazione del ciclo esterno, si ha $d[v_k]=\delta(s,v_k)$ per ogni 
+nodo $v_k$ per cui il cammino minimo da $s$ a $v_k$ è composto al più da $k$ archi.
+\begin{proof}
+    \textbf{Base}. per $k=0$, per il cammino da $s$ a $s$, $d[s]=0$ e $d[u]=\infty$ per tutti gli altri nodi $u$. 
+    \textbf{Passo}. Dimostriamo che KPATH sia vero anche dopo $k+1$ iterazioni. Sia $v_{k+1}$ un nodo il cui cammino minimo 
+    $s\leadsto v_k\leadsto v_{k+1}$ è composto da $k+1$ archi. Sappiamo che $\delta(s,v_{k+1})=\delta(s,v_k)+W(v_k,v_{k+1})$
+    e $d[v_k]=\delta(s,v_k)$. Quindi: $\delta(s,v_{k+1})=d[v_k]+W(v_k,v_{k+1})$.
+
+    Al passo $k+1$, ci sono due casi:
+    \begin{itemize}
+        \item $d[v{k+1}]$ viene aggiornata, allora $d[v{k+1}]=\delta(s,v_{k+1})$
+        \item $d[v{k+1}]$ non viene aggiornata, poichè $d[v{k+1}]$ è il peso di un cammino da $s$ a $v_{k+1}$ in $G$, 
+        $d[v{k+1}]\geq \delta(s,v_{k+1})$, e poichè non è stata aggiornata, $d[v{k+1}]=\delta(s,v_{k+1})$.
+    \end{itemize}
+    I cammini restituiti dall'algoritmo sono effettivamente quelli minimi.
+\end{proof}
+\subsubsection{Complessità}
+L'algoritmo da $n-1$ iterazioni del ciclo esterno. Per ogni iterazione, l'algoritmo considera tutti gli archi del grafo 
+con una serie di operazioni di costo $\mathcal{O}(1)$. La complessità è quindi $\mathcal{O}(n*m)$
+
+L'algoritmo di Dijkstra è più efficiente perchè sceglie $(u,v)$ garantendo che $(u,v)$ sia l'arco che minimizza $D(s,u)+W(u,v)$
+tra tutti gli archi nei quali $u$ è stato raggiunto da un cammino minimo e $v$ no, compiendo $\mathcal{O}(m)$ operazioni 
+di rilassamento; invece l'algoritmo di Bellman-Ford sceglie $(u,v)$ tra tutti gli archi presenti in $G$.
+\subsubsection{Trovare cicli negativi}
+Se un cammino minimo contiene vertici ripetuti, vuol dire che nel grafo esiste un ciclo.
+Se il ciclo ha \textbf{peso positivo}, il cammino minimo è quello ottenuto percorrendolo una sola volta.
+Se il ciclo ha \textbf{peso 0}, viene rilevato il cammino minimo ottenuto percorrendo il ciclo una volta sola.
+Se il ciclo ha \textbf{peso negativo}, ogni volta che viene percorso viene trovato un cammino minimo più lungo e di peso 
+minore: per i cicli negativi non sarà mai possibile trovare una soluzione ottima.
+\begin{algorithm}
+    \caption{BF-NEG(G,W,s)}
+    \begin{algorithmic}
+        \State INIZIALIZZA(G)
+        \State $d[s]\gets 0$
+        \For{$i=1\dots n-1$}
+            \For{ogni $(u,v)$ in $G$}
+                \If{$d[v]>d[u]+W(u,v)$}
+                    \State $\pi[v]\gets u$
+                    \State $d[v]\gets d[u]+W(u,v)$
+                \EndIf 
+            \EndFor
+        \EndFor
+        \For{ogni $(u,v)$ in $G$}
+            \If{$d[v]>d[u]+W(u,v)$}\\
+                \Return{errore}
+            \EndIf
+        \EndFor 
+    \end{algorithmic}
+\end{algorithm}
+Per rilevare cicli negativi basta controllare se l'n-esima iterazione aggiorna qualche distanza: se così succede, esiste 
+un ciclo negativo.
+\subsubsection{Ottimizzazione di BF per DAG}
+L'algoritmo di Bellman-Ford compie molti passi di rilassamento inutili. In particolare, l'assegnazione 
+$D(s,v_k)\gets D(s,v_{k-1})+W(v_{k-1},v_k)$ è inutile se $D(s,v_{k-1})>\delta(s,v_{k-1})$: infatti, sarà poi necessario 
+almeno un ulteriore rilassamento dello stesso arco per calcolare $\delta(s,v_{k})$.
+Se un grafo è un DAG, si può calcolare prima un ordinamento topologico, e poi passare tutti gli archi una sola volta seguendo
+l'ordine topologico.
+\begin{algorithm}
+    \caption{BF-DAG(G,W,s)}
+    \begin{algorithmic}
+        \State INIZIALIZZA(G)
+        \State $d[s]\gets 0$
+        \State $ord\gets$ TOPOLOGICAL-SORT(G)
+        \For{$i=1\dots n-1$}
+            \For{ogni $(ord[i],v)$}
+                \If{$d[v]>d[ord[i]]+W(ord[i],v)$}
+                    \State $\pi[v]\gets ord[i]$
+                    \State $d[v]\gets d[ord[i]]+W(ord[i],v)$
+                \EndIf 
+            \EndFor
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+Ha complessità $\mathcal{O}(m+n)$.
+
 \end{document}
