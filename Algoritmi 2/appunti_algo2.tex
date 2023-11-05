@@ -1664,5 +1664,13 @@ l'ordine topologico.
     \end{algorithmic}
 \end{algorithm}
 Ha complessità $\mathcal{O}(m+n)$.
+\subsection{Algoritmo di Floyd-Warshall}
+\subsubsection{Distanze e cammini minimi k-vincolati}
+Denotiamo i vertici del grafo come $v1,v2,\dots,v_n$. Per un $k$ fissato con $1\leq k\leq n$ definiamo: \textbf{cammino 
+minimo k-vincolato} tra $x$ e $y$ (denotato con $\pi{^k}_{xy}$) il cammino che va da $x$ a $y$ di costo minimo tra tutti
+quelli che non contengono i vertici $\{v_{k+1},\dots,v_n\}$ e \textbf{distanza k-vincolata} (denotata con $d{^k}_{xy}$), 
+che è il peso $W$ se $\pi{^k}_{xy}$ esiste, $\infty$ altrimenti.
 
+Un cammino minimo k-vincolato è un cammino minimo in un \textbf{grafo k-vincolato} $G_k$: varrà quindi la proprietà della 
+sottostruttura ottima e sarà possibile applicare tecniche di programmazione dinamica.
 \end{document}
