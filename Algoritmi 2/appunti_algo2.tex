@@ -1667,10 +1667,32 @@ Ha complessità $\mathcal{O}(m+n)$.
 \subsection{Algoritmo di Floyd-Warshall}
 \subsubsection{Distanze e cammini minimi k-vincolati}
 Denotiamo i vertici del grafo come $v1,v2,\dots,v_n$. Per un $k$ fissato con $1\leq k\leq n$ definiamo: \textbf{cammino 
-minimo k-vincolato} tra $x$ e $y$ (denotato con $\pi{^k}_{xy}$) il cammino che va da $x$ a $y$ di costo minimo tra tutti
-quelli che non contengono i vertici $\{v_{k+1},\dots,v_n\}$ e \textbf{distanza k-vincolata} (denotata con $d{^k}_{xy}$), 
-che è il peso $W$ se $\pi{^k}_{xy}$ esiste, $\infty$ altrimenti.
+minimo k-vincolato} tra $x$ e $y$ (denotato con $\pi^k_{xy}$) il cammino che va da $x$ a $y$ di costo minimo tra tutti
+quelli che non contengono i vertici $\{v_{k+1},\dots,v_n\}$ e \textbf{distanza k-vincolata} (denotata con $d^k_{xy}$), 
+che è il peso $W$ se $\pi^k_{xy}$ esiste, $\infty$ altrimenti.
 
 Un cammino minimo k-vincolato è un cammino minimo in un \textbf{grafo k-vincolato} $G_k$: varrà quindi la proprietà della 
-sottostruttura ottima e sarà possibile applicare tecniche di programmazione dinamica.
+sottostruttura ottima e sarà possibile applicare tecniche di programmazione dinamica. 
+
+
+Per ogni $1\leq k\leq n$ e per ogni coppia $x,y$ definiamo l'equazione ricorsiva: 
+\begin{equation*}
+    d^k_{xy}=min(d^{k-1}_{xy}, d^{k-1}_{xv_k}+d^{k-1}_{v_ky})
+\end{equation*}
+In poche parole, preso un $k$, si va a vedere se la concatenazione dei cammini minimi da $x$ a $v_k$ e da $v_k$ a $y$ ha 
+peso minore del cammino da $x$ a $y$ e si verifica la disuguaglianza triangolare: se \textbf{non} si verifica, si applica 
+un rilassamento facendo passare il cammino minimo attraverso $v_k$.
+Abbiamo due casi:
+\begin{itemize}
+    \item $v_k\notin\pi^k_{xy}$: allora $\pi^k_{xy}$ è anche un cammino minimo $(k-1)$ vincolato; se così non fosse, esisterebbe un 
+    cammino minimo $(k-1)$ vincolato di peso minore, ma questo sarebbe anche un cammino k-vincolato con peso minore di $\pi^k_{xy}$
+    (assurdo)
+    \item $v_k\in\pi^k_{xy}$: i sottocammini da $x$ a $v_k$ e da $v_k$ a $y$ sono cammini minimi k-vincolati (per sottostruttura 
+    ottima); poichè non contengono internamente $v_k$, essi sono anche cammini $(k-1)$ vincolati.
+\end{itemize}
+\subsubsection{Struttura di memoizzazione}
+Per modellare, per ogni coppia di vertici $x$ e $y$, la lunghezza del cammino provvisorio tra i due vertici, per ogni 
+k-esima iterazione dell'algoritmo, servono $n$ matrici $D^k$ di dimensione $n\times n$ (lo spazio richiesto è $\mathcal{O}(n^3)$). 
+
+$D^{k-1}[i,j]$ contiene la distanza tra il vertice $v_i$ e $v_j$ in un grafo $G^{k-1}$ in cui 
 \end{document}
