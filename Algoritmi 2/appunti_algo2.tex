@@ -1695,4 +1695,75 @@ Per modellare, per ogni coppia di vertici $x$ e $y$, la lunghezza del cammino pr
 k-esima iterazione dell'algoritmo, servono $n$ matrici $D^k$ di dimensione $n\times n$ (lo spazio richiesto è $\mathcal{O}(n^3)$). 
 
 $D^{k-1}[i,j]$ contiene la distanza tra il vertice $v_i$ e $v_j$ in un grafo $G^{k-1}$ in cui 
+$V^{k-1}=G-\{v_k,v_{k+1},\dots,v_n\}\cup\{v_i,v_j\}$. 
+
+$D^k[i,j]$ contiene la distanza tra il vertice $v_i$ e $v_j$ in un grafo $G^k$ in cui 
+$V^k=G-\{v_{k+1},\dots,v_n\}\cup\{v_i,v_j\}$.
+
+Avendo aggiunto solo $v_k$ rispetto al grafo precedente, le uniche strade diverse passano da $v_k$. Il miglior cammino da 
+$v_i$ a $v_j$ che passa da $v_k$ in $G^k$ è la concatenazione del miglior cammino da $v_i$ a $v_k$ ed il migliore da $v_k$
+a $v_j$: questi sono già presenti nella matrice $D^{k-1}$.
+
+In $G^k$, il miglior cammino da $v_i$ a $v_j$ è quello di distanza minore tra $D^{k-1}[i,j]$ e $D^{k-1}[i,k]+D^{k-1}[k,j]$.
+\subsubsection{Algoritmo di Floyd-Warshall}
+È possibile usare un'unica matrice, aggiornata ad ogni iterazione, in quanto $D^{k-1}[i,k]$ e $D^{k-1}[k,j]$ non cambieranno 
+mai valore tra iterazioni.
+\begin{algorithm}
+    \caption{FLOYD-WARSHALL(G,W)}
+    \begin{algorithmic}
+        \For{$i=1\dots n$}
+            \For{$j=1\dots n$}
+                \If{$i=j$}
+                    \State $D[i,j]\gets 0$
+                \ElsIf{$(i,j)\in E$}
+                    \State $D[i,j]\gets W(i,j)$
+                \Else
+                    \State $D[i,j]\gets \infty$
+                \EndIf 
+            \EndFor 
+        \EndFor 
+        \For($k=1\dots n$) 
+            \For{$i=1\dots n$}
+                \For{$j=1\dots n$}
+                    \If{$D[i,j]>D[i,k]+D[k,j]$}
+                        \State $D[i,j]\gets D[i,k]+D[k,j]$
+                    \EndIf 
+                \EndFor 
+            \EndFor 
+        \EndFor 
+    \end{algorithmic}
+\end{algorithm}
+\subsubsection{Cicli negativi e path reconstruction}
+In presenza di un ciclo negativo è possibile raggiungere un vertice $v$ da se stesso con un cammino di distanza minore di 0.
+La distanza da un vertice da se stesso è riportata nella diagonale della matrice, quindi basta aggiungere un controllo.
+
+È possibile ricostruire il cammino minimo partendo da un vettore di predecessori.
+\begin{algorithm}
+    \caption{PATH RECONSTRUCTION(P,x,y)}
+    \begin{algorithmic}
+        \If{$x=y$}\\
+            \Return{$x$}
+        \EndIf
+        \Return{PATH RECONSTRUCTION(P,x,P[x,y])+y}
+    \end{algorithmic}
+\end{algorithm}
+\section{Teoria della complessità}
+\subsection{Definizione}
+La complessità di un problema (non di un algoritmo) è la complessità del migliore algoritmo che lo risolve, sia esso noto 
+oppure ipotizzato. 
+
+La complessità di un problema non dipende nè dal linguaggio di programmazione utilizzato, nè dal tipo di calcolatore (a 
+patto che sia un modello di calcolo \textbf{Turing completo}).
+\subsection{Problemi}
+Un \textbf{problema P} è una relazione del tipo 
+\begin{equation*}
+    P\subseteq i\times S
+\end{equation*}
+Dove $I$ è l'insieme delle possibili istanze in ingresso ed $S$ è l'insieme delle possibili soluzioni del problema.
+Esistono diversi tipi di problemi:
+\begin{itemize}
+    \item \textbf{Problemi di decisione}: problemi che richiedono di verificare una certa proprietà sull'input.
+    \item \textbf{Problemi di decisione}:
+    \item \textbf{Problemi di decisione}: 
+\end{itemize}
 \end{document}
