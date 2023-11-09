@@ -368,13 +368,15 @@ vertice incontrato. Si ottiene dall'algoritmo di visita generico, implementando 
         \State color[$s$] $\gets$ gray
         \State \{visita $s$\}
         \State push(D)
-        \While{esiste $v$ non considerato adiacente a top(D)}
+        \While{NotEmpty(D)}
+            \While{esiste $v$ non considerato adiacente a top(D)}
             \If{color[$v$] = white}
                 \State color[$v$] = gray 
                 \State $\pi[v] \gets$ top(D) 
                 \State \{visita $s$\}
                 \State push(D,s)
             \EndIf 
+            \EndWhile
             \State color[top(D)] $\gets$ black
             \State pop(D)
         \EndWhile
@@ -1763,7 +1765,104 @@ Dove $I$ è l'insieme delle possibili istanze in ingresso ed $S$ è l'insieme de
 Esistono diversi tipi di problemi:
 \begin{itemize}
     \item \textbf{Problemi di decisione}: problemi che richiedono di verificare una certa proprietà sull'input.
-    \item \textbf{Problemi di decisione}:
-    \item \textbf{Problemi di decisione}: 
+    \item \textbf{Problemi di ricerca}: data l'istanza di un problema, restituire una soluzione ammissibile.
+    \item \textbf{Problemi di ottimizzazione}: dat l'istanza di un problema, restituire una soluzione ottima secondo un 
+    determinato criterio.
 \end{itemize}
+\subsection{Classi di complessità}
+Una \textbf{classe di complessità} è un insieme di problemi che possono essere risolti usando le stesse risorse di calcolo.
+Dato $n$, che indica la dimensione dell'input, possiamo classificare i problemi in base al tempo o allo spazio richiesti:
+\begin{itemize}
+    \item \textbf{TIME(f(n))}: è l'insieme dei problemi che possono essere risolti in tempo $\mathcal{O}(f(n))$
+    \item \textbf{SPACE(f(n))}: è l'insieme dei problemi che possono essere risolti in spazio $\mathcal{O}(f(n))$
+\end{itemize}
+\subsubsection{Classe P}
+Per semplicità, le classi di complessità sono raggruppate nelle cosiddette \textbf{classi unione}.
+
+La classe $P$ è la classe dei problemi risolvibili in tempo polinomiale rispetto ad $n$.
+\begin{equation*}
+    P=\bigcup^{\infty}_{c=0}TIME(n^c)
+\end{equation*}
+Ad esempio, i problemi risolvibili in $\mathcal{O}(n\log n)$ appartegono a $P$.
+\subsubsection{Classe PSPACE}
+La classe $PSPACE$ è la classe dei problemi risolvibili in spazio polinomiale rispetto ad $n$.
+\begin{equation*}
+    PSPACE=\bigcup^{\infty}_{c=0}SPACE(n^c)
+\end{equation*}
+Potendo fare al più un numero polinomiale di operazioni, e quindi anche di accessi in memoria, $P\subseteq PSPACE$.
+\subsubsection{Classe EXPTIME}
+La classe $EXPTIME$ è la classe dei problemi risolvibili in tempo esponenziale rispetto ad $n$.
+\begin{equation*}
+    EXPTIME=\bigcup^{\infty}_{c=0}TIME(2^{n^{c}})
+\end{equation*}
+Potendo fare al più un numero polinomiale di operazioni, e quindi anche di accessi in memoria, $P\subseteq PSPACE$.
+\subsection{Inclusione propria}
+L'unica inclusione proria dimostrata è $P\subset EXPTIME$, ovvero esiste almeno un problema che non può essere risolto in 
+tempo polinomiale. Capire se $P\subset PSPACE$ e $PSPACE\subset EXPTIME$ sono problemi aperti.
+
+Introduciamo un problema appartenente a $PSPACE$ per cui non esistono algoritmi risolventi polinomiali, quello dell'
+\textbf{Espressione in Forma Normale Congiuntiva}: congiunzione di disgiunzioni (\textbf{clausole}) di variabili booleane
+(\textbf{letterali}). Ad esempio
+\begin{equation*}
+    (x_1 \vee x_2 \vee x_3) \wedge (\overline{x_1}\vee \overline{x_3})
+\end{equation*}
+Il problema della soddisfacibilità di espressioni di questo tipo appartiene a PSPACE. Non si conoscono algoritmi che lo 
+risolvono in tempo polinomiale.
+
+Identifichiamo con $e(x_1,x_2,\dots,x_n)$ la formula.
+\begin{algorithm}
+    \caption{SODDISFACIBILITÀ(formula,assegnazioni(z),i)}
+    \begin{algorithmic}
+        \If{$i=n+1$}
+        \Return $e(z_1,z_2,\dots,z_n)$
+        \Else 
+            \State $v_0\gets$ SODDISFACIBILITÀ $(e(x_1,x_2,\dots,x_n),z_1,z_2,\dots,z_{i-1},0,i+1)$
+            \State $v_0\gets$ SODDISFACIBILITÀ $(e(x_1,x_2,\dots,x_n),z_1,z_2,\dots,z_{i-1},1,i+1)$
+        \EndIf\\
+        \Return{$v_0\vee v_1$}
+    \end{algorithmic}
+\end{algorithm} 
+L'algoritmo ha complessità $\mathcal{O}(2^n)$. Al termine dell'esecuzione, $z_1,z_2,\dots,z_n$ è un'assegnazione che rende
+vera la formula.
+
+Un \textbf{certificato} è un oggetto $y$, dipendente dall'istanza $x$ e dal problema $P$, che possa giustificare 
+$(x,1)\in P$ (per i problemi decisionali).
+Gli algoritmi possono essere riscritti in due fasi: fase di \textbf{costruzione} e fase di \textbf{verifica}.
+\subsection{Non determinismo}
+Definiamo una funzione $indovina z\in\{0,1\}$, che può indovinare, in tempo costante, un giusto valore booleano: con questa 
+funzione, l'algoritmo precendente avrebbe complessità $\mathcal{O}(n+m)$, dove $m$ è il numero di clausole.
+
+Gli algoritmi sviluppati con funzioni di questo tipo sono detti \textbf{non deterministici}, perchè la loro computazione 
+non è deterministica. La fase di verifica è deterministica.
+
+Chiamiamo $NTIME(f(n))$ la classe di problemi risolvibili da un algoritmo non deterministico in tempo $\mathcal{O}(f(n))$.
+La classe $NP$ è la classe di problemi risolvibili in tempo polinomiale da un algoritmo non deterministico.
+\begin{equation*}
+    NP=\bigcup^{\infty}_{c=0}NTIME(n^c)
+\end{equation*}
+Un algoritmo deterministico è un caso particolare di un algoritmo non deterministico, quindi $P\subseteq NP$. Inoltre, il 
+certificato deve occupare spazio polinomiale, quindi $NP\subseteq PSPACE$.
+
+Si sospetta, ma non è noto, che $P\subset NP$ e $NP\subset PSPACE$.
+Introduciamo un problema appartenente a $PSPACE$ ma che si sospetta non appartenere a $NP$, quello della 
+\textbf{Formula Booleana Quantificata}: è un espressione in forma normale congiuntiva preceduta da una serie di quantificatori 
+universali ed esistenziali che legano tutte le variabili. Ad esempio, 
+\begin{equation*}
+    \exists{x_1}\forall{x_2}\exists{x_3}\forall{x_4}(x_1 \vee x_2 \vee x_3) \wedge (\overline{x_1}\vee \overline{x_3}\vee \overline{x_4})
+\end{equation*}
+Data tale formula, il problema richiede di verificare se essa è vera.
+
+Identifichiamo con $e(x_1,x_2,\dots,x_n)$ la formula e $\xi_i x_i$ i quantificatori-
+\begin{algorithm}
+    \caption{SODDISFACIBILITÀ(formula,assegnazioni(z),i)}
+    \begin{algorithmic}
+        \If{$i=n+1$}
+        \Return $e(z_1,z_2,\dots,z_n)$
+        \Else 
+            \State $v_0\gets$ SODDISFACIBILITÀ $(e(x_1,x_2,\dots,x_n),z_1,z_2,\dots,z_{i-1},0,i+1)$
+            \State $v_0\gets$ SODDISFACIBILITÀ $(e(x_1,x_2,\dots,x_n),z_1,z_2,\dots,z_{i-1},1,i+1)$
+        \EndIf\\
+        \Return{$v_0\vee v_1$}
+    \end{algorithmic}
+\end{algorithm} 
 \end{document}

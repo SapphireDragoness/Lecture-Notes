@@ -2,10 +2,14 @@
 \usepackage[margin=.8in]{geometry}
 \usepackage[italian]{babel}
 \usepackage{amsmath}
+\usepackage{automata}
 
 \title{Appunti FLT}
 
 \begin{document}
+\section*{Nota ai lettori}
+Questi appunti sono basati sulle lezioni dell A.A. 2023/2024, integrate con passi tratti dal libro "Linguaggi Formali e 
+Compilazione", e formattati seguendo la suddivisione in paragrafi di quest'ultimo.
 \section{Teoria formale del linguaggio}
 \subsection{Alfabeto e linguaggio}
 Un \textbf{alfabeto} è un insieme finito di elementi chiamati \textbf{simboli terminali} o \textbf{caratteri}.
@@ -53,4 +57,28 @@ La potenza m-esima $x^m$ di una stringa $x$ è la concatenazione di $x$ con se s
 \subsection{Operazioni sul linguaggio}
 L'inverso $L^R$ di un linguaggio $L$ è l'insieme delle stringhe che sono l'inverso di una frase di $L$.
 
+\section{Automi a pila e parsing}
+\subsection{Automi a pila}
+Gli \textbf{automi a pila} sono automi a stati finiti che utilizzano una \textbf{pila} (stack) come memoria aggiuntiva.
+È possibile svolgere tre operazioni sullo stack:
+\begin{itemize}
+    \item \textbf{push}: inserisce un simbolo in cima allo stack
+    \item \textbf{pop}: rimuove un simbolo dalla cima dello stack (se questo non è vuoto)
+    \item \textbf{test di vuotezza}: controlla la presenza di simboli nello stack 
+\end{itemize}
+\subsubsection{Definizione}
+Un automa a pila è definito dalla 7-upla: $\langle Q,\Sigma,\Gamma,\delta,q_0,Z_0,F \rangle$.
+\begin{itemize}
+    \item $Q$: insieme degli stati
+    \item $\Sigma$: alfabeto che descrive il linguaggio
+    \item $\Gamma$: alfabeto della pila 
+    \item $\delta$: funzione di transizione
+    \item $q_0$: stato iniziale 
+    \item $Z_0$: fondo della pila 
+    \item $F$: stato (o stati) finale
+\end{itemize}
+L'input è una tripla, denotata come:
+\begin{equation*}
+    (q,a,A)\rightarrow(x,XX)
+\end{equation*}
 \end{document}
