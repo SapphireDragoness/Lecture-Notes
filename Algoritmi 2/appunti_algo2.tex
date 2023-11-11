@@ -811,7 +811,7 @@ L'invariante da dimostrare è \textbf{Max}.
 \end{proof}
 \subsection{Algoritmo di Moore}
 \subsubsection{Problema dello scheduling e algoritmo risolvente}
-Una \textbf{sequenza di shceduling}, o semplicemente \textbf{scheduling}, è una sequenza di lavori $L_1,L_2,\dots,L_n$ che 
+Una \textbf{sequenza di scheduling}, o semplicemente \textbf{scheduling}, è una sequenza di lavori $L_1,L_2,\dots,L_n$ che 
 devono essere eseguiti uno dopo l'altro consecutivamente. L'algoritmo è greedy, l'appetibilità è data dalla scadenza. 
 Descrizione informale:
 \begin{enumerate}
@@ -886,14 +886,14 @@ di ciascun carattere in un dato testo $t$.
 Produce in output un codice binario ottimo per la compressione di quel testo $t$.
 Con $f(c)=$ frequenza con cui il carattere $c$ compare nel testo e $d_c=$ livello del carattere $c$ nell'albero $T$, si 
 chiama lunghezza media di codifica o costo di $T$:
-\begin{equation}*
+\begin{equation*}
     L(T)=\Sigma_{c\in C}d_C\cdot f(c)
-\end{equation}
+\end{equation*}
 Se n è il numero di caratteri che compongono il testo con frequenze date dalla funzione $f$, la lunghezza in bit della 
 codifica del testo è data da:
-\begin{equation}*
+\begin{equation*}
     B(T)=\Sigma_{c\in C}d_C\cdot n\cdot f(c)=n\cdot L(T)
-\end{equation}
+\end{equation*}
 
 L'algoritmo di Huffman è un'applicazione della tecnica greedy \textbf{con appetibilità modificabili}:
 \begin{enumerate}
@@ -948,10 +948,10 @@ foresta $F-\{T_a,T_b\}\cup\{T_{ab}\}$ è ancora una foresta di Huffman.
     Consideriamo, fra i nodi interni di $T'$ non appartenenti alla foresta $F$, cioè fra i nodi che nel passo considerato 
     non sono ancora stati creati, quello di profondità massima. Sia esso $z$. Come ogni nodo interno, $z$ deve avere due 
     sottoalberi figli non nulli, siano $T_x$ e $T_y$.\\
-    Poichè $T_a$ e $T_b$ sono, al passo considerato, i due alberi di pesi minimi, assumendo $f(T_a)<=f(T_b)$ e $f(T_x)<=f(T_y)$,
-    abbiamo $f(T_a)<=f(T_x)$ e $f(T_b)<=f(T_y)$. Poichè $z$ è un nodo di profondità massima, le radici degli alberi $T_x$ 
+    Poichè $T_a$ e $T_b$ sono, al passo considerato, i due alberi di pesi minimi, assumendo $f(T_a)\leq f(T_b)$ e $f(T_x)\leq f(T_y)$,
+    abbiamo $f(T_a)\leq f(T_x)$ e $f(T_b)\leq f(T_y)$. Poichè $z$ è un nodo di profondità massima, le radici degli alberi $T_x$ 
     e $T_y$ si trovano in $T'$ a profondità $d$ non inferiore a quelle di $T_a$ e $T_b$, siano $d_1$ e $d_2$: quindi, 
-    $d_1<=d$ e $d_2<=d$.\\
+    $d_1\leq d$ e $d_2\leq d$.\\
     Scambiamo di posizione $T_a$ e $T_x$ per ottenere un albero di lunghezza media non superiore (analogamente per $T_b$
     e $T_y$).\\
     Ma $T'$ è un albero di Huffman, cioè avente $L(T')$ minimo. Quindi deve essere $L(T''')=L(T')$, e anche $T'''$, che 
@@ -1852,17 +1852,27 @@ universali ed esistenziali che legano tutte le variabili. Ad esempio,
 \end{equation*}
 Data tale formula, il problema richiede di verificare se essa è vera.
 
-Identifichiamo con $e(x_1,x_2,\dots,x_n)$ la formula e $\xi_i x_i$ i quantificatori-
+Identifichiamo con $e(x_1,x_2,\dots,x_n)$ la formula e $\xi_i x_i$ i quantificatori.
 \begin{algorithm}
-    \caption{SODDISFACIBILITÀ(formula,assegnazioni(z),i)}
+    \caption{QUANTIFICATA($\xi_i x_i,\dots,\xi_n x_n:e(x_1,x_2,\dots,x_n),z_1,z_2,\dots,z_{i-1},$i)}
     \begin{algorithmic}
         \If{$i=n+1$}
         \Return $e(z_1,z_2,\dots,z_n)$
         \Else 
-            \State $v_0\gets$ SODDISFACIBILITÀ $(e(x_1,x_2,\dots,x_n),z_1,z_2,\dots,z_{i-1},0,i+1)$
-            \State $v_0\gets$ SODDISFACIBILITÀ $(e(x_1,x_2,\dots,x_n),z_1,z_2,\dots,z_{i-1},1,i+1)$
-        \EndIf\\
-        \Return{$v_0\vee v_1$}
+            \State $v_0\gets$ QUANTIFICATA $(\xi_i x_i,\dots,\xi_n x_n:e(x_1,x_2,\dots,x_n),z_1,z_2,\dots,z_{i-1},0,i+1)$
+            \State $v_0\gets$ QUANTIFICATA $(\xi_i x_i,\dots,\xi_n x_n:e(x_1,x_2,\dots,x_n),\dots,z_{i-1},1,i+1)$
+            \If{$\xi_i=\exists$}
+            \Return{$v_0\vee v_1$}
+            \Else{}
+            \Return{$v_0\wedge v_1$}
+            \EndIf
+        \EndIf
     \end{algorithmic}
 \end{algorithm} 
+L'algoritmo ha complessità $\mathcal{O}(2^n)$.
+
+Il certificato da verificare ha esso stesso dimensione esponenziale.
+
+\section{Algoritmi di approssimazione}
+
 \end{document}
