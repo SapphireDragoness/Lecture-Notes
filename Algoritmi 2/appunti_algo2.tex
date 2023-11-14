@@ -775,7 +775,7 @@ da intervalli tutti disgiunti, tale che il numero di intervalli sia massimo.
 
 La soluzione ottimale si ottiene scandendo l'insieme di intervalli scegliendo ogni volta l'intervallo che finisce prima:
 \begin{enumerate}
-    \item orina l'insieme degli intervalli in una sequenza $S$ ordinata secondo l'istante finale
+    \item ordina l'insieme degli intervalli in una sequenza $S$ ordinata secondo l'istante finale
     \item inizializza la soluzione Sol come sequenza vuota 
     \item scandisci $S$ in ordine, e per ogni suo elemento $A$:
     \begin{enumerate}
@@ -1371,7 +1371,7 @@ semplicemente delle frecce per indicare come si sta costruendo $LCS[i,j]$, senza
     \end{algorithmic}
 \end{algorithm}
 \subsubsection{Complessità}
-Lc costruzione della matrice ha costo $\mathcal{O}(mn)$, così come il suo popolamento. La ricostruzione della soluzione 
+La costruzione della matrice ha costo $\mathcal{O}(mn)$, così come il suo popolamento. La ricostruzione della soluzione 
 ha costo $\mathcal{O}(m+n)$: in totale, $\mathcal{O}(mn)$.
 \subsection{Zaino 0-1}
 Simile al problema dello zaino frazionario, ma con oggetti non frazionabili.
@@ -1609,7 +1609,7 @@ nodo $v_k$ per cui il cammino minimo da $s$ a $v_k$ è composto al più da $k$ a
     I cammini restituiti dall'algoritmo sono effettivamente quelli minimi.
 \end{proof}
 \subsubsection{Complessità}
-L'algoritmo da $n-1$ iterazioni del ciclo esterno. Per ogni iterazione, l'algoritmo considera tutti gli archi del grafo 
+L'algoritmo fa $n-1$ iterazioni del ciclo esterno. Per ogni iterazione, l'algoritmo considera tutti gli archi del grafo 
 con una serie di operazioni di costo $\mathcal{O}(1)$. La complessità è quindi $\mathcal{O}(n*m)$
 
 L'algoritmo di Dijkstra è più efficiente perchè sceglie $(u,v)$ garantendo che $(u,v)$ sia l'arco che minimizza $D(s,u)+W(u,v)$
@@ -1853,7 +1853,7 @@ universali ed esistenziali che legano tutte le variabili. Ad esempio,
 Data tale formula, il problema richiede di verificare se essa è vera.
 
 Identifichiamo con $e(x_1,x_2,\dots,x_n)$ la formula e $\xi_i x_i$ i quantificatori.
-\begin{algorithm}
+\begin{algorithm}[H]
     \caption{QUANTIFICATA($\xi_i x_i,\dots,\xi_n x_n:e(x_1,x_2,\dots,x_n),z_1,z_2,\dots,z_{i-1},$i)}
     \begin{algorithmic}
         \If{$i=n+1$}
@@ -1871,8 +1871,136 @@ Identifichiamo con $e(x_1,x_2,\dots,x_n)$ la formula e $\xi_i x_i$ i quantificat
 \end{algorithm} 
 L'algoritmo ha complessità $\mathcal{O}(2^n)$.
 
-Il certificato da verificare ha esso stesso dimensione esponenziale.
+Il certificato da verificare ha esso stesso dimensione esponenziale, così come la sua verifica.
+\subsection{P vs NP}
+Il confine tra P e NP è quello più importante nella teoria della complessità: infatti, è quello che separa problemi "trattabili"
+da quelli "non trattabili". Troviamo un modo per confrontare i problemi.
 
+Diciamo che un problema $P1\subseteq I1\times\{0,1\}$ è riconducibile polinomialmente ad un problema $P2\subseteq I2\times\{0,1\}$
+se e solo se:
+\begin{itemize}
+    \item eiste una funzione che, data un'istanza $x1\in P1$, la trasforma in un'istanza $x2\in P2$ in tempo polinomiale 
+    \item per ogni coppia di istanze $x1$ e $x2$ così costruite, la soluzione di $x1$ è la stessa soluzione di $x2$
+\end{itemize}
+\begin{proprietà}
+    Se $P2$ appartiene alla classe $P$, anche $P1$ aappartiene a $P$.
+\end{proprietà}
+Ad esempio, il problema del Ciclo Hamiltoniano ($P1$) è riconducibile polinomialmente al problema del Cammino Semplice ($P2$).
+
+Si possono definire le seguenti classi:
+\begin{itemize}
+    \item \textbf{Problemi NP-hard}: un problema decisionale $D$ si definisce NP-hard se ogni problema $Q\in NP$ è riconducibile
+    a $D$ in tempo polinomiale 
+    \item \textbf{Problemi NP-completi}: un problema decisionale $D$ si definisce NP-completo se è NP-hard ed appartiene 
+    alla classe $NP$.
+\end{itemize}
+\subsection{Problemi NP-completi}
+Un problema NP-completo è quello dell'\textbf{Halt limitato}: dato un programma $X$ ed un intero $k$, verificare se esiste 
+un input per cui $X$ termina in al massimo $k$ passi.
+
+Appartiene ad $NP$ perchè la fase di verifica può essere effettuata in tempo polinomiale simulando $X(i)$ per $k$ passi.
+
+Ongi problema appartenente ad $NP$ è riconducibile polinomialmente ad halt limitato. 
+
+Sia $Prob\in NP$, allora esiste un programma $C$ che verifica un certificato in tempo polinomiale $p(n)$. Allora è possibile 
+costruire un programma $C'$ che va in loop ogniqualvolta la risposta di $C$ sia negativa, e termina altrimenti.
+È possibile riscrivere $Prob$ come il problema dell'halt limitato, con $C'$ come programma $X$ e $p(n)$ come $k$.
+L'halt limitato restituirà 1 se esistono dei dati per cui $C'$ termina in $p(n)$ passi, 0 altrimenti.
+
+Il problema dell'halt limitato è NP e NP-hard, quindi è NP-completo.
+\subsection{Problemi indecidibili}
+Esistono una serie di problemi definiti \textbf{indecidibili}: non solo non si conoscono algoritmi per risolverli, ma è 
+stato dimostrato che tali algoritmi non possono esistere, nemmeno utilizzando tempo e spazio infiniti.
+
+Il problema dell'halt è un problema indecidibile.
+
+Definire un programma $halt(P,i)$ che restituisca 1 se il programma $Prog$ (con un certo input $i$) termina in un numero 
+finito di passi, 0 altrimenti.
+
+Se potessimo scrivere halt, potremmo scrivere un programma $G$ come:
+\begin{algorithm}[H]
+    \caption{G(prog)}
+    \begin{algorithmic}
+        \If{halt(Prog,Prog)}
+            \State loop 
+        \Else{} 
+        \Return 0
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
+$G(G)$ termina solo se $G(G)$ non termina, che è una contraddizione.
 \section{Algoritmi di approssimazione}
+È sempre possibile associare ad un problema di ottimizzazione un problema decisionale, che ci dica se una determinata soluzione 
+per un problema è ottima. Privilegiando l'efficienza a costo dell'ottimalità, si utilizzano \textbf{algoritmi di approssimazione}
+tali per cui la soluzione restituita non è per forza ottimale, ma ha costo $C$ tale che:
+\begin{equation*}
+    max\{\frac{C}{C^*},\frac{C^*}{C}\}\leq \rho(n)
+\end{equation*}
+\subsection{Copertura dei vertici}
+Dato un grafo non orientato $G=(V,E)$, una copertura dei vertici è un sottoinsieme $V'\subseteq V$ tale che, se $(u,v)\in E$, 
+allora $u\in V'\vee v\in V'$.
+La dimensione di una copertura $V'$ è il numero di vertici che contiene. Il problema della copertura dei vertici consiste 
+nel trovare $V'$ ottima (minimizzarla). Decidere se una certa copertura è ottima è un problema NP-completo.
+\begin{algorithm}[H]
+    \caption{APPROX-COVER(G)}
+    \begin{algorithmic}
+        \State $C\gets$ insieme vuoto
+        \State $E'\gets E$
+        \While{$E'\neq \emptyset$}
+            \State sia $(u,v)$ un arco in $E'$
+            \State $C\gets C\cup\{u,v\}$
+            \State rimuovi da $E'$ ogni arco incidente in $u$ o $v$
+        \EndWhile\\
+        \Return{C}
+    \end{algorithmic}
+\end{algorithm}
+La complessità è $\mathcal{O}(n+m)$ se $G$ è rappresentato con liste di adiacenza.
+\subsubsection{Fattore di approssimazione}
+APPROX-COVER ha un fattore di approssimazione di 2; si dice che è \textbf{2-approssimato}.
+\begin{proof}
+    Sia $A$ l'insieme di archi $(u,v)$ scelti all'inizio di ogni ciclo. Per coprire gli archi in $A$, una copertura ottima 
+    deve contenere almeno un vertice di ciascun arco in $A$. Due archi in $A$ non possono avere un vertice in comune, 
+    perchè una volta scelto $(u,v)$ tutti gli archi incidenti ad $u$ o $v$ sono rimossi da $E'$. Pertanto, non ci sono 
+    due archi in $A$ coperti dallo stesso vertice e $|A|$ è un limite inferiore per la dimensione di una copertura ottima 
+    $C*$. Ma $|C|=2|A|$, poichè nel risultato metto sia $u$ che $v$ , quindi 
+    \begin{equation*}
+        |C|=2|A|\leq 2|C^*|
+    \end{equation*}
+\end{proof}
+\subsection{Problema del commesso viaggiatore}
+Dato un grafo pesato, completo e non orientato bisogna trovare un \textbf{ciclo Hamiltoniano} di costo minimo. Il problema 
+di capire se una soluzione è ottima è esso stesso NP-completo, di conseguenza vengono usate tecniche di approssimazione,
 
+Il peso di un MAR è un limite inferiore per il peso di un circuito Hamiltoniano. Circumnavigando il MAR si ottiene un ciclo 
+(con peso doppio rispetto al MAR) che però non è Hamiltoniano perchè passa dallo stesso nodo due volte.
+Per trasformarlo in Hamiltoniano, si possono tagliare le ripetizioni dei nodi, sfruttando la proprietà della disuguaglianza 
+triangolare. È possibile utilizzare una DFS per passare subito dall'albero al circuito.
+\begin{algorithm}
+    \caption{APPROX-TSP(G,W,r)}
+    \begin{algorithmic}
+        \State scegli un vertice $r$ casualmente
+        \State $A\gets$ PRIM(G,W,r)
+        \State $ord\gets$ DFS(A,r)\\
+        \Return{$ord$}
+    \end{algorithmic}
+\end{algorithm}
+L'algoritmo è 2-approssimato.
+\subsection{Ricerca locale}
+Una tecnica generale per trovare soluzioni buone è quella della \textbf{ricerca locale}. In un problem di ottimizzazione: 
+\begin{enumerate}
+    \item si parte da una soluzione ammissibile $x$
+    \item si calcolano tutte le soluzioni in un suo vicinato $N(x)$
+    \item se esiste una soluzione $y$ appartenente a $N(x)$ migliore di $x$, allora $x\gets y$ e si riparte dal punto 2 
+    \item altrimenti, $x$ è un minimo (o massimo) locale e ci possiamo fermare
+\end{enumerate}
+Per utilizzare la ricerca locale dobbiamo essere in grado di generare almeno una soluzione e di definire un criterio per 
+generare in maniera efficiente un vicinato $N(x)$.
+\subsubsection{Ricerca locale per TSP}
+Tecnica dei \textbf{k-scambi}:
+\begin{enumerate}
+    \item si genera un ciclo Hamiltoniano casuale 
+    \item se ne cancellano $k$ archi non adiacenti e se ne aggiungono altri $k$ in modo da ricreare il ciclo 
+    \item se così facendo si crea un ciclo di peso minore, si ricomincia l'iterazione dal punto 2 
+    \item altrimenti, si è trovata una soluzione minima localmente 
+\end{enumerate}
 \end{document}
