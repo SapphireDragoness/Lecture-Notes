@@ -1,10 +1,25 @@
 \documentclass[12pt]{article}
 \usepackage[margin=0.8in]{geometry}
 \usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage[italian]{babel}
 
 \title{Esercizi Sistemi Operativi 2}
 
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    }
+
+\urlstyle{same}
+
 \begin{document}
+\pagenumbering{roman}
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
 \section{Input/Output}
 \subsection{MTTF}
 Dati 4 dischi, calcolare MTTF orario di un'organizzazione RAID livello 0 e quello di
