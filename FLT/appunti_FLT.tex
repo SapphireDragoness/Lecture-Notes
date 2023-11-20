@@ -2,7 +2,7 @@
 \usepackage[margin=.8in]{geometry}
 \usepackage[italian]{babel}
 \usepackage{amsmath}
-\usepackage{automata}
+\usepackage{example}
 
 \title{Appunti FLT}
 
@@ -57,16 +57,10 @@ La potenza m-esima $x^m$ di una stringa $x$ è la concatenazione di $x$ con se s
 \subsection{Operazioni sul linguaggio}
 L'inverso $L^R$ di un linguaggio $L$ è l'insieme delle stringhe che sono l'inverso di una frase di $L$.
 
-\section{Automi a pila e parsing}
+\section{Automi}
 \subsection{Automi a pila}
 Gli \textbf{automi a pila} sono automi a stati finiti che utilizzano una \textbf{pila} (stack) come memoria aggiuntiva.
-È possibile svolgere tre operazioni sullo stack:
-\begin{itemize}
-    \item \textbf{push}: inserisce un simbolo in cima allo stack
-    \item \textbf{pop}: rimuove un simbolo dalla cima dello stack (se questo non è vuoto)
-    \item \textbf{test di vuotezza}: controlla la presenza di simboli nello stack 
-\end{itemize}
-\subsubsection{Definizione}
+
 Un automa a pila è definito dalla 7-upla: $\langle Q,\Sigma,\Gamma,\delta,q_0,Z_0,F \rangle$.
 \begin{itemize}
     \item $Q$: insieme degli stati
@@ -80,5 +74,22 @@ Un automa a pila è definito dalla 7-upla: $\langle Q,\Sigma,\Gamma,\delta,q_0,Z
 L'input è una tripla, denotata come:
 \begin{equation*}
     (q,a,A)\rightarrow(x,XX)
+\end{equation*}
+con:
+\begin{itemize}
+    \item $q$: stato corrente
+    \item $a$: il simbolo della stringa da leggere
+    \item $A$: il contenuto dello stack
+\end{itemize}
+Il simbolo di fine stringa è $\swarrow$.
+
+Negli automi a pila ci sono due tipi di accettazione: l'\textbf{accettazione per stato finale}, quando è stato consumato 
+tutto l'input e si giunge ad uno stato finale, e l'\textbf{accettazione per pila vuota}, quando è stato consumato tutto 
+l'input e la pila è vuota (anche senza $Z_0$).
+
+Essendo l'automa non deterministico, bisogna fare tutte le computazioni possibili (quindi esplorare tutte le possibilità).
+\paragraph{Esempio}
+\begin{equation*}
+    e
 \end{equation*}
 \end{document}
