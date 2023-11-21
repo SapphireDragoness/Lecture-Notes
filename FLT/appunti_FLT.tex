@@ -61,7 +61,11 @@ L'inverso $L^R$ di un linguaggio $L$ è l'insieme delle stringhe che sono l'inve
 \subsection{Automi a pila}
 Gli \textbf{automi a pila} sono automi a stati finiti che utilizzano una \textbf{pila} (stack) come memoria aggiuntiva.
 
-Un automa a pila è definito dalla 7-upla: $\langle Q,\Sigma,\Gamma,\delta,q_0,Z_0,F \rangle$.
+Un automa a pila è definito dalla 7-upla 
+\begin{equation*}
+    \langle Q,\Sigma,\Gamma,\delta,q_0,Z_0,F \rangle
+\end{equation*}
+con:
 \begin{itemize}
     \item $Q$: insieme degli stati
     \item $\Sigma$: alfabeto che descrive il linguaggio
@@ -88,8 +92,56 @@ tutto l'input e si giunge ad uno stato finale, e l'\textbf{accettazione per pila
 l'input e la pila è vuota (anche senza $Z_0$).
 
 Essendo l'automa non deterministico, bisogna fare tutte le computazioni possibili (quindi esplorare tutte le possibilità).
-\paragraph{Esempio}
+
+Processiamo una stringa nella forma $ca^nb^n$ con $n\geq 1$, ad esempio $caabb\swarrow$. 
 \begin{equation*}
-    e
+    \Gamma=\{Z_0,X\}
+\end{equation*}
+$Z_0$ è sempre presente, $X$ è il simbolo che gestisce il bilanciamento. Consumando $c$, si passa dallo stato $q_0$ allo 
+stato $q_1$.
+\begin{equation*}
+    (q_0,c,Z_0)\rightarrow(q_1,Z_0)
+\end{equation*}
+Ora non sarà più possibile incontrare $c$. Consumiamo $a$:
+\begin{equation*}
+    (q_1,a,Z_0)\rightarrow(q_1,Z_0X)
+\end{equation*}
+$X$ serve a contare le $a$. La funzione $(q_1,Z_0X)$ rimane in $q_1$; la testa della pila contiene $X$, quindi la funzione
+$(q_1,a,Z_0)$ non può scattare. Bisogna definire una nuova:
+\begin{equation*}
+    (q_1,a,X)\rightarrow(q_1,XX)
+\end{equation*}
+Se la parola è corretta, prima o poi si incontrerà una $b$. Passiamo allo stato $q_2$ per non incontrare più $a$.
+\begin{equation*}
+    (q_1,b,X)\rightarrow(q_2,\varepsilon)
+\end{equation*}
+Non può esserci $Z_0$, altrimenti sarebbe come se non avessimo mai incontrato nessuna $a$. Il passaggio a $q_2$ è obbligato.
+\begin{equation*}
+    (q_2,b,X)\rightarrow(q_2,\varepsilon)
+\end{equation*}
+\begin{equation*}
+    (q_2,\swarrow,X)\rightarrow(q_3,Z_0)
+\end{equation*}
+Incontrerò il fine stringa quando aavrò rimosso tutti gli $X$ dalla pila. Lo stato finale conterrà solo $q_3$.
+\begin{center}
+    \begin{tabular}{ |c|c|c|c| } 
+     \hline
+     Input & Pila & Stato & Commenti \\ 
+     \hline\hline
+     $caabb\swarrow$ & $Z_0$ & $q_0$ & devo consumare $c$ e $Z_0$ \\ 
+     $aabb\swarrow$ & $Z_0$ & $q_1$ & devo consumare $a$ \\ 
+     $abb\swarrow$ & $Z_0X$ & $q_1$ & devo trovare tripla $(q_1,a,X)$ \\ 
+     $bb\swarrow$ & $Z_0XX$ & $q_1$ & ogni volta che incontro una $a$, metto $X$ sulla pila \\ 
+     $b\swarrow$ & $Z_0X$ & $q_2$ & consumo la testa della pila, non scrivo nulla \\ 
+     $\swarrow$ & $Z_0$ & $q_2$ & \\ 
+     $ $ & $Z_0$ & $q_3$ & la parola appartiene al linguaggio \\ 
+     \hline
+    \end{tabular}
+\end{center}
+
+Una grammatica context free genera da un non terminale una sequenza di terminali e non terminali, combinati in qualunque 
+modo; è una quadrupla nella forma 
+\begin{equation*}
+    G=\langle V,\Sigma,P,S\rangle
 \end{equation*}
 \end{document}
