@@ -3,6 +3,7 @@
 \usepackage[italian]{babel}
 \usepackage{amsmath}
 \usepackage{example}
+\usepackage{forest}
 
 \title{Appunti FLT}
 
@@ -57,7 +58,7 @@ La potenza m-esima $x^m$ di una stringa $x$ è la concatenazione di $x$ con se s
 \subsection{Operazioni sul linguaggio}
 L'inverso $L^R$ di un linguaggio $L$ è l'insieme delle stringhe che sono l'inverso di una frase di $L$.
 
-\section{Automi}
+\section{Automi a pila e parsing}
 \subsection{Automi a pila}
 Gli \textbf{automi a pila} sono automi a stati finiti che utilizzano una \textbf{pila} (stack) come memoria aggiuntiva.
 
@@ -86,13 +87,13 @@ con:
     \item $A$: il contenuto dello stack
 \end{itemize}
 Il simbolo di fine stringa è $\swarrow$.
-
+\subsubsection{Tipi di accettazione}
 Negli automi a pila ci sono due tipi di accettazione: l'\textbf{accettazione per stato finale}, quando è stato consumato 
 tutto l'input e si giunge ad uno stato finale, e l'\textbf{accettazione per pila vuota}, quando è stato consumato tutto 
 l'input e la pila è vuota (anche senza $Z_0$).
 
 Essendo l'automa non deterministico, bisogna fare tutte le computazioni possibili (quindi esplorare tutte le possibilità).
-
+\subsubsection{Esempio di accettazione per stato finale}
 Processiamo una stringa nella forma $ca^nb^n$ con $n\geq 1$, ad esempio $caabb\swarrow$. 
 \begin{equation*}
     \Gamma=\{Z_0,X\}
@@ -124,7 +125,7 @@ Non può esserci $Z_0$, altrimenti sarebbe come se non avessimo mai incontrato n
 \end{equation*}
 Incontrerò il fine stringa quando aavrò rimosso tutti gli $X$ dalla pila. Lo stato finale conterrà solo $q_3$.
 \begin{center}
-    \begin{tabular}{ |c|c|c|c| } 
+    \begin{tabular}{ |c|c|c|c| }
      \hline
      Input & Pila & Stato & Commenti \\ 
      \hline\hline
@@ -138,10 +139,168 @@ Incontrerò il fine stringa quando aavrò rimosso tutti gli $X$ dalla pila. Lo s
      \hline
     \end{tabular}
 \end{center}
-
-Una grammatica context free genera da un non terminale una sequenza di terminali e non terminali, combinati in qualunque 
+\subsubsection{Regole di produzione}
+Una \textbf{grammatica context free} genera da un non terminale una sequenza di terminali e non terminali, combinati in qualunque 
 modo; è una quadrupla nella forma 
 \begin{equation*}
     G=\langle V,\Sigma,P,S\rangle
 \end{equation*}
+È possibile usare l'automa a pila per simulare la fase di generazione: quando trovo un non terminale, posso sostituirlo 
+con un terminale o un non terminale.
+
+La costruzione della funzione di transizione viene guidata dalle regole di produzione.
+Il funzionamento dell'automa a pila è il seguente: controllo l'elemento in cima alla pila, individuo la regola di produzione 
+corrispondente e la applico. 
+
+Esistono 4 categorie di regole di generazione: regola di \textbf{inizializzazione}, regola di \textbf{terminazione}, 
+regole \textbf{derivate da $P$} e regole \textbf{derivate da $\Sigma$}.
+Per qualunque tripla, si può applicare più di una regola.
+\paragraph*{Inizializzazione}
+Questa regola permette di far partire la generazione, corrisponde a mettere sulla pila l'assioma $S$.
+\begin{equation*}
+    (q_0,\varepsilon,Z_0)\rightarrow(q_0,\swarrow S)
+\end{equation*}
+Implico il trovarmi in $q_0$ e dover transizionare in $q_0$. Non consumo nulla, ma modifico il contenuto della pila. 
+Accettando per pila vuota, non bisogna includere $Z_0$.
+\paragraph*{Terminazione}
+Questa regola permette di terminare la generazione; l'ultimo simbolo in input è quello di fine stringa ($\swarrow$).
+\begin{equation*}
+    (q_0,\swarrow,\swarrow)\rightarrow(q_0,\varepsilon)
+\end{equation*}
+La generazione termina quando l'automa incontra il simbolo di fine stringa. Non viene scritto nulla sulla pila, ma si rimuove 
+$\swarrow$, terminando la generazione.
+\paragraph*{Regole per $\Sigma$}
+Esiste una regola per ogni simbolo dell'alfabeto ($\forall a\in \Sigma$).
+\begin{equation*}
+    (q_0,a,a)\rightarrow(q_0,\varepsilon)
+\end{equation*}
+Il simbolo in cima alla pila viene consumato.
+Esistono due tipi di regole di produzione per $a$, quelle che \textbf{iniziano con un terminale} 
+\begin{equation*}
+    (q_0,a,A)\rightarrow(q_0,\beta^R)\quad per \quad A\rightarrow a\beta
+\end{equation*}
+e quelle che \textbf{iniziano con un non terminale}
+\begin{equation*}
+    (q_0,\varepsilon,A)\rightarrow(q_0,\beta^R X)\quad per \quad A\rightarrow X\beta
+\end{equation*}
+\subsubsection{Esempio di accettazione per pila vuota}
+Creiamo un automa a stati finiti non deterministico che accetta per \textbf{pila vuota}:
+\begin{itemize}
+    \item $Q=\{q_0\}$: perchè si può gestire il tutto con un solo stato (dato il non determinismo) e l'insieme degli stati finali è vuoto.
+    \item $\Sigma=\Sigma$: l'alfabeto è quello del linguaggio
+    \item $\Gamma=\{Z_0,\dots\}$: conterrà sicuramente il simbolo di fine pila, più tutti i simboli scrivibili sulla pila 
+    \item $F=\{\emptyset\}$: l'insieme degli stati finali è vuoto
+\end{itemize}
+
+L'alfabeto della pila è definito come
+\begin{equation*}
+    \{Z_0\}\cup \Sigma \cup V
+\end{equation*}
+ovvero l'unione del simbolo di fine pila e gli insiemi dei simboli terminali e non terminali.
+
+Regole di produzione:
+\begin{align*}
+    S&\rightarrow aBA & S&\rightarrow bcS & B&\rightarrow Ba & B&\rightarrow A & A&\rightarrow ac & A&\rightarrow AA
+\end{align*}
+La funzione di transizione è composta da 11 regole. Le seguenti regole di inizializzazione e terminazione
+\begin{align*}
+    (q_0,\varepsilon,Z_0)&\rightarrow(q_0,\swarrow S) & (q_0,\swarrow,\swarrow)&\rightarrow(q_0,\varepsilon)
+\end{align*}
+sono comuni a tutti i linguaggi.
+
+Le regole
+\begin{align*}
+    (q_0,a,a)&\rightarrow(q_0,\varepsilon) & (q_0,b,b)&\rightarrow(q_0,\varepsilon) & (q_0,c,c)&\rightarrow(q_0,\varepsilon)
+\end{align*}
+non scrivono nulla sulla pila. 
+
+Infine
+\begin{align*}
+    (q_0,a,S)&\rightarrow(q_0,AB) & (q_0,b,S)&\rightarrow(q_0,Sc) & (q_0,\varepsilon,B)&\rightarrow(q_0,aB)\\
+    (q_0,\varepsilon,B)&\rightarrow(q_0,A) & (q_0,a,A)&\rightarrow(q_0,c) & (q_0,\varepsilon,A)&\rightarrow(q_0,AA)
+\end{align*}
+
+Generiamo la stringa $aacac$ sequendo le regole di produzione ed esaminiamola.
+\begin{equation*}
+    S\rightarrow aBA\rightarrow aAA \rightarrow aacA \rightarrow aacac
+\end{equation*}
+\begin{center}
+    \begin{tabular}{ |c|c|c|c| }
+     \hline
+     Input & Pila & Stato & Regola di produzione \\ 
+     \hline\hline
+     $aacac\swarrow$ & $Z_0$ & $q_0$ & $(q_0,\varepsilon,Z_0)\rightarrow(q_0,\swarrow S)$ \\ 
+     $aacac\swarrow$ & $\swarrow S$ & $q_0$ & $(q_0,a,S)\rightarrow(q_0,AB)$ \\ 
+     $acac\swarrow$ & $\swarrow AB$ & $q_0$ &  $(q_0,\varepsilon,B)\rightarrow(q_0,A)$\\ 
+     $acac\swarrow$ & $\swarrow AA$ & $q_0$ & $(q_0,a,A)\rightarrow(q_0,c)$ \\ 
+     $cac\swarrow$ & $\swarrow Ac$ & $q_0$ &  $(q_0,c,c)\rightarrow(q_0,\varepsilon)$\\ 
+     $ac\swarrow$ & $\swarrow A$ & $q_0$ & $(q_0,a,A)\rightarrow(q_0,c)$ \\ 
+     $c\swarrow$ & $\swarrow c$ & $q_0$ & $(q_0,c,c)\rightarrow(q_0,\varepsilon)$ \\
+     $\swarrow$ & $\swarrow$ & $q_0$ & $(q_0,\swarrow,\swarrow)\rightarrow(q_0,\varepsilon)$ \\ 
+     \hline
+    \end{tabular}
+\end{center}
+\subsection{Parsing}
+L'\textbf{albero di derivazione} è creato durante la parsificazione. 
+
+Si possono avere due politiche diverse durante la 
+derivazione di un albero: \textbf{dall'alto verso il basso} e \textbf{dal basso verso l'alto}.
+Parser di questo tipo sono automi a pila.
+\subsubsection{Parser di tipo $LR(0)$}
+Vediamo un parser di tipo $LR(0)$.
+
+Con 0 intendiamo che, oltre a consumare un simbolo in input, \textbf{legge 0 altri simboli}.
+
+Con $L$ intendiamo \textbf{left}: il parser parte da sinistra con la lettura.
+
+Con $R$ intendiamo \textbf{rightmost}: il parser cerca la regola della grammatica da utilizzare partendo da quella più a destra.
+
+Si inseriscono nodi nell'albero ogni volta che si effettua una riduzione.
+Ad esempio, date le seguenti regole di produzione
+\begin{align*}
+    E&\rightarrow id & S&\rightarrow E+E
+\end{align*}
+si ottiene l'albero
+\begin{center}
+    \begin{forest}
+        for tree={
+            grow=south,
+            circle, draw, minimum size=3ex, inner sep=1pt,
+            s sep=7mm, tier/.pgfmath=level()
+                }
+        [S
+            [E
+                [id, tier=number]
+            ]
+            [+, tier=number]
+            [E
+                [id, tier=number]
+            ]
+        ]
+    \end{forest}
+\end{center}
+$LR(0)$ è un'\textbf{automa a pila deterministico}: in ogni momento della parsificazione è possibile compiere una sola 
+azione (o nessuna). Il suo compito è accettare o rifiutare una stringa in input. Sono inoltre possibili due operazioni:
+\begin{itemize}
+    \item \textbf{SHIFT}: leggo input e lo trascrivo sulla pila 
+    \item \textbf{REDUCE}: operazione legata ad una regola grammaticale; consuma simboli dalla pila e li sostituisce 
+\end{itemize}
+L'operazione di REDUCE non modifica la pila, fa una serie di pop e poi fa una push.
+
+Finora, gli stati sono stati identificati per label. In $LR(0)$ gli stati sono etichettati con "SHIFT" o "REDUCE" e contengono 
+informazioni utili a determinare il tipo di operazione da svolgere.
+
+Un parser $LR(0)$ non gestisce tutte le grammatiche context free, ma è possibile costruire un parser a partire da una di
+queste.
+
+Durante la parsificazione di possono verificare due problemi:
+\begin{itemize}
+    \item il comportamento non è deterministico: alcuni stati hanno due o più comandi
+    \item si possono avere più operazioni di reduce, ognuna legata ad una regola diversa (qual è quella corretta)
+\end{itemize}
+Inoltre, \textbf{non} è possibile fare contemporaneamente operazioni di SHIFT e REDUCE oppure due operazioni di REDUCE in 
+parallelo.
+
+Un automa a pila deterministico ha all'interno dei suoi stati dei candidati legati alla regola di produzione.
+$A\rightarrow a^\beta$
 \end{document}

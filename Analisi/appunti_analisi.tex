@@ -1,0 +1,67 @@
+\documentclass[11pt]{book}
+\usepackage[margin=.8in]{geometry}
+\usepackage[italian]{babel}
+\usepackage{tikz}
+\usepackage{amsfonts} 
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{thmtools}
+\usepackage{float}
+\usepackage{hyperref}
+
+\title{Appunti Analisi Matematica}
+
+\newtheorem*{theorem}{Teorema}
+\newtheorem*{proprietà}{Proprietà}
+\newtheorem*{lemma}{Lemma}
+\newtheorem*{corollary}{Corollario}
+\newtheorem*{definition}{Definizione}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    }
+
+\urlstyle{same}
+
+\begin{document}
+\pagenumbering{roman}
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+\chapter{Insiemi}
+\section{Concetti di base sugli insiemi}
+Un \textit{insieme} è un raggruppamento di oggetti detti \textit{elementi}, che possono essere di natura qualsiasi, Si 
+dice che gli elementi di un insieme \textit{appartengono} all'insieme.
+\subsubsection{Simboli}
+Per indicare gli insiemi si usano solitamente lettere maiuscole, come
+\begin{equation*}
+    A,B,C\dots
+\end{equation*}
+
+Per indicare gli elementi di un insieme si usano solitamente lettere minuscole ($a,b,c\dots$) e per indicare che un elemento 
+$x$ appartiene all'insieme $A$ scriviamo
+\begin{equation*}
+    x\in A \quad \textnormal{oppure} \quad A\ni x
+\end{equation*}
+\subsubsection{Rappresentazione}
+È possibile rappresentare un insieme elencando i suoi elementi, in caso questo sia finito. Ad esempio
+\begin{equation*}
+    A=\{1,2,5\}
+\end{equation*}
+significa che l'insieme $A$ ha come elementi i numeri 1,2,5. In questo caso si dice che l'abbiamo definito \textit{per tabulazione}.
+
+Oppure è possibile rappresentare un insieme descrivendolo mediante una proprietà che lo caratterizzi univocamente. Ad esempio
+\begin{equation*}
+    X=\{n:n \textnormal{ intero pari}\}
+\end{equation*}
+
+Un insieme privo di elementi viene detto \textit{insieme vuoto} e viene indicato con il simbolo $\emptyset$.
+\subsubsection{Relazioni tra insiemi}
+\begin{definition}
+    Si dice che un insieme $X$ è un sottoinsieme di un insieme $Y$ se ogni elemento di $X$ appartiene ad $Y$. Si utilizza 
+    il simbolo di inclusione (larga) $X\subseteq Y$.
+\end{definition}
+\end{document}
