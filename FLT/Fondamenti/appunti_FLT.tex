@@ -9,45 +9,53 @@
 
 \begin{document}
 \section*{Nota ai lettori}
-Questi appunti sono basati sulle lezioni dell A.A. 2023/2024, integrate con passi tratti dal libro "Linguaggi Formali e 
-Compilazione", e formattati seguendo la suddivisione in paragrafi di quest'ultimo.
-\section{Teoria formale del linguaggio}
-\subsection{Alfabeto e linguaggio}
-Un \textbf{alfabeto} è un insieme finito di elementi chiamati \textbf{simboli terminali} o \textbf{caratteri}.
-$\Sigma=\{a_1,a_2,\dots,a_k\}$ è un alfabeto composto da $k$ elementi (la sua cardinalità è $k$). Una \textbf{stringa} (o 
-\textbf{parola}) è una sequenza, ovvero un insieme ordinato eventualmente con ripetizioni, di caratteri.
+Questi appunti sono basati sulle lezioni dell A.A. 2023/2024 tenute dal Prof. Alessio Bottrighi, integrate con passi tratti 
+dal libro "Linguaggi Formali e Compilazione" ed appunti forniti dal docente.
+\section{Alfabeto e linguaggio}
+Un \textbf{alfabeto} è un insieme finito di elementi chiamati \textbf{simboli terminali} o \textbf{caratteri}. Ad esempio 
+\begin{equation*}
+    \Sigma=\{a,b,c\}
+\end{equation*}
+è un alfabeto composto da 3 elementi $a,b,c$ (la sua cardinalità è 3). 
+
+Una \textbf{stringa} (o \textbf{parola}) è una sequenza, ovvero un insieme ordinato eventualmente con ripetizioni, di caratteri.
 
 Un \textbf{linguaggio} è un insieme di stringhe di un alfabeto specifico. Dato un linguaggio, una stringa che gli appartiene 
-è detta \textbf{frase}. 
+è detta \textbf{frase}. Ad esempio, possiamo definire un linguaggio L 
+\begin{equation*}
+    L=\{a,ab,bc,cccc\}
+\end{equation*}
+le cui parole al suo interno sono formate esclusivamente delle lettere dell'alfabeto specificato in precedenza.
 
 La \textbf{cardinalità} di un linguaggio è definita dal numero di frasi che contiene. Se la cardinalità è finita, il linguaggio 
 si dice \textbf{finito}. 
 
-Un linguaggi finito è una collezione di parole, solitamente chiamate \textbf{vocabolario}. Il linguaggio che non contiene 
+Un linguaggio finito è una collezione di parole, solitamente chiamate \textbf{vocabolario}. Il linguaggio che non contiene 
 frasi è chiamato \textbf{insieme vuoto} o \textbf{linguaggio $\emptyset$}.
 
 La \textbf{lunghezza} $|x|$ di una stringa $x$ è il numero di caratteri che contiene.
-\subsubsection{Operazioni sulle stringhe}
-Date le stringhe
-\begin{align*}
-    x=&a_1a_2\dots a_h   &   y=&b_1b_2\dots b_k
-\end{align*}
-la \textbf{concatenazione}, indicata con $\cdot$, è definita come:
-\begin{align*}
-    x\cdot y=a_1a_2\dots a_hb_1b_2\dots b_k
-\end{align*}
-La concatenazione non è commutativa, ma è associativa.
+\subsection{Operazioni sulle stringhe}
 \subsubsection{Stringa vuota}
-La \textbf{stringa vuota} (o \textbf{nulla}), denotata con $\epsilon$, soddisfa l'identità:
+La \textbf{stringa vuota} (o \textbf{nulla}), denotata con $\varepsilon$, soddisfa l'identità:
 \begin{align*}
     x\cdot \varepsilon=\varepsilon \cdot x = x
 \end{align*}
 La stringa vuota non deve essere confusa con l'insieme vuoto; infatti, l'insieme vuoto è un linguaggio che non contiene 
-stringhe, mentre il set $\{\varepsilon\}$ ne contiene una, la stringa vuota.
+stringhe, mentre l'insieme $\{\varepsilon\}$ ne contiene una, la stringa vuota.
 \subsubsection{Sottostringa}
 Sia la stringa $x=uyv$ il prodotto della concatenazione delle stringhe $u$, $y$ e $v$: le stringhe $u$, $y$ e $v$ sono 
 \textbf{sottostringhe} di $x$. In questo caso, la stringa $u$ è un \textbf{prefisso} di $x$ e la stringa $v$ è un 
 \textbf{suffisso} di $x$. Una sottostringa non vuota è detta \textbf{propria} se non coincide con $x$.
+\subsubsection{Concatenazione}
+Date le stringhe
+\begin{align*}
+    x=&a_1a_2\dots a_h   &   y=&b_1b_2\dots b_k
+\end{align*}
+la \textbf{concatenazione}, indicata con '$\cdot$', è definita come:
+\begin{align*}
+    x\cdot y=a_1a_2\dots a_hb_1b_2\dots b_k
+\end{align*}
+La concatenazione non è commutativa, ma è associativa.
 \subsubsection{Inversione di stringa}
 L'\textbf{inverso} di una stringa $x=a_1a_2\dots a_h$ è la stringa $x^R=a_ha_{h-1}\dots a_1$.
 \subsubsection{Ripetizione}
@@ -56,7 +64,16 @@ La potenza m-esima $x^m$ di una stringa $x$ è la concatenazione di $x$ con se s
     x=&ab    &   x^0=&\varepsilon    &   x^2=&(ab)^2=abab\\  
 \end{align*}
 \subsection{Operazioni sul linguaggio}
+\subsubsection{Linguaggio neutro}
+
+\subsubsection{Linguaggio vuoto}
+
+\subsubsection{Inversione}
 L'inverso $L^R$ di un linguaggio $L$ è l'insieme delle stringhe che sono l'inverso di una frase di $L$.
+\subsubsection{Ripetizione}
+
+\subsection{Operazioni sugli insiemi}
+\subsubsection{}
 
 \section{Automi a pila e parsing}
 \subsection{Automi a pila}
