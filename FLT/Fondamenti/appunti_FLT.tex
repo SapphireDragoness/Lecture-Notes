@@ -12,72 +12,194 @@
 Questi appunti sono basati sulle lezioni dell A.A. 2023/2024 tenute dal Prof. Alessio Bottrighi, integrate con passi tratti 
 dal libro "Linguaggi Formali e Compilazione" ed appunti forniti dal docente.
 \section{Alfabeto e linguaggio}
-Un \textbf{alfabeto} è un insieme finito di elementi chiamati \textbf{simboli terminali} o \textbf{caratteri}. Ad esempio 
+Un \textit{alfabeto} è un insieme finito di elementi chiamati \textit{simboli terminali} o \textit{caratteri}. Ad esempio 
 \begin{equation*}
     \Sigma=\{a,b,c\}
 \end{equation*}
 è un alfabeto composto da 3 elementi $a,b,c$ (la sua cardinalità è 3). 
 
-Una \textbf{stringa} (o \textbf{parola}) è una sequenza, ovvero un insieme ordinato eventualmente con ripetizioni, di caratteri.
+Una \textit{stringa} (o \textit{parola}) è una sequenza, ovvero un insieme ordinato eventualmente con ripetizioni, di caratteri.
 
-Un \textbf{linguaggio} è un insieme di stringhe di un alfabeto specifico. Dato un linguaggio, una stringa che gli appartiene 
-è detta \textbf{frase}. Ad esempio, possiamo definire un linguaggio L 
+Un \textit{linguaggio} è un insieme di stringhe di un alfabeto specifico. Dato un linguaggio, una stringa che gli appartiene 
+è detta \textit{frase}. Ad esempio, possiamo definire un linguaggio L 
 \begin{equation*}
     L=\{a,ab,bc,cccc\}
 \end{equation*}
 le cui parole al suo interno sono formate esclusivamente delle lettere dell'alfabeto specificato in precedenza.
 
-La \textbf{cardinalità} di un linguaggio è definita dal numero di frasi che contiene. Se la cardinalità è finita, il linguaggio 
-si dice \textbf{finito}. 
+La \textit{cardinalità} di un linguaggio è definita dal numero di frasi che contiene. Se la cardinalità è finita, il linguaggio 
+si dice \textit{finito}. 
 
-Un linguaggio finito è una collezione di parole, solitamente chiamate \textbf{vocabolario}. Il linguaggio che non contiene 
-frasi è chiamato \textbf{insieme vuoto} o \textbf{linguaggio $\emptyset$}.
+Un linguaggio finito è una collezione di parole, solitamente chiamate \textit{vocabolario}. Il linguaggio che non contiene 
+frasi è chiamato \textit{insieme vuoto} o \textit{linguaggio $\emptyset$}.
 
-La \textbf{lunghezza} $|x|$ di una stringa $x$ è il numero di caratteri che contiene.
+La \textit{lunghezza} $|x|$ di una stringa $x$ è il numero di caratteri che contiene.
 \subsection{Operazioni sulle stringhe}
-\subsubsection{Stringa vuota}
-La \textbf{stringa vuota} (o \textbf{nulla}), denotata con $\varepsilon$, soddisfa l'identità:
+\subsubsection*{Stringa vuota}
+La \textit{stringa vuota} (o \textit{nulla}), denotata con $\varepsilon$, soddisfa l'identità:
 \begin{align*}
     x\cdot \varepsilon=\varepsilon \cdot x = x
 \end{align*}
 La stringa vuota non deve essere confusa con l'insieme vuoto; infatti, l'insieme vuoto è un linguaggio che non contiene 
 stringhe, mentre l'insieme $\{\varepsilon\}$ ne contiene una, la stringa vuota.
-\subsubsection{Sottostringa}
+\subsubsection*{Sottostringa}
 Sia la stringa $x=uyv$ il prodotto della concatenazione delle stringhe $u$, $y$ e $v$: le stringhe $u$, $y$ e $v$ sono 
-\textbf{sottostringhe} di $x$. In questo caso, la stringa $u$ è un \textbf{prefisso} di $x$ e la stringa $v$ è un 
-\textbf{suffisso} di $x$. Una sottostringa non vuota è detta \textbf{propria} se non coincide con $x$.
-\subsubsection{Concatenazione}
+\textit{sottostringhe} di $x$. In questo caso, la stringa $u$ è un \textit{prefisso} di $x$ e la stringa $v$ è un 
+\textit{suffisso} di $x$. Una sottostringa non vuota è detta \textit{propria} se non coincide con $x$.
+\subsubsection*{Concatenazione}
 Date le stringhe
 \begin{align*}
     x=&a_1a_2\dots a_h   &   y=&b_1b_2\dots b_k
 \end{align*}
-la \textbf{concatenazione}, indicata con '$\cdot$', è definita come:
+la \textit{concatenazione}, indicata con '$\cdot$', è definita come:
 \begin{align*}
     x\cdot y=a_1a_2\dots a_hb_1b_2\dots b_k
 \end{align*}
 La concatenazione non è commutativa, ma è associativa.
-\subsubsection{Inversione di stringa}
-L'\textbf{inverso} di una stringa $x=a_1a_2\dots a_h$ è la stringa $x^R=a_ha_{h-1}\dots a_1$.
-\subsubsection{Ripetizione}
+\subsubsection*{Inversione di stringa}
+L'\textit{inverso} di una stringa $x=a_1a_2\dots a_h$ è la stringa $x^R=a_ha_{h-1}\dots a_1$.
+\subsubsection*{Ripetizione}
 La potenza m-esima $x^m$ di una stringa $x$ è la concatenazione di $x$ con se stessa per $m-1$ volte. Esempi:
 \begin{align*}
     x=&ab    &   x^0=&\varepsilon    &   x^2=&(ab)^2=abab\\  
 \end{align*}
 \subsection{Operazioni sul linguaggio}
-\subsubsection{Linguaggio neutro}
-
-\subsubsection{Linguaggio vuoto}
-
-\subsubsection{Inversione}
+\subsubsection*{Linguaggio neutro}
+Il linguaggio contenente esclusivamente la stringa vuota è detto \textit{linguaggio neutro}. Ha cardinalità pari a 1.
+\begin{align*}
+    L_N &= \{\varepsilon\}\\
+    L\cdot L_N=&L_N\cdot L=L
+\end{align*}
+\subsubsection*{Linguaggio vuoto}
+Il linguaggio vuoto non contiene alcuna stringa, quindi la sua cardinalità è 0. Si indica con $\emptyset$.
+\begin{equation*}
+    L\cdot \emptyset=\emptyset\cdot L = \emptyset
+\end{equation*}
+\subsubsection*{Concatenazione}
+La concatenazione tra due linguaggi è il prodotto cartesiano tra le stringhe di entrambi i linguaggi. Ad esempio, dati
+i linguaggi $L_1$ e $L_2$
+\begin{align*}
+    L1&=\{a,b,c\} & L_2&=\{bb,cc\}
+\end{align*}
+concatenandoli si ottiene
+\begin{equation*}
+    L_1\cdot L_2=\{abb,acc,bbb,bcc,cbb,ccc\}
+\end{equation*}
+\subsubsection*{Inversione}
 L'inverso $L^R$ di un linguaggio $L$ è l'insieme delle stringhe che sono l'inverso di una frase di $L$.
-\subsubsection{Ripetizione}
-
+\subsubsection*{Ripetizione}
+Come per le stringhe, è possibile l'elevamento a potenza.
+\begin{align*}
+    L^m&=L^{m-1}\cdot L \textnormal{ per } m\geq 1 & L^0&=\{\varepsilon\}
+\end{align*}
 \subsection{Operazioni sugli insiemi}
-\subsubsection{}
+Dato che un linguaggio è un insieme, si possono usare gli operatori unione '$\cup$', intersezione '$\cap$' e differenza 
+'$\setminus$'. Sono applicabili inoltre le relazioni di inclusione '$\subseteq$', inclusione stretta '$\subset$' ed 
+uguaglianza '$=$'.
+
+Il \textit{linguaggio universale} è l'insieme di tutte le stringhe, su un alfabeto $\Sigma$, di ogni lunghezza inclusa 0.
+Il linguaggio universale è infinito.
+\begin{equation*}
+    L_{universale}=\Sigma^0 \cup \Sigma^1 \cup \Sigma^2 \cup \dots
+\end{equation*}
+Il \textit{complemento} di un linguaggio $L$ su un alfabeto $\Sigma$, denotato con $\lnot L$, è la differenza insiemistica
+\begin{equation*}
+    \lnot L=L_{universale}\setminus L
+\end{equation*}
+\subsection{Operatore di Kleene e croce}
+Per definire linguaggi infiniti, si usano due operatori: l'operatore di Kleene '$*$' e l'operatore croce '$+$'.
+\subsubsection*{Operatore di Kleene}
+Questa operazione è definita come unione di tutte le potenze del linguaggio base:
+\begin{equation*}
+    L^*=\bigcup^{\infty}_{h=0}L^h=L^0\cup L^1\cup L^2 \cup \dots
+\end{equation*}
+Può generare un numero infinito di parole composte da un numero infinito di caratteri.
+\subsubsection*{Operatore croce}
+Questo operatore è derivato da quello precedente:
+\begin{equation*}
+    L^+=\bigcup^{\infty}_{h=1}L^h=L^1\cup L^2\cup L^3 \cup \dots
+\end{equation*}
+\section{Linguaggi regolari}
+\subsection{Definizione di espressione regolare}
+Un linguaggio su un alfabeto $\Sigma=\{a_1,a_2,\dots,a_n\}$ è \textit{regolare} se può essere espresso applicando finite 
+volte le operazioni di concatenazione, unione e Kleene, a partire dai linguaggi unitari $\{a_1\},\{a_2\},\dots,\{a_n\}$ o 
+la stringa vuota $\varepsilon$.
+
+Più precisamente, un'\textit{espressione regolare} è una stringa $r$ contenente i caratteri terminali dell'alfabeto 
+$\Sigma$ e i metasimboli '$\cup$' (unione), '$\cdot$' (concatenazione), '$*$' (iterazione), '$\varepsilon$' (stringa vuota)
+e parentesi, in accordo con le seguenti regole:
+\begin{center}
+    \begin{tabular}{ |c|c| }
+        \hline
+        regola & significato \\
+        \hline
+        $r=\varepsilon$ & stringa vuota \\
+        $r=a$ & linguaggio unitario \\
+        $r=(s\cup t)$ & unione di espressioni \\
+        $r=(s\cdot t)$ & concatenazione di espressioni \\
+        $r=(s)^*$ & iterazione di un'espressione \\
+        \hline
+    \end{tabular}
+\end{center}
+dove i simboli $s$ e $t$ sono espressioni regolari.
+\subsubsection*{Esempio di espressione regolare}
+Proviamo a creare un linguaggio che generi tutti i numeri naturali, con o senza segno. L'alfabeto per questo linguaggio 
+sarà:
+\begin{equation*}
+    \Sigma=\{0,1,2,3,4,5,6,7,8,9,+,-\}
+\end{equation*}
+Il primo simbolo della parola dovrà necessariamente essere '$+$' o '$-$', quindi la prima parte della nostra espressione 
+regolare sarà:
+\begin{equation*}
+    (+\cup -\cup \varepsilon)
+\end{equation*}
+I simboli a destra dovranno essere delle cifre, quindi:
+\begin{equation*}
+    (+\cup -\cup \varepsilon)(1\cup 9)(0\cup 9)*
+\end{equation*}
+In questo modo, il primo simbolo sarà almeno 1. Per poter generare anche lo 0:
+\begin{equation*}
+    (+\cup -\cup \varepsilon)((1\cup 9)(0\cup 9)^*)\cup 0
+\end{equation*}
+\subsection{Derivazioni}
+Formalizziamo il processo mediante il quale una data espressione regolare $e$ produce il linguaggio in questione. Prendiamo 
+in esame l'espressione regolare $e_0$:
+\begin{equation*}
+    e_0=(((a\cup (bb)^)*)((c^+)\cup(a\cup (bb))))
+\end{equation*}
+Questa espressione regolare è data dalla concatenazione delle due \textit{sottoespressioni} $e_1$ ed $e_2$:
+\begin{align*}
+    e_1&=((a\cup (bb))^*) & e_2&=((c^+)\cup(a\cup (bb)))
+\end{align*}
+La sottostringa $s$
+\begin{equation*}
+    s=(a\cup (bb))
+\end{equation*}
+è una sottoespressione di $e_2$ ma non di $e_0$.
+
+Un operatore di unione o iterazione offre diversi modi per produrre stringhe. Effettuando una scelta, si può ottenere 
+un'espressione regolare che definisce un linguaggio meno espressivo (in grado di generare meno parole), incluso in quello
+originale. Si dice che un'espressione regolare è una \textit{scelta} di un'altra nei seguenti tre casi:
+\subsubsection*{Derivazione da unione}
+Un'espressione regolare $e_k$, con $1\leq k\leq m$ e $m\geq2$, è una scelta dell'unione:
+\begin{equation*}
+    (e_1\cup \dots\cup e_k\cup \dots\cup e_m)
+\end{equation*}
+\subsubsection*{Derivazione da * o +}
+Un'espressione regolare $e^m=e\dots \dots e$, con $m\geq 1$ è una scelta di $e^*$ o $e^+$.
+\subsubsection*{Derivazione da stringa vuota}
+La stringa vuota $\varepsilon$ è una scelta di $e^*$.
+\subsubsection*{Derivazione immediata}
+Si dice che un'espressione regolare $e'$ \textit{deriva} un'espressione regolare $e''$ ($e'\Rightarrow e''$) se una delle 
+seguenti proposizioni è vera:
+\begin{enumerate}
+    \item l'espressione regolare $e''$ è una scelta di $e'$
+    \item l'espressione regolare $e'$ p la concatenazione di $m\geq 2$ sottoespressioni
+\end{enumerate}
 
 \section{Automi a pila e parsing}
 \subsection{Automi a pila}
-Gli \textbf{automi a pila} sono automi a stati finiti che utilizzano una \textbf{pila} (stack) come memoria aggiuntiva.
+Gli \textit{automi a pila} sono automi a stati finiti che utilizzano una \textit{pila} (stack) come memoria aggiuntiva.
 
 Un automa a pila è definito dalla 7-upla 
 \begin{equation*}
@@ -105,8 +227,8 @@ con:
 \end{itemize}
 Il simbolo di fine stringa è $\swarrow$.
 \subsubsection{Tipi di accettazione}
-Negli automi a pila ci sono due tipi di accettazione: l'\textbf{accettazione per stato finale}, quando è stato consumato 
-tutto l'input e si giunge ad uno stato finale, e l'\textbf{accettazione per pila vuota}, quando è stato consumato tutto 
+Negli automi a pila ci sono due tipi di accettazione: l'\textit{accettazione per stato finale}, quando è stato consumato 
+tutto l'input e si giunge ad uno stato finale, e l'\textit{accettazione per pila vuota}, quando è stato consumato tutto 
 l'input e la pila è vuota (anche senza $Z_0$).
 
 Essendo l'automa non deterministico, bisogna fare tutte le computazioni possibili (quindi esplorare tutte le possibilità).
@@ -157,7 +279,7 @@ Incontrerò il fine stringa quando aavrò rimosso tutti gli $X$ dalla pila. Lo s
     \end{tabular}
 \end{center}
 \subsubsection{Regole di produzione}
-Una \textbf{grammatica context free} genera da un non terminale una sequenza di terminali e non terminali, combinati in qualunque 
+Una \textit{grammatica context free} genera da un non terminale una sequenza di terminali e non terminali, combinati in qualunque 
 modo; è una quadrupla nella forma 
 \begin{equation*}
     G=\langle V,\Sigma,P,S\rangle
@@ -169,8 +291,8 @@ La costruzione della funzione di transizione viene guidata dalle regole di produ
 Il funzionamento dell'automa a pila è il seguente: controllo l'elemento in cima alla pila, individuo la regola di produzione 
 corrispondente e la applico. 
 
-Esistono 4 categorie di regole di generazione: regola di \textbf{inizializzazione}, regola di \textbf{terminazione}, 
-regole \textbf{derivate da $P$} e regole \textbf{derivate da $\Sigma$}.
+Esistono 4 categorie di regole di generazione: regola di \textit{inizializzazione}, regola di \textit{terminazione}, 
+regole \textit{derivate da $P$} e regole \textit{derivate da $\Sigma$}.
 Per qualunque tripla, si può applicare più di una regola.
 \paragraph*{Inizializzazione}
 Questa regola permette di far partire la generazione, corrisponde a mettere sulla pila l'assioma $S$.
@@ -192,16 +314,16 @@ Esiste una regola per ogni simbolo dell'alfabeto ($\forall a\in \Sigma$).
     (q_0,a,a)\rightarrow(q_0,\varepsilon)
 \end{equation*}
 Il simbolo in cima alla pila viene consumato.
-Esistono due tipi di regole di produzione per $a$, quelle che \textbf{iniziano con un terminale} 
+Esistono due tipi di regole di produzione per $a$, quelle che \textit{iniziano con un terminale} 
 \begin{equation*}
     (q_0,a,A)\rightarrow(q_0,\beta^R)\quad per \quad A\rightarrow a\beta
 \end{equation*}
-e quelle che \textbf{iniziano con un non terminale}
+e quelle che \textit{iniziano con un non terminale}
 \begin{equation*}
     (q_0,\varepsilon,A)\rightarrow(q_0,\beta^R X)\quad per \quad A\rightarrow X\beta
 \end{equation*}
 \subsubsection{Esempio di accettazione per pila vuota}
-Creiamo un automa a stati finiti non deterministico che accetta per \textbf{pila vuota}:
+Creiamo un automa a stati finiti non deterministico che accetta per \textit{pila vuota}:
 \begin{itemize}
     \item $Q=\{q_0\}$: perchè si può gestire il tutto con un solo stato (dato il non determinismo) e l'insieme degli stati finali è vuoto.
     \item $\Sigma=\Sigma$: l'alfabeto è quello del linguaggio
@@ -258,19 +380,19 @@ Generiamo la stringa $aacac$ sequendo le regole di produzione ed esaminiamola.
     \end{tabular}
 \end{center}
 \subsection{Parsing}
-L'\textbf{albero di derivazione} è creato durante la parsificazione. 
+L'\textit{albero di derivazione} è creato durante la parsificazione. 
 
 Si possono avere due politiche diverse durante la 
-derivazione di un albero: \textbf{dall'alto verso il basso} e \textbf{dal basso verso l'alto}.
+derivazione di un albero: \textit{dall'alto verso il basso} e \textit{dal basso verso l'alto}.
 Parser di questo tipo sono automi a pila.
 \subsubsection{Parser di tipo $LR(0)$}
 Vediamo un parser di tipo $LR(0)$.
 
-Con 0 intendiamo che, oltre a consumare un simbolo in input, \textbf{legge 0 altri simboli}.
+Con 0 intendiamo che, oltre a consumare un simbolo in input, \textit{legge 0 altri simboli}.
 
-Con $L$ intendiamo \textbf{left}: il parser parte da sinistra con la lettura.
+Con $L$ intendiamo \textit{left}: il parser parte da sinistra con la lettura.
 
-Con $R$ intendiamo \textbf{rightmost}: il parser cerca la regola della grammatica da utilizzare partendo da quella più a destra.
+Con $R$ intendiamo \textit{rightmost}: il parser cerca la regola della grammatica da utilizzare partendo da quella più a destra.
 
 Si inseriscono nodi nell'albero ogni volta che si effettua una riduzione.
 Ad esempio, date le seguenti regole di produzione
@@ -296,11 +418,11 @@ si ottiene l'albero
         ]
     \end{forest}
 \end{center}
-$LR(0)$ è un'\textbf{automa a pila deterministico}: in ogni momento della parsificazione è possibile compiere una sola 
+$LR(0)$ è un'\textit{automa a pila deterministico}: in ogni momento della parsificazione è possibile compiere una sola 
 azione (o nessuna). Il suo compito è accettare o rifiutare una stringa in input. Sono inoltre possibili due operazioni:
 \begin{itemize}
-    \item \textbf{SHIFT}: leggo input e lo trascrivo sulla pila 
-    \item \textbf{REDUCE}: operazione legata ad una regola grammaticale; consuma simboli dalla pila e li sostituisce 
+    \item \textit{SHIFT}: leggo input e lo trascrivo sulla pila 
+    \item \textit{REDUCE}: operazione legata ad una regola grammaticale; consuma simboli dalla pila e li sostituisce 
 \end{itemize}
 L'operazione di REDUCE non modifica la pila, fa una serie di pop e poi fa una push.
 
@@ -315,7 +437,7 @@ Durante la parsificazione di possono verificare due problemi:
     \item il comportamento non è deterministico: alcuni stati hanno due o più comandi
     \item si possono avere più operazioni di reduce, ognuna legata ad una regola diversa (qual è quella corretta)
 \end{itemize}
-Inoltre, \textbf{non} è possibile fare contemporaneamente operazioni di SHIFT e REDUCE oppure due operazioni di REDUCE in 
+Inoltre, \textit{non} è possibile fare contemporaneamente operazioni di SHIFT e REDUCE oppure due operazioni di REDUCE in 
 parallelo.
 
 Un automa a pila deterministico ha all'interno dei suoi stati dei candidati legati alla regola di produzione.
