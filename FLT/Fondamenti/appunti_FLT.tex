@@ -194,8 +194,123 @@ Si dice che un'espressione regolare $e'$ \textit{deriva} un'espressione regolare
 seguenti proposizioni è vera:
 \begin{enumerate}
     \item l'espressione regolare $e''$ è una scelta di $e'$
-    \item l'espressione regolare $e'$ p la concatenazione di $m\geq 2$ sottoespressioni
+    \item l'espressione regolare $e'$ è la concatenazione di $m\geq 2$ sottoespressioni, e $e''$ è ottenuta da $e'$ sostituendo 
+    una sottoespressione, ad esempio $e'_k$, con una scelta di $e'_k$, ad esempio $e''_k$:
+    \begin{equation*}
+        \exists k, 1\leq k\leq m \textnormal{ tale che }e''_k \textnormal{ è una scelta di } e'_k\wedge e''=e'_1\dots e''_k\dots e'_m
+    \end{equation*}
 \end{enumerate}
+Tale derivazione è detta \textit{immediata} in quanto effettua una sola scelta. Si dice che un'espressione regolare $e_0$
+deriva un'espressione regolare $e_n$ in $n\geq 1$ passi ($e_0\Rightarrow^n e_n$) se le seguenti derivazioni immediate sono 
+applicabili:
+\begin{align*}
+    e_0&\Rightarrow e_1 & e_1&\Rightarrow e_2 & &\dots & e_{n-1}&\Rightarrow e_n
+\end{align*}
+Esempi di derivazioni immediate:
+\begin{align*}
+    a^*&\cup b^+\Rightarrow a^* & a^*&\cup b^+\Rightarrow b^+ & (a^*&\cup bb)^*\Rightarrow(a^*\cup bb)(a^*\cup bb)
+\end{align*}
+Le sottostringhe di un'espressione regolare sono scelte in ordine da più esterna a più interna.
+\subsection{Limiti dei linguaggi regolari}
+Le espressioni regolari, nonostante siano utili e pratiche, sono costrutti molto limitati. Ad esempio, l'espressione 
+$a^n b^n$ con $n\geq 0$ non è formalizzabile come espressione regolare, in quanto $a^n b^n \neq a^* b^*$: infatti, il 
+numero di $a$ è vincolato al numero di $b$, non traducibile solo mediante operatori di espressioni regolari.
+\section{Grammatiche}
+Una \textit{grammatica generativa} o \textit{sintassi} è un insieme di semplici regole che possono essere applicate ripetutamente 
+per generare tutte e sole le stringhe valide.
+\subsubsection*{Esempio: palindromi}
+Il linguaggio $L$, descritto dall'alfabeto $\Sigma=\{a,b\}$, è definito, tramite l'operazione di inversione, come:
+\begin{equation*}
+    L=\{uu^R|u\in \Sigma^*\}=\{\varepsilon,aa,bb,abba,baab,\dots,abbbba,\dots\}
+\end{equation*}
+Contiene stringhe specularmente simmetriche. La grammatica $G$ contiene tre regole:
+\begin{align*}
+    pal&\rightarrow\varepsilon & pal&\rightarrow a\textnormal{ }pal\textnormal{ }a & pal&\rightarrow b\textnormal{ }pal\textnormal{ }b
+\end{align*}
+Per derivare le stringhe, basta rimpiazzare il simbolo $pal$, detto \textit{non terminale}, con la parte destra della regola 
+di generazione, ad esempio:
+\begin{equation*}
+    pal\Rightarrow a pal a\Rightarrow a b pal b a \Rightarrow a b b pal b b a \Rightarrow\dots
+\end{equation*}
+Il processo di derivazione termina quando l'ultima stringa ottenuta non contiene più nessun carattere non terminale. 
+Completiamo la derivazione:
+\begin{equation*}
+    a b b pal b b a \Rightarrow a b b \varepsilon b b a = abbbba
+\end{equation*}
+Il linguaggio dei palindromi non è regolare.
+\subsection{Definizione di grammatica context-free}
+Una grammatica \textit{context-free} è una grammatica $G$ definita da quattro entità:
+\begin{itemize}
+    \item[$V$ ] \textit{alfabeto dei non terminali}, un insieme di simboli non terminali 
+    \item[$\Sigma$ ] \textit{alfabeto dei terminali}, un insieme di simboli terminali 
+    \item[$P$ ] insieme di \textit{regole di produzione} (un linguaggio senza regole di produzione è un linguaggio vuoto)
+    \item[$S$ ] un particolare non terminale detto \textit{assioma}, dal quale parte la generazione ($S\in V$)
+\end{itemize}
+Una regola dell'insieme $P$ è una coppia ordinata $X\rightarrow\alpha$, con $X\in V$ e $\alpha\in(V\cup \Sigma)^*$.
+\subsection{Derivazione e generazione}
+Sia $\beta=\delta A\mu$ una stringa contenente un non terminale $A$, dove $\delta$ e $\mu$ sono stringhe, possibilmente 
+vuote. Sia $A\rightarrow\alpha$ una regola della grammatica $G$ e sia $\gamma=\delta\alpha\mu$ la stringa ottenuta rimpiazzando 
+il non terminale $A$ in $\beta$ con la regola nella parte destra $\alpha$. Questa relazione è detta \textit{derivazione}.
+Si dice che la stringa $\beta$ deriva la stringa $\gamma$ per la grammatica $G$, e scriviamo:
+\begin{equation*}
+    \beta\Rightarrow\gamma
+\end{equation*}
+La regola $A\rightarrow\alpha$ viene applicata in tale derivazione e la stringa $\alpha$ \textit{riduce} al non terminale 
+$A$.
+Il \textit{linguaggio generato} o \textit{definito} da una grammatica $G$, iniziando da un non terminale $A$, è l'insieme 
+delle strignhe terminali che derivano da un non terminale $A$ in uno o più passi:
+\begin{equation*}
+    L_A(G)=\{x\in\Sigma^*|A\Rightarrow^+ x\}
+\end{equation*}
+Se il non terminale è l'assioma $S$, si ha il linguaggio generato da $G$:
+\begin{equation*}
+    L(G)=L_S(G)=\{x\in\Sigma^*|S\Rightarrow^+ x\}
+\end{equation*}
+Un linguaggio è context-free se esiste una grammatica context-free che lo genera. Due grammatiche $G$ e $G'$ sono 
+\textit{equivalenti} se generano lo stesso linguaggio.
+\subsection{Grammatiche ridotte}
+Una grammatica $G$ è detta \textit{ridotta} se:
+\begin{enumerate}
+    \item non sono presenti regole di produzione inutili (non torno alla stringa di partenza)
+    \item qualsiasi non terminale $A$ è \textit{raggiungibile} dall'assioma 
+    \item qualsiasi non terminale $A$ è \textit{ben definito}, ovvero non genera un linguaggio vuoto
+\end{enumerate}
+\subsubsection*{Esempio: espressioni aritmetiche}
+La grammatica $G$:
+\begin{equation*}
+    G=(\{E,T,F\},\{i,+,\times,'(',')'\},P,E)
+\end{equation*}
+ha l'insieme di regole di produzione $P$:
+\begin{align*}
+    E&\rightarrow E+T|T & T&\rightarrow T\times F|F & F&\rightarrow (E)|i
+\end{align*}
+Il linguaggio di $G$:
+\begin{equation*}
+    L(G)=\{i,i+i,i\times i,(i+i)\times i,\dots\}
+\end{equation*}
+è l'insieme di espressioni aritmetiche generato. Dato che la grammatica $G$ è ridotta e non circolare, il linguaggio 
+$L(G)$ è infinito.
+\subsection{ALbero di sintassi e derivazione}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Automi a pila e parsing}
 \subsection{Automi a pila}
