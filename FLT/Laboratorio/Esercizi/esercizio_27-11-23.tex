@@ -1,0 +1,24 @@
+\documentclass{article}
+
+\begin{document}
+\begin{center}
+    \begin{tabular}{ |c|c|c| }
+     \hline
+     Token & Pattern & Classe rappresentata \\ 
+     \hline\hline
+     INT & $([1-9][0-9]*)|0$ & Costante \\ 
+     FLOAT & $([0-9]*[.])?[0-9]+$ & Costante \\ 
+     ID & $([A-Z]|[a-z])+$ & Identificatore \\ 
+     PRINT & (print) & Parola Chiave \\ 
+     PLUS & $(+)$ & Operatore \\ 
+     MINUS & $(-)$ & Operatore \\
+     DIV & $(\setminus)$ & Operatore \\
+     MUL & $(*)$ & Operatore \\
+     ASS & $(=)$ & Assegnamento \\
+     OP\_ASS & $(*|\setminus|-|+)[=]$ & Operatori (per assegnamento) \\
+     SEMI & (;) & Separatore \\
+     EOF & (char) - 1 & Fine Input \\ 
+     \hline
+    \end{tabular}
+\end{center}
+\end{document}
