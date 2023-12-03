@@ -29,8 +29,8 @@ public class Token {
 		return val;
 	}
 
-	public String toString() {
-		return null;
-	}
+//	public String toString() {
+//		return getTipo().toString() + ", riga: " + getRiga() + ", " + getVal();
+//	}
 
 }

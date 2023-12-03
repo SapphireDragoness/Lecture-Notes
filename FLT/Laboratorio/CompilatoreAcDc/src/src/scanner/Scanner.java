@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PushbackReader;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,11 +15,13 @@ public class Scanner {
 	private int riga;
 	private PushbackReader buffer;
 	private String log;
-	
+
 	final public Set<Character> skipChar = Set.of(' ', '\n', '\t', '\r', EOF);
-	
-	final public Map<Character, TokenType> charTypeMap = Map.of('+', TokenType.PLUS, '-', TokenType.MINUS, '*', TokenType.TIMES, '/', TokenType.DIVIDE, ';', TokenType.SEMI, '=', TokenType.OP_ASSIGN);
-	final public Map<String, TokenType> keywordsMap = Map.of("print", TokenType.PRINT, "float", TokenType.FLOAT, "int", TokenType.INT); 
+
+	final public Map<Character, TokenType> charTypeMap = Map.of('+', TokenType.PLUS, '-', TokenType.MINUS, '*',
+			TokenType.TIMES, '/', TokenType.DIVIDE, ';', TokenType.SEMI, '=', TokenType.OP_ASSIGN);
+	final public Map<String, TokenType> keywordsMap = Map.of("print", TokenType.PRINT, "float", TokenType.FLOAT, "int",
+			TokenType.INT);
 
 	// skpChars: insieme caratteri di skip (include EOF) e inizializzazione
 	// letters: insieme lettere e inizializzazione
@@ -43,74 +46,99 @@ public class Scanner {
 		try {
 			nextChar = peekChar();
 		} catch (IOException e) {
-			throw new LexicalException();
+			throw new LexicalException("Impossibile leggere carattere.");
 		} // Catturate l'eccezione IOException e
-		// ritornate una LexicalException che la contiene
+			// ritornate una LexicalException che la contiene
 
 		// Avanza nel buffer leggendo i carattere in skipChars
 		// incrementando riga se leggi '\n'.
 		// Se raggiungi la fine del file ritorna il Token EOF
-		if(skipChar.contains(nextChar)) {
-			if(nextChar == '\n')
+		if (skipChar.contains(nextChar)) {
+			if (nextChar == '\n') {
+				try {
+					readChar();
+				} catch (IOException e) {
+					throw new LexicalException("Impossibile leggere carattere.");
+				}
 				riga++;
+			}
+			if (nextChar == EOF) {
+				try {
+					readChar();
+				} catch (IOException e) {
+					throw new LexicalException("Impossibile leggere carattere.");
+				}
+				return new Token(TokenType.EOF, riga);
+			}
 			try {
-				buffer.read();
+				readChar();
 			} catch (IOException e) {
-				throw new LexicalException();
+				throw new LexicalException("Impossibile leggere carattere.");
 			}
 		}
-			
+
 		// Se nextChar e' in letters
 		// return scanId()
 		// che legge tutte le lettere minuscole e ritorna un Token ID o
 		// il Token associato Parola Chiave (per generare i Token per le
 		// parole chiave usate l'HaskMap di corrispondenza
-		if(Character.isLetter(nextChar)) {
-			return scanId();
+		if (Character.isLetter(nextChar)) {
+			try {
+				return scanId();
+			} catch (IOException e) {
+				throw new LexicalException("Impossibile leggere carattere.");
+			}
 		}
-			
+
 		// Se nextChar e' o in operators oppure
 		// ritorna il Token associato con l'operatore o il delimitatore
-		if(charTypeMap.containsValue(nextChar)) {
+		if (charTypeMap.containsValue(nextChar)) {
 			return new Token(charTypeMap.get(nextChar), riga);
 		}
-			
+
 		// Se nextChar e' in numbers
 		// return scanNumber()
 		// che legge sia un intero che un float e ritorna il Token INUM o FNUM
 		// i caratteri che leggete devono essere accumulati in una stringa
 		// che verra' assegnata al campo valore del Token
-		if(Character.isDigit(nextChar)) {
+		if (Character.isDigit(nextChar)) {
 			try {
 				return scanNumber();
 			} catch (IOException e) {
-				throw new LexicalException();
+				throw new LexicalException("Impossibile leggere carattere.");
 			}
 		}
-			
+
 		// Altrimenti il carattere NON E' UN CARATTERE LEGALE sollevate una
 		// eccezione lessicale dicendo la riga e il carattere che la hanno
 		// provocata.
 		else {
-			throw new LexicalException();
+			throw new LexicalException("Carattere illegale");
 		}
 	}
 
 	private Token scanNumber() throws IOException {
 		char[] number = {};
-		
-		while(Character.isDigit(peekChar()) || peekChar() == '.') {
+
+		while (Character.isDigit(peekChar()) || peekChar() == '.') {
 			buffer.read(number);
 		}
-		if(number.toString().matches("[0-9]+.([0-9]{1,5})")) {
+		if (number.toString().matches("[0-9]+.([0-9]{1,5})")) {
 			return new Token(TokenType.FLOAT, riga, number.toString());
-		}
-		else
+		} else
 			return new Token(TokenType.INT, riga, number.toString());
 	}
 
-	private Token scanId() {
-		
+	private Token scanId() throws IOException {
+		char[] id = {};
+
+		while (Character.isLowerCase(peekChar())) {
+			buffer.read(id);
+		}
+		if (keywordsMap.containsValue(id.toString())) {
+			return new Token(TokenType.FLOAT, riga, id.toString());
+		} else
+			return new Token(TokenType.INT, riga, id.toString());
 	}
 
 	private char readChar() throws IOException {

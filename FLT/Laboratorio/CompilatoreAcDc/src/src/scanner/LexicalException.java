@@ -2,7 +2,20 @@ package scanner;
 
 public class LexicalException extends Exception {
 	
-	// Costruttori
+	public LexicalException() {
+		super();
+	}
 	
-
+	public LexicalException(String msg) {
+		super(msg);
+	}
+	
+	public LexicalException(Throwable cause) {
+		super(cause);
+	}
+	
+	public LexicalException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
+	
 }

@@ -290,7 +290,63 @@ Il linguaggio di $G$:
 \end{equation*}
 è l'insieme di espressioni aritmetiche generato. Dato che la grammatica $G$ è ridotta e non circolare, il linguaggio 
 $L(G)$ è infinito.
-\subsection{ALbero di sintassi e derivazione}
+\subsection{Albero di sintassi e derivazione}
+Il processo di derivazione può essere visualizzato come un albero, che descrive l'ordine in cui sono state derivate 
+le parole. 
+
+La radice rappresenta l'assioma, mentre le foglie rappresentano i terminali. I nodi intermedi contengono solo nodi non 
+terminali. Si può ricavare la parola leggendo le foglie da sinistra a destra.
+\subsubsection{Esempio: albero di dreivazione delle espressioni aritmetiche}
+Visualizziamo l'albero di derivazione generato dal linguaggio riportato nel paragrafo precedente.
+
+\begin{forest}
+    for tree={
+        grow=south,
+        circle, draw, minimum size=3ex, inner sep=1pt,
+        s sep=7mm
+            }
+    [E
+        [E
+            [i]
+        ]
+        [+]
+        [E
+            [E
+                [i]
+            ]
+            [*]
+            [E
+                [i]
+            ]
+        ]
+    ]
+\end{forest}
+\begin{forest}
+    for tree={
+        grow=south,
+        circle, draw, minimum size=3ex, inner sep=1pt,
+        s sep=7mm
+            }
+    [E
+        [E
+            [i]
+        ]
+        [+]
+        [E
+            [E
+                [i]
+            ]
+            [*]
+            [E
+                [i]
+            ]
+        ]
+    ]
+\end{forest}
+Notiamo che la stessa parola può essere generata in modi diversi (e quindi avere alberi di generazione differenti). 
+Grammatiche di questo tipo sono dette \textit{grammatiche ambigue}. 
+
+Per eliminare le ambiguità è possibile utilizzare delle parentesi:
 
 
 
