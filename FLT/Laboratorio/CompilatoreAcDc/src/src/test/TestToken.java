@@ -34,13 +34,15 @@ class TestToken {
 		scanner = new Scanner("src/test/data/testScanner/testEOF.txt");
 		
 		assertEquals(TokenType.EOF, scanner.nextToken().getTipo());
+		assertEquals(4, scanner.nextToken().getRiga());
 	}
 	
 	@Test
 	void testFLOAT() throws FileNotFoundException, LexicalException {
 		scanner = new Scanner("src/test/data/testScanner/testFLOAT.txt");
 		
-		scanner.nextToken();
+		assertEquals(9, scanner.nextToken().getVal());
+		assertEquals(TokenType.FLOAT, scanner.nextToken().getTipo());
 	}
 //	
 //	@Test
