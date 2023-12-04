@@ -296,57 +296,128 @@ le parole.
 
 La radice rappresenta l'assioma, mentre le foglie rappresentano i terminali. I nodi intermedi contengono solo nodi non 
 terminali. Si può ricavare la parola leggendo le foglie da sinistra a destra.
-\subsubsection{Esempio: albero di dreivazione delle espressioni aritmetiche}
+\subsubsection*{Esempio: albero di derivazione delle espressioni aritmetiche}
 Visualizziamo l'albero di derivazione generato dal linguaggio riportato nel paragrafo precedente.
-
-\begin{forest}
-    for tree={
-        grow=south,
-        circle, draw, minimum size=3ex, inner sep=1pt,
-        s sep=7mm
-            }
-    [E
-        [E
-            [i]
-        ]
-        [+]
+\begin{center}
+    \begin{forest}
+        for tree={
+            grow=south,
+            circle, draw, minimum size=3ex, inner sep=1pt,
+            s sep=7mm
+                }
         [E
             [E
                 [i]
+            ]
+            [+]
+            [E
+                [E
+                    [i]
+                ]
+                [*]
+                [E
+                    [i]
+                ]
+            ]
+        ]
+    \end{forest}
+    \qquad\qquad
+    \begin{forest}
+        for tree={
+            grow=south,
+            circle, draw, minimum size=3ex, inner sep=1pt,
+            s sep=7mm
+                }
+        [E
+            [E
+                [E
+                    [i]
+                ]
+                [+]
+                [E
+                    [i]
+                ]
             ]
             [*]
             [E
                 [i]
             ]
         ]
-    ]
-\end{forest}
-\begin{forest}
-    for tree={
-        grow=south,
-        circle, draw, minimum size=3ex, inner sep=1pt,
-        s sep=7mm
-            }
-    [E
-        [E
-            [i]
-        ]
-        [+]
-        [E
-            [E
-                [i]
-            ]
-            [*]
-            [E
-                [i]
-            ]
-        ]
-    ]
-\end{forest}
+    \end{forest} 
+\end{center}
 Notiamo che la stessa parola può essere generata in modi diversi (e quindi avere alberi di generazione differenti). 
 Grammatiche di questo tipo sono dette \textit{grammatiche ambigue}. 
 
-Per eliminare le ambiguità è possibile utilizzare delle parentesi:
+Per eliminare le ambiguità è possibile utilizzare delle parentesi, esplicitando la priorità tra operazioni
+\begin{equation*}
+    E\rightarrow E+E|E*E|i|(E)
+\end{equation*}
+ed ampliare la grammatica inserendo altre regole: 
+\begin{align*}
+    E&\rightarrow E+T|T & T&\rightarrow T*F|F & F&\rightarrow (E)|i
+\end{align*}
+Questa è una \textit{grammatica stratificata}, in quanto ad ogni livello viene generata una sola operazione.
+\begin{equation*}
+    E\rightarrow E+T\rightarrow E+T*F\rightarrow E+T*i\rightarrow T+T*i\rightarrow F+T*i\rightarrow i+T*i\rightarrow i+F*i\rightarrow i+i*i
+\end{equation*}
+Questa grammatica non è ambigua.
+\subsection{Grammatiche di Chomsky e Greibach}
+Le grammatiche di Chomsky sono molto semplici, in quanto hanno solo due regole:
+\begin{itemize}
+    \item da un non terminale si possono generare due non terminali: $A\rightarrow BC \textnormal{ dove } B,C\in V$
+    \item un non terminale può generare un simbolo dell'alfabeto o la stringa vuota $\varepsilon$: $A\rightarrow a \textnormal{ dove } a\in \Sigma$
+\end{itemize}
+
+Con la forma normale di Greibach si possono scrivere grammatiche context free con regole di un solo tipo:
+\begin{itemize}
+    \item ogni non terminale genera un terminale: $A\rightarrow a\alpha \textnormal{ dove } a\in \Sigma \textnormal{ e } \alpha\in V^*$
+\end{itemize}
+Ogni regola inizia con un terminale, seguito da zero o più non terminali.
+\subsection{Conversione della ricorsione da sinistra a destra}
+Un'altra forma normale, detta \textit{ricorsiva non-sinistra}, è caratterizzata dall'assenza di regole ricorsive sinistre
+o derivazioni (l-ricorsioni).
+\subsubsection*{Trasformazione della ricorsione immediata sinistra}
+Consideriamo tutte le alternative l-ricorsive per un non terminale $A$:
+\begin{equation*}
+    A\rightarrow A\beta_1|A\beta_2|\dots|A\beta_h \quad h\geq 1
+\end{equation*}
+dove nessuna stringa $\beta_i$ è vuota, e siano le rimanenti alternative di $A$, che sono necessarie per terminare la ricorsione:
+\begin{equation*}
+    A\rightarrow \gamma_1|\gamma_2|\dots|\gamma_k \quad k\geq 1
+\end{equation*}
+Creiamo un nuovo terminale ausiliario $A'$ e rimpiazziamo le regole precedenti con quelle mostrate in seguito:
+\begin{align*}
+    A\rightarrow \gamma_1 A'|\gamma_2 A'|\dots|\gamma_k A'|\gamma_1|\gamma_2|\dots|\gamma_k\\
+    A'\rightarrow \beta_1 A'|\beta_2 A'|\dots|\beta_h A'|\beta_1|\beta_2|\dots|\beta_k
+\end{align*}
+Ora, ogni derivazione che originalmente coinvolgeva passi l-ricorsivi, ad esempio
+\begin{equation*}
+    A\Rightarrow A\beta_2 \Rightarrow\beta_3\beta_2 A'\Rightarrow \gamma_1\beta_3\beta_2
+\end{equation*}
+è rimpiazzata dalla derivazione equivalente:
+\begin{equation*}
+    A\Rightarrow\gamma_1 A'\Rightarrow\gamma_1\beta_3 A'\Rightarrow\gamma_1\beta_3\beta_2
+\end{equation*}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Automi a stati finiti}
+\subsection{Automa riconoscitore}
+Per controllare se una stringa è valida per un determinato linguaggio, serve un algoritmo di riconoscimento, un tipo di 
+algoritmo che produce una risposta positiva o negativa all'input fornito. 
+
+
 
 
 
