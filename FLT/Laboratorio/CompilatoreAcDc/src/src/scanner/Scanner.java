@@ -18,6 +18,8 @@ public class Scanner {
 	private String log;
 
 	final public Set<Character> skipChars = Set.of(' ', '\n', '\t', '\r', EOF);
+	final public Set<Character> letters = Set.of('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'z');
+	final public Set<Character> numbers = Set.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
 	final public Map<Character, TokenType> charTypeMap = Map.of('+', TokenType.PLUS, '-', TokenType.MINUS, '*',
 			TokenType.TIMES, '/', TokenType.DIVIDE, ';', TokenType.SEMI, '=', TokenType.OP_ASSIGN);
@@ -37,7 +39,6 @@ public class Scanner {
 	public Scanner(String fileName) throws FileNotFoundException {
 		this.buffer = new PushbackReader(new FileReader(fileName));
 		riga = 1;
-		// inizializzare campi che non hanno inizializzazione
 		log = "";
 	}
 
@@ -111,30 +112,33 @@ public class Scanner {
 		}
 	}
 
-	private Token scanNumber() throws IOException {
-		ArrayList<Character> number = new ArrayList<Character>();
+	private Token scanNumber() throws IOException, LexicalException {
+		ArrayList<String> number = new ArrayList<String>();
 
-		while (Character.isDigit(peekChar()) || peekChar() == '.') {
+		while (numbers.contains(peekChar())|| peekChar() == '.') {
 			char c = readChar();
-			number.add(c);
+			number.add(Character.toString(c));
 		}
-		if (String.join("", number.toString()).matches("[0-9]+.([0-9]{1,5})")) {
-			return new Token(TokenType.FLOAT, riga, String.join("", number.toString()));
-		} else
-			return new Token(TokenType.INT, riga, String.join("", number.toString()));
+		if (String.join("", number).matches("[0-9]+.([0-9]{1,5})")) {
+			return new Token(TokenType.FLOAT, riga, String.join("", number));
+		} else if(String.join("", number).matches("[0-9]+.([0-9]{1,5})")) {
+			return new Token(TokenType.INT, riga, String.join("", number));
+		}
+		else 
+			throw new LexicalException("Numero non parsificabile alla riga " + riga);
 	}
 
-	private Token scanId() throws IOException {
-		ArrayList<Character> id = new ArrayList<Character>();
+	private Token scanId() throws IOException, LexicalException {
+		ArrayList<String> id = new ArrayList<String>();
 
-		while (Character.isDigit(peekChar()) || peekChar() == '.') {
+		while (letters.contains(peekChar())) {
 			char c = readChar();
-			id.add(c);
+			id.add(Character.toString(c));
 		}
-		if (keywordsMap.containsValue(id.toString())) {
-			return new Token(TokenType.FLOAT, riga, id.toString());
+		if (keywordsMap.containsValue((Object)String.join("", id))) {
+			return new Token(TokenType.ID, riga, String.join("", id));
 		} else
-			return new Token(TokenType.INT, riga, id.toString());
+			throw new LexicalException("Id non parsificabile alla riga " + riga);
 	}
 
 	private char readChar() throws IOException {
