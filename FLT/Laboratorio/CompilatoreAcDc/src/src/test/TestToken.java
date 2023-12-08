@@ -7,8 +7,6 @@ import java.io.FileNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import appuntamento.Appuntamento;
-import eccezioni.AppuntamentoException;
 import scanner.LexicalException;
 import scanner.Scanner;
 import token.Token;
@@ -17,13 +15,6 @@ import token.TokenType;
 class TestToken {
 	
 	Scanner scanner;
-
-	@Test
-	void testErroriID() throws FileNotFoundException, LexicalException {
-		scanner = new Scanner("src/test/data/testScanner/erroriID.txt");
-		
-		
-	}
 	
 	@Test
 	void testErroriNumbers() throws FileNotFoundException, LexicalException {
@@ -43,9 +34,9 @@ class TestToken {
 	void testFLOAT() throws FileNotFoundException, LexicalException {
 		scanner = new Scanner("src/test/data/testScanner/testFLOAT.txt");
 		
-		Assertions.assertThrows(LexicalException.class, () -> scanner.nextToken().getVal()); //qui dovrebbe sollevare un'eccezione
-		Assertions.assertThrows(LexicalException.class, () -> scanner.nextToken().getVal());
-		Assertions.assertThrows(LexicalException.class, () -> scanner.nextToken().getVal());
+		Assertions.assertThrows(LexicalException.class, () -> scanner.nextToken()); //qui dovrebbe sollevare un'eccezione
+		Assertions.assertThrows(LexicalException.class, () -> scanner.nextToken());
+		Assertions.assertThrows(LexicalException.class, () -> scanner.nextToken());
 		
 		Token t = scanner.nextToken();
 		
@@ -58,7 +49,11 @@ class TestToken {
 	void testGenerale() throws FileNotFoundException, LexicalException {
 		scanner = new Scanner("src/test/data/testScanner/testGenerale.txt");
 		
-		scanner.nextToken();
+		assertEquals("TYINT, riga: 1", scanner.nextToken().toString());
+		assertEquals("ID, riga: 1", scanner.nextToken().toString());
+		assertEquals("SEMI, riga: 1", scanner.nextToken().toString());
+		
+		//assertEquals("ID, riga: 2", scanner.nextToken().toString());
 	}
 	
 	@Test
@@ -79,7 +74,10 @@ class TestToken {
 	void testINT() throws FileNotFoundException, LexicalException {
 		scanner = new Scanner("src/test/data/testScanner/testINT.txt");
 		
-		scanner.nextToken();
+		assertEquals("698", scanner.nextToken().getVal());
+		assertEquals("560099", scanner.nextToken().getVal());
+		assertEquals("1234", scanner.nextToken().getVal());
+		assertEquals(TokenType.EOF, scanner.nextToken().getTipo());
 	}
 	
 	@Test

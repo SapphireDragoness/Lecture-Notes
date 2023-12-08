@@ -29,8 +29,11 @@ public class Token {
 		return val;
 	}
 
-//	public String toString() {
-//		return getTipo().toString() + ", riga: " + getRiga() + ", " + getVal();
-//	}
+	public String toString() {
+		if(getTipo() == TokenType.INT || getTipo() == TokenType.FLOAT) {
+			return getTipo().toString() + ", riga: " + getRiga() + ", " + getVal();
+		}
+		return getTipo().toString() + ", riga: " + getRiga();
+	}
 
 }

@@ -1,0 +1,63 @@
+\documentclass[11pt]{article}
+\usepackage[margin=.8in]{geometry}
+\usepackage[italian]{babel}
+\usepackage{graphicx}
+
+\title{Appunti Ingegneria del Software}
+
+\begin{document}
+\section{Introduzione}
+\subsection{Sistemi software}
+Un \textit{sistema software} è un insieme di componenti software che funzionano in modo coordinato allo scopo di informatizzare 
+una certa attività. La realizzazione di un sistema software richiede l'impiego di un gruppo di lavoro, nel quale ogni 
+persona ricopre un ruolo ben preciso e le attività dei vari gruppi vanno coordinate, e tempo da dedicare alle varie fasi 
+di sviluppo.
+
+Esistono due categorie di sistemi software: i \textit{sistemi generici}, definiti in base alle tendenze di mercato, e i 
+\textit{sistemi customizzati}, richiesti da uno specifico cliente (il committente).
+\subsection{Il processo software}
+Con \textit{ingegneria del software} si intende l'applicazione del processo dell'Ingegneria alla produzione di sistemi 
+software. Il processo è suddiviso in:
+\begin{itemize}
+    \item specifica: definizione dei requisiti funzionali e non funzionali 
+    \item progettazione: si definiscono architettura, controllo, comportamento dei componenti, strutture dati, algoritmi,
+    struttura del codice, interfaccia utente
+    \item implementazione: scrittura del codice e integrazione dei moduli 
+    \item collaudo: si controlla se il sistema ha difetti di funzionamento e se soddisfa i requisiti 
+    \item manutenzione: modifiche del sistema dopo la consegna 
+\end{itemize}
+\subsection{Gestione del processo}
+L'ingegneria del software si occupa anche della gestione del progetto che si svolge in parallelo al processo software.
+Le principali attività di gestione sono l'\textit{assegnazione} di risorse (umane, finanziarie...), la \textit{stima del tempo}
+necessario per ogni attività, la \textit{stima dei costi} e la \textit{stima dei rischi}.
+\section{Specifica}
+La \textit{specifica} è l'insieme di attività necessarie per generare il documento dei requisiti che descrive i 
+\textit{requisiti funzionali} e i \textit{requisiti non funzionali}: descrive il "cosa" il sistema deve fare, non il "come".
+I requisiti servono per una proposta di contratto e modellare fasi successive del processo software.
+\subsection{Requisiti funzionali}
+I requisiti funzionali sono i servizi che il cliente richiede al sistema. Per ogni servizio si descrive:
+\begin{itemize}
+    \item cosa accade nell'interazione tra utente e sistema 
+    \item cosa accade in seguito ad un certo input o stimolo
+    \item cosa accade in particolari sistuazioni, ad esempio in caso di eccezioni
+\end{itemize}
+Non viene descritto come funziona internamente il sistema, in quanto è oggetto della successiva fase di progettazione.
+\subsection{Requisiti non funzionali}
+I requisiti non funzionali sono divisi in tre categorie: \textit{requisiti di prodotto}, \textit{requisiti organizzativi}
+e \textit{requisiti esterni}.
+
+I requisiti di prodotto sono attributi che definiscono la qualità del sistema. Una \textit{proprietà complessiva} riguarda
+il sistema nel suo complesso; una \textit{proprietà emergente} è una proprietà che "emerge" dal funzionamento del sistema, 
+dopo che è stato implementato.
+
+I requisiti organizzativi sono caratteristiche riguardanti le fasi del processo software o la gestione del progetto. I 
+\textit{requisiti di sviluppo} sono i metodi e le tecniche di sviluppo utilizzati; i \textit{requisiti gestionali} sono
+le risorse utilizzate.
+
+I requisiti esterni derivano da fattori esterni al sistema e al processo software. Essi sono i requisiti di compatibilità
+con altri sistemi e aspetti giuridici.
+\begin{center}
+    \includegraphics[scale=0.4]{reqnfunz.jpeg}
+\end{center}
+
+\end{document}
