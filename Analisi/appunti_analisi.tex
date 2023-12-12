@@ -1,5 +1,5 @@
 \documentclass[11pt]{book}
-\usepackage[margin=.8in]{geometry}
+\usepackage[margin=.9in]{geometry}
 \usepackage[italian]{babel}
 \usepackage{tikz}
 \usepackage{amsfonts} 
@@ -59,9 +59,114 @@ Oppure è possibile rappresentare un insieme descrivendolo mediante una propriet
 \end{equation*}
 
 Un insieme privo di elementi viene detto \textit{insieme vuoto} e viene indicato con il simbolo $\emptyset$.
-\subsubsection{Relazioni tra insiemi}
+\subsubsection{Relazioni tra insiemi: inclusione}
 \begin{definition}
     Si dice che un insieme $X$ è un sottoinsieme di un insieme $Y$ se ogni elemento di $X$ appartiene ad $Y$. Si utilizza 
-    il simbolo di inclusione (larga) $X\subseteq Y$.
+    il simbolo di inclusione (larga) $X\subseteq Y$. Se $X$ non coincide con $Y$, si usa il simbolo di inclusione stretta
+    $X\subset Y$.
 \end{definition}
+\subsubsection*{Relazioni tra insiemi: uguaglianza}
+Due insiemi sono uguali quando possiedono gli stessi elementi.
+Siano $X$ e $Y$ due insiemi. Allora $X=Y$ se e solo se $X\subseteq Y$ e $Y\subseteq X$.
+\subsubsection*{Operazioni insiemistiche}
+\begin{itemize}
+    \item \textit{Unione}. L'unione di due insiemi $X$ e $Y$ è definita da:
+    \begin{equation*}
+        X\cup Y=\{x:x\in X \textnormal{ o } x\in Y\}
+    \end{equation*}
+    È l'insieme degli elementi che appartengono sia al primo sia al secondo insieme.
+    \item \textit{Intersezione}. L'intersezione di due insiemi $X$ e $Y$ è definita da:
+    \begin{equation*}
+        X\cap Y=\{x:x\in X \textnormal{ e } x\in Y\}
+    \end{equation*}
+    È l'insieme degli elementi che appartengono al primo e al secondo insieme, intendendo la "o" in modo non esclusivo.
+    \item \textit{Unione}. La differenza tra due insiemi $X$ e $Y$ è definita da:
+    \begin{equation*}
+        X\setminus Y=\{x:x\in X \textnormal{ e } x\notin Y\}
+    \end{equation*}
+    È l'insieme degli elementi che appartengono al primo ma non al secondo insieme.
+    \item \textit{Complementare}. È un tipo particolare di differenza. Siano $X$ e $Y$ insiemi con $X\subseteq Y$. Si 
+    definisce insieme complementare di $X$ in $Y$ l'insieme $Y\setminus X$. Si indica con il simbolo $X^C$.
+\end{itemize}
+\subsubsection*{Proprietà delle operazioni insiemistiche}
+\begin{itemize}
+    \item \textit{Proprietà dell'unione}.
+        \begin{itemize}
+            \item [] commutativa: $X\cup Y=Y\cup X$
+            \item [] associativa: $/^(X\cup Y)\cup Z = X\cup (Y\cup Z)$
+            \item [] idempotenza: $X\cup X=X$
+        \end{itemize}
+    \item \textit{Proprietà dell'intersezione}.
+    \begin{itemize}
+        \item [] commutativa: $X\cap Y=Y\cap X$
+        \item [] associativa: $/^(X\cap Y)\cap Z = X\cap (Y\cap Z)$
+        \item [] idempotenza: $X\cap X=X$
+    \end{itemize}
+    \item \textit{Proprietà distributive}.
+    \begin{itemize}
+        \item [] $X\cup (Y\cap Z)=(X\cup Y)\cap(X\cup Z)$
+        \item [] $X\cap (Y\cup Z)=(X\cap Y)\cup(X\cap Z)$
+    \end{itemize}
+    \item \textit{Formule di De Morgan}.
+    Siano $A,B\subseteq X$ e denotiamo con $A^C$ e $B^C$ i loro insiemi complementari in $X$.
+    \begin{itemize}
+        \item [] $(A\cup B)^C =A^C \cap B^C$
+        \item [] $(A\cap B)^C =A^C \cup B^C$
+    \end{itemize}
+\end{itemize}
+\section{Insieme delle parti e prodotto cartesiano}
+\subsubsection*{Insieme delle parti}
+Dato un insieme $X$, si dice \textit{insieme delle parti} di $X$ l'insieme di tutti i sottoinsiemi di $X$. Si indica con 
+$\mathcal{P}^X$ o con $2^X$. Ad esempio, si consideri l'insieme $X=\{1,4,5\}$:
+\begin{equation*}
+    \mathcal{P}(X)=\{\emptyset,\{1\},\{4\},\{5\},\{1,4\},\{1,5\},\{4,5\},\{1,4,5\}\}
+\end{equation*}
+Se $X$ è un insieme finito con $n$ elementi, allora $\mathcal{P}(X)$ è un insieme finito con $2^n$ elementi. Se $X$ è un 
+insieme infinito, allora anche $\mathcal{P}(X)$ è un insieme infinito.
+\subsubsection*{Prodotto cartesiano}
+Si dice \textit{coppia} un insieme ordinato di due elementi. Ad esempio:
+\begin{align*}
+    \{3,7\}&=\{7,3\}:\textnormal{ insieme non ordinato}\\
+    \{3,7\}&\neq\{7,3\}:\textnormal{ insieme ordinato (coppia)}
+\end{align*}
+Dati due insiemi $X$ e $Y$, il \textit{prodotto cartesiano} di $X$ e $Y$ è l'insieme delle coppie $(x,y)$ in cui $x\in X$
+e $y\in Y$.
+\begin{equation*}
+    X\times Y=\{(x,y):x\in X\textnormal{ e }y\in Y\}
+\end{equation*}
+L'insieme dei numeri reali è indicato con $\mathbb{R}$, e il prodotto cartesiano $\mathbb{R}\times\mathbb{R}$ viene 
+indicato con $\mathbb{R}^2$.
+\begin{equation*}
+    \mathbb{R}^2=\mathbb{R}\times\mathbb{R}=\{(x,y):x,y\in\mathbb{R}\}
+\end{equation*}
+\section{Insiemi numerici fondamentali}
+\begin{itemize}
+    \item [$\mathbb{N}$] insieme dei numeri naturali (interi positivi, zero compreso)
+    \begin{equation*}
+        \mathbb{N}=\{0,1,2,3,4,5,6,\dots\}
+    \end{equation*}
+    \item [$\mathbb{Z}$] insieme dei numeri interi
+    \begin{equation*}
+        \mathbb{Z}=\{0,1,-1,2,-2,3,-3,\dots\}
+    \end{equation*}
+    \item [$\mathbb{Q}$] insieme dei numeri razionali (sono frazioni di numeri interi)
+    \begin{equation*}
+        \mathbb{Q}=\{\frac{a}{b}:a\in\mathbb{Z}\textnormal{ e }b\in\mathbb{Z}\setminus 0\}
+    \end{equation*}
+    \item [$\mathbb{R}$] insieme dei numeri reali
+    \item [$\mathbb{I}$] insieme dei numeri irrazionali ($\mathbb{I}=\mathbb{R}\setminus\mathbb{Q}$)
+\end{itemize}
+\chapter{Funzioni}
+\begin{definition}
+    Siano $X,Y\neq\emptyset$. Si dice funzione da $X$ in $Y$ una legge che fa corrispondere ad ogni elemento di $X$ uno 
+    ed un solo elemento di $Y$. L'insieme $X$ viene detto dominio della funzione mentre l'insieme $Y$ viene detto codominio 
+    della funzione.
+\end{definition}
+Viene utilizzata la seguente notazione:
+\begin{align*}
+    f&:X\rightarrow Y & x&\mapsto f(x)
+\end{align*}
+Per ogni $x\in X$, l'elemento di $Y$ che la funzione $f$ fa corrispondere a $x$ viene detto \textit{immagine} di $x$ 
+mediante $f$ e si indica con $f(x)$.
+
 \end{document}
