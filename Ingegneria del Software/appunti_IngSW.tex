@@ -101,10 +101,102 @@ della possibilità di costruire un sistema e dei vantaggi che possono derivare d
 \subsubsection*{Deduzione dei requisiti}
 La \textit{deduzione dei requisiti} è la raccolta di informazioni da cui dedurre quali sono i requisiti.
 Le informazioni si possono raccogliere mediante uno studio del dominio applicativo del sistema richiesto, il dialogo con 
-stakeholder, 
+stakeholder, studio di sistemi simili già realizzati e studio di sistemi con cui dovrà interagire quello da sviluppare.
+
+Il \textit{dominio applicativo} è l'insieme di entità reali su cui il sistema software ha effetto.
+
+Uno \textit{stakeholder} è, in ambito economico, il soggetto che può influenzare il successo di un'impresa o che ha 
+interessi nelle decisioni dell'impresa; in ambito del processo software sono persone che possono influenzare il processo 
+o che hanno interesse nelle decisioni assunte in esso.
+
+È possibile dialogare con gli stakeholder tramite \textit{interviste}, nelle quali viene chiesto di raccontare attraverso 
+degli esempi reali come l'attività lavorativa funziona realmente, e tramite \textit{etnografia}, l'osservazione dei potenziali 
+utenti nello svolgimento delle loro mansioni.
+
+Il dialogo con gli stakeholder presenta vari problemi, in quanto non sono in grado di indicare chiaramente cosa vogliono 
+dal sistema, omettendo informazioni ritenute ovvie ed utilizzando terminologia non adatta. Inoltre, lo stesso requisito 
+può essere espresso da più stakeholder in maniera differente, ed addirittura essere in conflitto.
+
+Molti problemi scaturiscono dal \textit{linguaggio naturale}, in quanto una descrizione ad alto livello di un requisito 
+può generare confusione. La soluzione è quella di utilizzare il linguaggio in modo coerente, evitando gergo tecnico ed 
+illustrando i requisiti tramite semplici diagrammi.
 \subsubsection*{Analisi dei requisiti}
 La \textit{analisi dei requisiti} è l'organizzazione, negoziazione e modellazione dei requisiti.
+Comprende:
+\begin{itemize}
+    \item \textit{classificazione e organizzazione dei requisiti}
+    \item \textit{assegnazione di priorità ai requisiti}: si stabilisce il grado di rilevanza di ogni requisito 
+    \item \textit{negoziazione dei requisiti}
+    \item \textit{modellazione analitica dei requisiti}: produzione di modelli che rappresentano o descrivono nel dettaglio 
+    i requisiti 
+\end{itemize}
+I \textit{requisiti di sistema} sono l'espansione dei requisiti utente, e formano la base per la progettazione. Il linguaggio
+naturale non è adatto alla definizione di un requisito di sistema, quindi è necessario usare template, modelli grafici o 
+notazione matematica.
 
+Il \textit{modello data-flow}, detto anche pipe \& filter, permette di modelalre il flusso e l'elaborazione dei dati, ma 
+non prevede la gestione degli errori. L'elaborazione è di tipo batch: input $\rightarrow$ elaborazione $\rightarrow$ output.
+
+I requisiti non funzionali si possono specificare definendone delle misure quantitative:
+\begin{itemize}
+    \item \textit{efficienza}: tempo di elaborazione delle richieste, occupazione di memoria
+    \item \textit{affidabilità}: probabilità di malfunzionamento, disponibilità
+    \item \textit{usabilità}: tempo di addestramento, aiuto contestuale
+\end{itemize}
+
+Il \textit{documento dei requisiti} contiene il risultato della deduzione e dell'analisi, ed è la dichiarazione ufficiale 
+di ciò che si deve sviluppare. Il documento contiene una breve introduzione che descrive le funzionalità del sistema, un 
+glossario contenente le definizione di termini tecnici, i requisiti utente e i requisiti di sistema, correlati con modelli 
+UML. Il documento è letto da tutte le figure coinvolte nella realizzazione del progetto.
 \subsubsection*{Validazione dei requisiti}
-La \textit{validazione dei requisiti} è la verifica del rispetto di alcune proprietà da parte del documento dei requisiti.
+La \textit{validazione dei requisiti} è la verifica del rispetto di alcune proprietà da parte del documento dei requisiti,
+serve ad evitare la scoperta di \textit{errori di specifica} durante le fasi successive del processo software. Sono da 
+verificare le segueni proprietà:
+\begin{itemize}
+    \item \textit{completezza}: tutti i requisiti richiesti dal committente devono essere documentati
+    \item \textit{coerenza}: la specifica dei requisiti non deve contenere definizioni tra loro contraddittorie
+    \item \textit{precisione}: l'interpretazione di una definizione di requisito deve essere unica
+    \item \textit{realismo}: i requisiti devono essere implementati date le risorse disponibili
+    \item \textit{tracciabilità}
+\end{itemize}
+
+Quando si modifica un requisito bisogna valutarne l'impatto sul resto della specifica: è quindi necessario tracciarlo.
+Vari tipi di \textit{tracciabilità}:
+\begin{itemize}
+    \item \textit{tracciabilità della sorgente}: reperire la fonte d'informazione relativa al requisito
+    \item \textit{tracciabilità dei requisiti}: individuare i requisiti dipendenti
+    \item \textit{tracciabilità del progetto}: individuare i componenti del sistema che realizzano il requisito
+    \item \textit{tracciabilità dei test}: individuare i test-case usati per collaudare il requisito
+\end{itemize}
+
+Per validare i requisiti si può impegare un gruppo di \textit{revisori} che ricontrolli i requisiti e \textit{costruire 
+dei prototipi}.
+\section{Progettazione}
+\subsection{Attività di progettazione}
+Durante la fase di \textit{progettazione architetturale} viene definita la struttura del sistema, come questo verrà 
+distribuito e come il sistema si dovrà comportare. Sono inoltre progettate le strutture dati, gli algoritmi e la GUI.
+\subsection{Progettazione architetturale}
+\subsubsection*{Strutturazione}
+Il sistema può essere strutturato in vari sottosistemi (strati), tipicamente tre. Ogni strato interagisce con gli strati 
+adiacenti. Gli strati sono:
+\begin{itemize}
+    \item \textit{presentazione}: l'interfaccia utente, raccoglie i dati dall'utente
+    \item \textit{elaborazione}:  elabora i dati in input e produce dati in output
+    \item \textit{gestione dei dati}: il database
+\end{itemize}
+
+Un \textit{sottosistema} è la parte del sistema dedicata a svolgere una certa attività, mentre un \textit{modulo} è la 
+parte del sottosistema dedicata a svolgere particolari funzioni legate all'attività del sottosistema.
+\subsubsection*{Deployment}
+Con \textit{deployment} si intende la distribuzione dei componenti in vari dispositivi hardware. Nel \textit{deployment 
+a 1-tier} i tre stati del sistema sono concentrati su un dispositivo, in quello a \textit{2-tiers} su due e in quello a 
+\textit{3-tiers} su tre.
+
+Con deployment a 2-tiers si possono avere due soluzioni: \textit{fat client} e \textit{thin client}.
+Nel modello \textit{thin client}, il server si occupa dell'elaborazione e della gestione dei dati, mentre il client si 
+occupa della presentazione.
+Nel modello \textit{fat client}, il server si occupa della gestione dei dati, mentre il client si occupa della presentazione 
+e dell'elaborazione.
+\subsubsection*{Metodo di controllo}
+
 \end{document}
