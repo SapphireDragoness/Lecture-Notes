@@ -157,6 +157,7 @@ indicato con $\mathbb{R}^2$.
     \item [$\mathbb{I}$] insieme dei numeri irrazionali ($\mathbb{I}=\mathbb{R}\setminus\mathbb{Q}$)
 \end{itemize}
 \chapter{Funzioni}
+\section{Il concetto di funzione}
 \begin{definition}
     Siano $X,Y\neq\emptyset$. Si dice funzione da $X$ in $Y$ una legge che fa corrispondere ad ogni elemento di $X$ uno 
     ed un solo elemento di $Y$. L'insieme $X$ viene detto dominio della funzione mentre l'insieme $Y$ viene detto codominio 
@@ -164,9 +165,51 @@ indicato con $\mathbb{R}^2$.
 \end{definition}
 Viene utilizzata la seguente notazione:
 \begin{align*}
-    f&:X\rightarrow Y & x&\mapsto f(x)
+    f&:X\rightarrow Y \textnormal{ ($f$ definita da $X$ a $Y$)} & f:x&\mapsto f(x) \textnormal{ ($f$ associa $f(x)$ ad $x$)}
 \end{align*}
 Per ogni $x\in X$, l'elemento di $Y$ che la funzione $f$ fa corrispondere a $x$ viene detto \textit{immagine} di $x$ 
-mediante $f$ e si indica con $f(x)$.
-
+mediante $f$ e si indica con $f(x)$. La proprietà caratteristica di $f$, affinchè la si possa chiamare funzione, è 
+l'\textit{univocità} della corrispondenza: assegnato l'elemento in "ingresso" $a\in A$, l'elemento in "uscita" $b=f(a)$ 
+dev'essere univocamente determinato.
+\begin{definition}
+    Siano $X,Y \neq \emptyset$ e sia $f:X\rightarrow Y$. Si dice grafico di $F$ l'insieme
+    \begin{equation*}
+        \mathcal{G}(f)=\{(x,y)\in X\times Y:x\in X \textnormal{ e } y=f(x)\}
+    \end{equation*}
+\end{definition}
+Ossia, il grafico di una funzione $f$ è l'insieme dei punti del piano di coordinate $(x,y)$ con $y=f(x)$ e $x$ variabile 
+nel dominio $D$.
+\begin{definition}
+    Siano $X,Y \neq \emptyset$ e sia $f:X\rightarrow Y$. Siano rispettivamente $A\subseteq X$ e $B\subseteq Y$. Si dice 
+    immagine di $A$ il sottoinsieme di $Y$ costruito dalle imagini dei singoli elementi di $A$. Tale insieme viene denotato 
+    con $f(A)$. In altre parole si ha 
+    \begin{equation*}
+        f(A)=\{f(x)\in Y:x\in A\}\subseteq Y 
+    \end{equation*}
+    Si dice immagine inversa di $B$ o controimmagine di $B$ il sottoinsieme di $X$ costituito da quegli elementi di $X$ 
+    la cui immagine appartiene a $B$. Tale insieme viene denotato con $f^{-1}(B)$. In altre parole si ha 
+    \begin{equation*}
+        f^{-1}(B)=\{x\in X:f(x)\in B\}\subseteq X
+    \end{equation*}
+\end{definition}
+\begin{definition}
+    Siano $X,Y \neq \emptyset$ e sia $f:X\rightarrow Y$. Sia inoltre $A\subseteq X$ insieme non vuoto. Si dice restrizione 
+    di $f$ all'insieme $A$ la funzione 
+    \begin{equation*}
+        f_{|A}:A\rightarrow Y
+    \end{equation*}
+\end{definition}
+\begin{theorem}
+    Siano $X,Y \neq \emptyset$ e sia $f:X\rightarrow Y$. Siano inoltre $A,B\subseteq X$ e $C,D\subseteq Y$. Valgono le 
+    seguenti conclusioni:
+    \begin{enumerate}
+        \item $f(A\cup B)=f(A)\cup f(B)$
+        \item $f(A\cap B)=f(A)\cap f(B)$
+        \item $f^{-1}(f(A))\supset A$
+        \item $f^{-1}(C\cup D)=f^{-1}(C)\cup f^{-1}(D)$
+        \item $f^{-1}(C\cap D)=f^{-1}(C)\cap f^{-1}(D)$
+        \item $f(f^{-1}(C))\subseteq C$
+    \end{enumerate}
+\end{theorem}
+Ad esempio, sia $f:\mathbb{R}\rightarrow\mathbb{R}$ definita $f(x)=x^2$
 \end{document}

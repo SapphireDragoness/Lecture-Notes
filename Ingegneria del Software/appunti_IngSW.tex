@@ -198,5 +198,101 @@ occupa della presentazione.
 Nel modello \textit{fat client}, il server si occupa della gestione dei dati, mentre il client si occupa della presentazione 
 e dell'elaborazione.
 \subsubsection*{Metodo di controllo}
+Un componente fornisce servizi ad altri componenti. Un'\textit{interfaccia} è un insieme di operazioni che il componente
+mette a disposizione di altri componenti ed è condivisa con i componenti che lo invocano. Un \textit{corpo} è la parte 
+interna del componente e non è conosciuto agli altri componenti. La separazione tra interfaccia e corpo è detta 
+\textit{information hiding}.
 
+Esistono diversi stili di controllo (attivazione) tra componenti:
+\begin{itemize}
+    \item controllo \textit{centralizzato}: è presente un componente detto \textit{controllore}, che controlla l'attivazione 
+    e il coordinamento degli altri componenenti
+    \item controllo \textit{basato su eventi}: è basato su eventi esterni (ad esempio un segnale) ed ogni componente si
+    occupa di gestire determinati eventi; il gestore degli eventi è detto \textit{broker}, che rileva l'evento e lo notifica 
+    tramite broadcast (selettivo o non selettivo)
+    \item controllo \textit{call-return}: il controllo passa dall'alto verso il basso
+    \item controllo \textit{client-server}: un componente client chiede un servizio ad un componente server attraverso 
+    una chiamata di proceduta e il componente server risponde
+\end{itemize}
+\subsubsection*{Modellazione del comportamenti ad oggetti}
+I componenti del sistema sono considerati come oggetti che interagiscono. Un \textit{oggetto} è definito da \textit{attributi} e 
+\textit{operazioni}. Gli oggetti comunicano tra di loro attraverso lo scambio di messaggi.
+\section{Collaudo}
+La fase di collaudo avviene alla fine dell'implementazione del sistema. Si ricercano e correggono difetti, si controlla 
+che il prodotto realizzi ogni servizio senza malfunzionamenti (fase di \textit{verifica}) e che soddisfi i requisiti del 
+committente (fase di \textit{validazione}).
+\subsection{Ispezione}
+\subsubsection*{Motivazioni}
+L'\textit{ispezione} è una tecnica statica di analisi del codice, basata sulla lettura di questo e della documentazione.
+L'ispezione è meno costosa del testing e può essere eseguita su una versione incompleta del sistema, ma alcuni requisiti 
+non funzionali non si possono collaudare solo con l'ispezione (efficienza, affidabilità...).
+
+Un team analizza il codice e segnala i possibili difetti. Viene seguita una checklist che indica i possibili difetti da 
+investigare: 
+\begin{itemize}
+    \item errori nei dati 
+    \item errori di controllo 
+    \item errori di I/O 
+    \item errori di interfaccia 
+    \item errori nella gestione della memoria 
+    \item errori di gestione delle eccezioni 
+\end{itemize}
+\subsubsection*{Ruoli nel team di ispezione}
+Il team di ispezione è composto da \textit{autori} del codice, che correggono i difetti rilevati durante l'ispezione, 
+\textit{ispettori}, che trovano difetti, e \textit{moderatore}, che gestisce il processo di ispezione.
+\subsubsection*{Processo di ispezione}
+Durante la fase di \textit{pianificazione}, il moderatore seleziona gli ispettori e controlla che il materiale sia completo.
+
+Durante la fase di \textit{introduzione}, il moderatore organizza una riunione preliminare con autori e ispettori, nella 
+quale è discusso lo scopo del codice e la checklist da seguire.
+
+Durante la fase di \textit{preparazione individuale}, gli ispettori studiano il materiale e cercano difetti nel codice 
+in base alla checklist ed all'esperienza personale.
+
+Durante la fase di \textit{riunione di ispezione}, gli ispettori indicano i difetti individuati.
+
+Durante la fase di \textit{rielaborazione}, il programma è modificato dall'autore per correggere i difetti.
+
+Durante la fase di \textit{prosecuzione}, il moderatore decide se è necessario un ulteriore processo di ispezione.
+\subsubsection*{Analisi statica del codice}
+Gli strumenti CASE supportano l'ispezione del codice eseguendo su di esso l'\textit{analisi del flusso di controllo}, 
+che assicura l'assenza di cicli con uscire multiple, salti incondizionati e codice non raggiungibile; l'\textit{analisi 
+dell'uso dei dati}, che assicura l'assenza di problemi legati alle variabili; l'\textit{analisi delle interfacce} e 
+l'\textit{analisi della gestione della memoria}. Due strumenti per l'analisi statica sono il compilatore gcc e SonarQube.
+
+L'analisi statica precede l'ispezione del codice fornendo informazioni utili all'individuazione dei difetti, ma non è 
+sufficiente.
+\subsection{Testing}
+\subsubsection*{Processo di testing}
+Durante la fase di \textit{testing}, sono preparati ed eseguiti i test case, ed i loro risultati in output sono confrontati 
+con quelli attesi.
+
+Nella fase di \textit{debugging} viene controllata l'esecuzione del programma e il valore delle variabili, in modo da 
+individuare l'errore. L'errore viene corretto e viene eseguito un \textit{testing di regressione}, nel quale si ripete 
+l'ultimo test-case e tutti quelli precedenti.
+\subsubsection{Test-case}
+Un \textit{test-case} è composto da dati in input e dati in output attesi. 
+
+Esistono due approcci per scegliere test-case. Nel testing \textit{black box}, la scelta dei test-case è basata sulla 
+conoscenza di quali sono i dati in input e quelli in output. 
+
+Dato l'insieme dei dati in input e l'insieme dei dati in 
+output, una \textit{partizione di equivalenza} è un sottoinsieme dei dati in input per cui il sistema produce sempre lo 
+stesso dato in output (oppure simili). Si può fare black box testing usando delle partizioni di equivalenza.
+Per scrivere test-case, si individuano le partizioni di equivalenza e si scelgono un numero finito di test-case: in 
+particolare si scelgono test-case con dati I/O al confine delle partizioni di equivalenza (\textit{Boundaty Value Analysis}).
+
+Nel testing \textit{white box}, la scelta dei test-case è basata sulla struttura del codice. L'obiettivo è testare ogni 
+parte del codice. Il codice viene rappresentato con un \textit{flow graph}, un grafo che rappresenta i possibili cammini 
+nel codice.
+\subsubsection{Complessità ciclomatica}
+Nel codice, un cammino si dice \textit{indipendente} se introduce almeno una nuova sequenza di istruzioni o una nuova 
+condizione. Il numero di cammini indipendenti equivale alla \textit{complessità ciclomatica} (CC) del flow graph. CC è 
+il numero minimo di test-case richiesti per eseguire almeno una volta ogni parte del codice. I \textit{dynamic program
+analyser} sono strumenti CASE che, dato un test-case, indicano quali parti del codice sono state interessate da un 
+test-case e quali sono ancora da testare.
+\subsubsection*{Testing d'integrazione}
+I componenti possono essere implementati gradualmente oppure contemporaneamente. Il testing riguarda ciascun componente 
+e la sua integrazione nel sistema. Prima vengono testati i componenti in maniera isolata, poi viene testato il sistema 
+con le componenti integrate fino ad allora 
 \end{document}
