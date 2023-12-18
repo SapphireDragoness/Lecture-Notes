@@ -294,5 +294,117 @@ test-case e quali sono ancora da testare.
 \subsubsection*{Testing d'integrazione}
 I componenti possono essere implementati gradualmente oppure contemporaneamente. Il testing riguarda ciascun componente 
 e la sua integrazione nel sistema. Prima vengono testati i componenti in maniera isolata, poi viene testato il sistema 
-con le componenti integrate fino ad allora 
+con le componenti integrate fino ad allora. Il testing compiuto sul sistema con tutte le componenti è detto \textit{release 
+testing}.
+
+Lo scopo del \textit{testing d'integrazione} è verificare l'interfacciamento corretto dei componenti. Qui si applicano i 
+test-case applicati nei test d'integrazione precedenti e si applicano nuovi test. Se i componenti integrati sono pochi, 
+si usa white box testing.
+
+Nel \textit{top-down integration testing} si costruiscono prima i moduli primari, poi quelli secondari. I moduli secondari 
+non ancora disponibili sono sostituiti da STUB, dei moduli "dummy" che forniscono servizi pre-impostati.
+
+Nel \textit{bottom-up integration testing} si costruiscono prima i moduli secondari, poi quelli primari. I moduli primari 
+non ancora disponibili sono sostituiti da DRIVER, dei test program che invocano i moduli secondo i dati selezionati per 
+test-case.
+\subsubsection*{Release testing}
+Il \textit{release testing} riguarda il sistema completo. Riguarda la validazione ed è di tipo black-box.
+
+Per i sistemi customizzati si ha il \textit{test di accettazione}, nel quale il committente controlla il soddisfacimento 
+dei requisiti e si effettuano correzioni finchè il cliente non è soddisfatto.
+
+Per i sistemi generici si hanno le fasi di \textit{alpha e beta testing}. La versione "alpha" del sistema viene resa 
+disponibile ad un gruppo di sviluppatori per il collaudo finchè non si raggiunge ad un sistema soffisfacente; la versione 
+"beta" del sistema viene resa disponibile ad un gruppo di clienti ed eventualmente corretta, dopodichè il prodotto viene 
+messo sul mercato.
+\subsubsection*{Stress testing}
+Lo \textit{stress testing} serve per verificare l'efficienza e l'affidabilità del sistema. Viene svolto quando il sistema 
+è completamente integrato. Vengono eseguiti test in cui il carico di lavoro è molto superiore a quello previsto normalmente.
+\subsubsection*{Altri tipi di testing}
+\begin{itemize}
+    \item \textit{test di usabilità}: si valuta la facilità con cui gli utenti riescono ad usare il sistema 
+    \item \textit{recovery testing}
+    \item \textit{security testing}: simulazione di attacchi dall'esterno 
+    \item \textit{deployment testing}: verifica dell'installazione sui dispositivi
+    \item \textit{back-to-back testing}: si usa quando varie versioni del sistema sono disponibili, si effettua lo stesso 
+    test su tutte le versiono e si confrontano gli output delle varie versioni
+\end{itemize}
+\section{Manutenzione}
+La manutenzione riguarda tutte le modifiche fatte al sistema dopo la consegna. La manutenzione è un processo ciclico, che 
+permette al sistema di "evolversi".
+\subsection{Tipi di manutenzione e costo}
+\subsubsection*{Manutenzione correttiva}
+La \textit{manutenzione correttiva} corregge difetti non emersi in fase di collaudo. I difetti possono essere \textit{di 
+implementazione}, i meno costosi da correggere, \textit{di progettazione} e \textit{di specifica}, i più costosi in quanto 
+potrebbe essere necessario riprogettare il sistema.
+\subsubsection*{Manutenzione adattiva}
+Con \textit{manutenzione adattativa} s'intende l'adattamento del sistema a cambiamenti di piattaforma.
+\subsubsection*{Manutenzione migliorativa}
+Con \textit{manutenzione migliorativa} s'intende l'aggiunta, cambiamento o miglioramento di requisiti funzionali e non 
+funzionali, secondo le richieste del committente.
+\subsubsection*{Costi di manutenzione}
+Molti sono i fattori che influenzano il costo di manutenzione: 
+\begin{itemize}
+    \item \textit{dipendenza dei componenti}: la modifica dell componenti potrebbe avere ripercussioni sugli altri componenti 
+    \item \textit{linguaggio di programmazione}: i programmi scritti con linguaggi ad alto livello sono più facili da capire 
+    e da mantenere
+    \item \textit{struttura del codice}: codice ben strutturato e documentato rende più facile la manutenzione
+    \item \textit{collaudo}: una fase di collaudo approfondita riduce il numero di difetti 
+    \item \textit{qualità della documentazione}: una documentazione chiara e completa facilita la comprensione del sistema 
+    da mantenere 
+    \item \textit{stabilità dello staff}
+    \item \textit{età del sistema}
+    \item \textit{stabilità del dominio dell'applicazione}: se il dominio subisce variazioni, il sistema deve essere aggiornato
+    \item \textit{stabilità della piattaforma}
+\end{itemize}
+\subsection{Processo di manutenzione}
+Nel processo di manutenzione, bisogna innanzitutto \textit{identificare l'intervento} da svolgere e analizzarne l'impatto 
+sul sistema, identificando quali componenti e tests saranno impattati dalla modifica. 
+In seguito sono \textit{realizzate le modifiche}, aggiornando, se necessario, specifica, progettazione e/o implementazione.
+Dopo il collaudo, la nuova versione viene rilasciata.
+\subsubsection*{CRF}
+Il \textit{Change Request Form} (CRF) è un documento formale che descrive una modifica.
+È compilato dal proponente della modifica, gli sviluppatori e dalla Change Control Board. 
+\subsection{Patch, versioni e release}
+\subsubsection*{Patch}
+Nel caso si presentino problemi che devono essere risolti in fretta, si richiede d'urgenza una \textit{manutenzione d'emergenza}.
+Viene modificato direttamente il codice, applicando la soluzione più immediata, e si rilascai una versione aggiornata, 
+detta \textit{patch}.
+\subsubsection*{Versioni}
+Una \textit{versione} è un'istanza del sistema che differisce per qualche aspetto dalle altre istanze.  Una versione è 
+identificabile non solo da numeri di versione, ma anche dagli attributi
+\subsubsection*{Release}
+Una \textit{release} è una particolare verisone che viene distribuita a committenti/clienti. Una release comprende tutte 
+le componenti software necessarie per far funzionare il sistema e la documentazione.
+\subsubsection*{Configurazione software}
+La \textit{configurazione software} è l'insieme di informazioni prodotto da un processo software. Include documentazione, 
+codice e dati. Il \textit{database delle configurazioni} contiene varie configurazioni software corrispondenti alle release 
+di un sistema.
+\subsection{Sistemi ereditati e re-engineering}
+Un \textit{sistema ereditato} è un vecchio sistema che deve essere mantenuto nel tempo. Sfruttano tecnologie obsolete e 
+sono costosi e difficili da mantenere.
+È possibile \textit{reimplementarli}, \textit{re-ingegnerizzarli} ed infine \textit{dismetterli}.
+
+Il \textit{forward engineering} è il processo software nel quale si crea un nuovo progetto partendo dalla specifica dei 
+requisiti.
+
+Il \textit{re-engineering} è il processo mediante il quale un nuovo sistema nasce dalla trasformazione di uno vecchio, allo 
+scopo di rinnovarlo e aumentare la mantenibilità. Le attività di re-engineering sono: traduzione del codice, ristrutturazione 
+del codice, ristrutturazione dei dati.
+\subsubsection*{Traduzione del codice}
+Con \textit{traduzione del codice} s'intende il passaggio da un liguaggio di programmazione ad un altro, oppure ad una 
+versione più recente di quel linguaggio.
+\subsubsection*{Refactoring}
+Le modifiche fatte al sistema nel corso del tempo tendono a rendere il codice sempre meno ordinato. La \textit{ristrutturazione}
+cerca di rendere il codice più semplice, leggibile, comprensibile e modulare; vengono aggiunti commenti, eliminate le 
+ridondanze, uniformato lo stile di programmazione. Non modifica il comportamento del codice, ma ne aumenta la leggibilità.
+\subsubsection*{Ristrutturazione dei dati}
+È il processo di riorganizzazione delle strutture dati.
+\subsubsection*{Reverse engineering}
+Per sistemi ereditati, la documentazione può essere scarsa o assente, complicando le attività di re-engineering. 
+Il \textit{reverse engineering} è la generazione di documentazione partendo da codice e dati.
+\subsubsection*{Reimplementazione del sistema}
+Quando il sistema è troppo mal strutturato per il re-engineering, è inevitabile la reimplementazione del sistema. 
+\section{Gestione del progetto}
+Il processo software e la gestione si svolgono in 
 \end{document}
