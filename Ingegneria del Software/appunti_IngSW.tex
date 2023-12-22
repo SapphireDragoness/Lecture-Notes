@@ -406,5 +406,148 @@ Il \textit{reverse engineering} è la generazione di documentazione partendo da 
 \subsubsection*{Reimplementazione del sistema}
 Quando il sistema è troppo mal strutturato per il re-engineering, è inevitabile la reimplementazione del sistema. 
 \section{Gestione del progetto}
-Il processo software e la gestione si svolgono in 
+Un progetto è l'insieme del processo software e dalle attività di gestione.
+\subsection{Attività di pianificazione}
+Il processo software è \textit{scomposto} in task, ai quali devono essere assegnati risorse e dei quali devono essere 
+schedulati i tempi di esecuzione.
+\subsubsection*{Milestone e deliverable}
+Per valutare l'avanzamento del processo, sis stabiliscono dei momenti precisi in cui determinati risultati intermedi devono 
+essere raggiunti.
+Una \textit{milestone} è la terminazione di un certo insieme di task previsto per una certa data, e funge come punto di 
+controllo per l'avanzamento del lavoro. Una \textit{deliverable} è una particolare milestone i cui risultati devono essere 
+notificati al committente.
+\subsubsection*{Tempistica}
+Una dipendenza tra task indica che un task non può iniziare prima che un insieme di task sia stato ultimato.
+
+Un \textit{cammino critico} è il cammino più lungo, in termini di tempo, dal "nodo iniziale" al "nodo finale". Ritardi 
+di task nel cammino critico determinano ritardo nel completamento del progetto.
+\subsection{Rischi}
+Un \textit{rischio} è una circostanza avversa che si preferirebbe non accadesse. Il rischio ha due caratteristiche: l'
+\textit{incertezza} che il rischio si verifichi, e la \textit{perdita} che il rischio potrebbe causare.
+
+La \textit{gestione dei rischi} coinvolge l'identificazione dei rischi, la valutazione del loro impatto, la definizione 
+di strategie preventive o reattive.
+\subsubsection*{Tipi di rischio}
+I rischi possono essere di vario tipo:
+\begin{itemize}
+    \item \textit{rischi tecnologici}: derivano dall'hardware e software utilizzati
+    \item \textit{rischi riguardanti il personale}: derivano dal personale del team
+    \item \textit{rischi organizzativi}: derivano dall'organizzazione aziendale
+    \item \textit{rischi strumentali}: derivano dagli strumenti CASE
+    \item \textit{rischi dei requisiti}: derivano dal cambiamento dei requisiti
+    \item \textit{rischi di stima}: derivano dalle valutazioni relative a tempi, costi, ecc... 
+\end{itemize}
+I rischi di \textit{progetto} colpiscono la pianificazione, i rischi di \textit{prodotto} colpiscono la qualità del sistema 
+e i rischi di \textit{business} colpiscono il committente o lo sviluppatore sul piano economico.
+\subsubsection*{Analisi dei rischi}
+Con \textit{analisi dei rischi} s'intende lo stimare la probabilità del rischio e la gravità dei suoi effetti.
+\subsubsection*{Pianificazione dei rischi}
+È necessario sviluppare strategie per limitare i rischi. Le \textit{strategie preventive} sono piani per ridurre la 
+probabilità che il rischio si verifichi; le \textit{strategie reattive} sono piani per ridurre gli effetti nel caso il 
+rischio si verifichi.
+\subsubsection*{Monitoring dei rischi}
+Si verifica, per ogni rischio identificato, se la sua probabilità può crescere o decrescere, e se la gravità dei suoi 
+effetti può cambiare.
+\subsection{Monitoraggio e revisione}
+La gestione del progetto si basa sulle informazioni, inizialmente ridotte. Durante il progetto di raccolgono maggiori 
+informazioni, e periodicamente di aggiornano pianificazione, stima dei costi e gestione dei rischi.
+
+Il \textit{piano di progetto} è un documento che raccoglie le informazioni sulle attività di gestione di un progetto.
+\section{Modelli di processo prescrittivi}
+\subsection{Modello a cascata}
+Il \textit{modello a cascata} è caratterizzato da fasi sequenziali: prima di passare alla fase successiva, la fase 
+corrente deve essere stata completata. 
+Il committente è coinvolto solo nella specifica, e può visionare il sistema solo alla consegna.
+
+Il modello a cascata è caratterizzato da:
+\begin{itemize}
+    \item visibilità alta: ogni fase produce della documentazione e le fasi sono ben distinte
+    \item affidabilità bassa: il sistema è collaudato in blocco e il committente può controllare il soddisfacimento dei 
+    requisiti solo alla consegna 
+    \item robustezza bassa: i requisiti non devono cambiare 
+    \item rapidità bassa: il committente può disporre del sistema solo alla consegna, dopo le lunghe fasi di sviluppo
+\end{itemize}
+\subsubsection*{Prototipo}
+Un \textit{prototipo} è una versione preliminare del sistema che realizza un sottoinsieme dei requisiti. Lo scopo del 
+prototipo è comprendere un insieme di requisiti poco chiari. Non ha la qualità del prodotto finale, viene mostrato al 
+committente e valutato. È utile se combinato con il modello a cascata.
+\subsubsection*{Sviluppo basato sul riuso}
+Lo sviluppo CBSE si basa sul riuso di componenti esistenti. È caratterizzato da:
+\begin{itemize}
+    \item visibilità alta
+    \item affidabilità migliore: i componenenti pre-esistenti sono già stati collaudati in precedenza 
+    \item robustezza migliore 
+    \item rapidità migliore: alcuni componenti sono già pronti
+\end{itemize}
+\subsection{Modelli iterativi}
+I \textit{modelli iterativi} prevedono la ripetizione di alcune fasi del processo e la partecipazione del committente
+durante il processo per verificare il soddisfacimento dei requisiti. Il sistema è un \textit{prototipo evolutivo}: il 
+prototipo evolve nel sistema finale, aggiungendo gradualmente i requisiti mancanti. 
+\subsubsection*{Sviluppo evolutivo}
+Lo sviluppo è diviso  in sei fasi:
+\begin{itemize}
+    \item si definiscono ad alto livello i requisiti
+    \item si seleziona un sottoinsieme dei requisiti
+    \item si aggiorna il prototipo corrente facendo la specifica, la progettazione, l'implementazione e il collaudo dei 
+    nuovi requisiti
+    \item si genera una release del sistema che realizza i requisiti considerati finora, si mostra il prototipo al committente 
+    che fornisce un feedback
+    \item se necessario, si corregge il prototipo in base al feedback 
+    \item se ci sono altri requisiti da trattare, si ritorna al passo 2
+\end{itemize}
+Si comincia dai requisiti funzionali con maggiore priorità.
+
+Attributi dello sviluppo evolutivo:
+\begin{itemize}
+    \item visibilità bassa: la documentazione non sempre viene aggiornata
+    \item affidabilità alta: il collauddo riguarda un sottoinsieme di requisiti e il committente controlla il soddisfacimento 
+    dei requisiti ad ogni versione 
+    \item robustezza media: il processo supporta il cambiamento dei requisiti, ma il codice rischia di diventare poco 
+    strutturato
+    \item rapidità media: un prototipo funzionante è sempre disponibile, ma la consegna della versione richiede comunque 
+    l'attesa dell'analisi, la progettazione, l'implementazione e il collaudo dei relativi requisiti
+\end{itemize}
+\subsubsection*{Sviluppo incrementale}
+Mantiene i vantaggi dello sviluppo evolutivo ma ha maggiore visibilità.
+
+Durante le \textit{fasi iniziali} si ha la specifica ad alto livello, si stabilisce quale sarà il numero di incrementi del 
+sistema durante lo sviluppo, il loro ordine e viene progettato il sistema.
+Durante le \textit{fasi cicliche} si specificano i requisiti dell'incremento, lo si implementa, lo si collauda e si genera 
+una release corrente del sistema.
+
+Attributi dello sviluppo incrementale:
+\begin{itemize}
+    \item visibilità alta: all'inizio del progetto sono specificati architettura, numero e ordine degli incrementi
+    \item affidabilità alta: il collaudo riguarda un sottoinsieme di requisiti e il committente controlla il soddisfacimento 
+    dei requisiti ad ogni versione 
+    \item robustezza media: il processo supporta il cambiamento dei requisiti, e conoscendo l'architettura e il numero 
+    degli incrementi, il codice può essere strutturato più ordinatamente
+\end{itemize}
+\subsection{Processo unificato}
+Il \textit{processo unificato} (UP) comprende 4 fasi:
+\begin{itemize}
+    \item \textit{avvio}: l'inizio del progetto, con studio di fattibilità, requisiti preliminari, ecc... 
+    \item \textit{elaborazione}: genera un primo prototipo per il sistema 
+    \item \textit{costruzione}: si passa dal prototipo iniziale a quello finale 
+    \item \textit{transizione}: prepara tutto ciò che è necessario per la consegna del sistema presso il committente 
+\end{itemize}
+Ogni fase richiede l'esecuzione dei seguenti \textit{workflow}: requisiti, analisi, progettazone, implementazione, test.
+La quantità di lavoro dedicato ad ogni workflow varia a seconda della fase, ed ogni fase può essere eseguita più volte.
+Alla fine di ogni fase si otttengono una milestone ed un prototipo eseguibile.
+
+UP è contemporaneamente \textit{sequenziale}, \textit{iterativo} e \textit{incrementale}. UP si avvale di diagrammi UML 
+per modellare le fasi di lavoro.
+
+Attributi di UP:
+\begin{itemize}
+    \item visibilità media: le 4 fasi sono ben distinte e producono ducumentazione, ma non si sa a priori quante volte 
+    verranno ripetute
+    \item affidabilità alta: il collaudo riguarda un sottoinsieme di requisiti e il committente controlla il soddisfacimento 
+    dei requisiti ad ogni versione 
+    \item robustezza media: il processo supporta il cambiamento dei requisiti, e conoscendo l'architettura e il numero 
+    degli incrementi, il codice può essere strutturato più ordinatamente
+    \item rapidità media: prevede prototipo evolutivo, feedback del committente e gestione dei rischi
+\end{itemize}
+\section{Modelli di processo agili}
+
 \end{document}
