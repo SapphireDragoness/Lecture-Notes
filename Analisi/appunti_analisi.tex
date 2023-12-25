@@ -11,11 +11,11 @@
 
 \title{Appunti Analisi Matematica}
 
-\newtheorem*{theorem}{Teorema}
+\newtheorem{theorem}{Teorema}[chapter]
 \newtheorem*{proprietà}{Proprietà}
 \newtheorem*{lemma}{Lemma}
 \newtheorem*{corollary}{Corollario}
-\newtheorem*{definition}{Definizione}
+\newtheorem{definition}{Definizione}[chapter]
 
 \hypersetup{
     colorlinks=true,
@@ -29,6 +29,7 @@
 \begin{document}
 \pagenumbering{roman}
 \tableofcontents
+\
 \newpage
 \pagenumbering{arabic}
 \chapter{Insiemi}
@@ -211,5 +212,70 @@ nel dominio $D$.
         \item $f(f^{-1}(C))\subseteq C$
     \end{enumerate}
 \end{theorem}
-Ad esempio, sia $f:\mathbb{R}\rightarrow\mathbb{R}$ definita $f(x)=x^2$
+\begin{definition}
+    Siano $X,Y,Z$ insiemi non vuoti. Siano $f:y\rightarrow Z$ e $g:X\rightarrow Y$. Viene detta composizione di $f$ con 
+    $g$ la funzione $f\circ g$ definita da
+    \begin{equation*}
+        f\circ g:X\rightarrow Z
+    \end{equation*}
+\end{definition}
+\begin{definition}
+    Siano $X$ e $Y$ insiemi non vuoti e sia $f:X\rightarrow Y$. Si dice che $f$ è iniettiva se elementi distinti del dominio 
+    $X$ hanno immagini distinte:
+    \begin{equation*}
+        x_1,x_2\in X,x_1\neq x_2\Rightarrow f(x_1)\neq f(x_2)
+    \end{equation*}
+\end{definition}
+\begin{definition}
+    Siano $X$ e $Y$ insiemi non vuoti e sia $f:X\rightarrow Y$. Si dice che $f$ è suriettiva se ogni elemento del codominio 
+    $Y$ è immagine di almeno un elemento del dominio $X$:
+    \begin{equation*}
+        \forall y\in Y, \exists x\in X:f(x)=y
+    \end{equation*}
+\end{definition}
+\begin{definition}
+    Siano $X$ e $Y$ insiemi non vuoti e sia $f:X\rightarrow Y$. Si dice che $f$ è biettiva (biiettiva o biunivoca) se è 
+    contemporaneamente iniettiva e suriettiva. In altre parole, si dice che $f$ è biettiva se ogni elemento del codominio
+    $Y$ è immagine di esattamente un elemento del dominio $X$:
+    \begin{equation*}
+        \forall y\in Y,\exists !x\in X:f(x)=y
+    \end{equation*}
+\end{definition}
+Dato un insieme $X$ non vuoto, indicheremo con $Id_X:X\rightarrow X$ la \textit{funzione identità}, cioè quella funzione 
+che ad ogni $x\in X$ associa se stesso:
+\begin{equation*}
+    Id_X(x)=x \forall x\in X
+\end{equation*}
+\begin{definition}
+    Siano $X$ e $Y$ insiemi non vuoti e sia $f:X\rightarrow Y$. Si dice che $f$ è invertibile se esiste una funzione 
+    $g:Y\rightarrow X$ tale che $f\circ g=Id_Y$ e $g\circ f=Id_X$. In altre parole si ha che:
+    \begin{align*}
+        f(g(y))=y\quad&\forall y\in Y &  g(f(x))=x\quad&\forall x\in X
+    \end{align*}
+    Se $f$ è invertibile, una tale funzione $g$ è unica e viene denominata funzione inversa di $f$. Si indica con il 
+    simbolo $f^{-1}:Y\rightarrow X$.
+\end{definition}
+\begin{theorem}
+    Siano $X$ e $Y$ insiemi non vuoti e sia $f:X\rightarrow Y$. Allora $f$ è invertibile se e solo se $f$ è biettiva.
+\end{theorem}
+\begin{definition}
+    Siano $X$ e $Y$ due insiemi non vuoti. Si dice che $X$ e $Y$ hanno la stessa cardinalità se esiste una funzione 
+    $f:X\rightarrow Y$ biettiva.
+\end{definition}
+Non tutti gli insiemi infiniti hanno la stessa cardinalità. Gli insiemi con la stessa cardinalità di $\mathbb{N}$ si 
+dicono \textit{numerabili}. Gli insiemi $\mathbb{Z}$ e $\mathbb{Q}$ sono numerabili ed hanno quindi la stessa cardinalità 
+di $\mathbb{N}$, nonostante $\mathbb{N}\subset\mathbb{Z}\subset\mathbb{Q}$. L'insieme $\mathbb{R}$ dei numeri reali non 
+è numerabile: ha una cardinalità di \textit{ordine superiore} rispetto ad $\mathbb{N}$.
+\chapter{Insiemi in $\mathbb{R}$}
+\section{Intervalli}
+Si dice \textit{intervallo} un sottoinsieme di $\mathbb{R}$ tale per cui ogni numero reale compreso tra due elementi di 
+questo sottoinsieme appartiene al sottoinsieme medesimo.
+
+Dati $a,b\in \mathbb{R}$ con $a<b$, si definiscono i seguenti intervalli:
+\begin{align*}
+    [a,b]&=\{x\in\mathbb{R}:a\leq x\leq b\} & (a,b)&=\{x\in\mathbb{R}:a< x< b\}
+\end{align*}
+\begin{definition}
+    
+\end{definition}
 \end{document}
