@@ -275,7 +275,231 @@ Dati $a,b\in \mathbb{R}$ con $a<b$, si definiscono i seguenti intervalli:
 \begin{align*}
     [a,b]&=\{x\in\mathbb{R}:a\leq x\leq b\} & (a,b)&=\{x\in\mathbb{R}:a< x< b\}
 \end{align*}
+Anche un insieme costituito da un solo numero reale va considerato un intervallo.
 \begin{definition}
-    
+    Sia $X\subseteq\mathbb{R}$ un insieme nonn vuoto:
+    \begin{enumerate}
+        \item si dice che $X$ è limitato superiormente se esiste $a\in\mathbb{R}$ tale che
+        \begin{equation*}
+            \forall x\in X\rightarrow x\leq a
+        \end{equation*}
+        \item si dice che $X$ è limitato inferiormente se esiste $a\in\mathbb{R}$ tale che
+        \begin{equation*}
+            \forall x\in X\rightarrow x\geq a
+        \end{equation*}
+        \item si dice che $X$ è limitato se è contemporaneamente limitato inferiormente e superiormente
+    \end{enumerate}
 \end{definition}
+\begin{definition}
+    Sia $X\subseteq\mathbb{R}$ un insieme non vuoto:
+    \begin{enumerate}
+        \item si dice $a\in\mathbb{R}$ è un maggiorante di $X$ se
+        \begin{equation*}
+            \forall x\in X\rightarrow x\leq a
+        \end{equation*}
+        \item si dice $a\in\mathbb{R}$ è un minorante di $X$ se
+        \begin{equation*}
+            \forall x\in X\rightarrow x\geq a
+        \end{equation*}
+    \end{enumerate}
+\end{definition}
+\begin{definition}
+    Sia $X\subseteq\mathbb{R}$ un insieme non vuoto:
+    \begin{enumerate}
+        \item si dice che $a\in\mathbb{R}$ è un massimo ($maxX$) di $X$ se $a$ è un maggiorante di $X$ e $a\in X$
+        \item si dice che $a\in\mathbb{R}$ è un minimo ($minX$) di $X$ se $a$ è un minorante di $X$ e $a\in X$
+    \end{enumerate}
+\end{definition}
+Se $X$ ammette un massimo, tale massimo è unico. Analogamente, se $X$ ammette un minimo, tale minimo è unico.
+\begin{definition}
+    Sia $X\subseteq\mathbb{R}$ un insieme non vuoto:
+    \begin{enumerate}
+        \item si dice che $a\in\mathbb{R}$ è l'estremo superiore ($supX$) di $X$ se $a$ è il minimo dell'insieme dei maggioranti di 
+        $X$
+        \item si dice che $a\in\mathbb{R}$ è l'estremo inferiore ($infX$) di $X$ se $a$ è il massimo dell'insieme dei minoranti di 
+        $X$
+    \end{enumerate}
+\end{definition}
+\begin{theorem}[Completezza di $\mathbb{R}$]
+    Sia $X\subseteq\mathbb{R}$ un insieme non vuoto:
+    \begin{enumerate}
+        \item se $X$ è limitato superiormente, allora $X$ ammette un estremo superiore
+        \item se $X$ è limitato inferiormente, allora $X$ ammette un estremo inferiore
+    \end{enumerate}
+\end{theorem}
+\chapter{Limiti}
+\section{Definizione di limite}
+\begin{definition}
+    Sia $x_0\in\mathbb{R}$ e sia $R>0$. Si dice intorno di $x_0$ di raggio $R$ l'intervallo $(x_0-R,x_0+R)$.
+\end{definition}
+Si ha che $x$ appartiene all'intorno di raggio $R$ se e soltanto se $|x-x_0|<R$.
+\begin{definition}
+    Sia $X\subseteq\mathbb{R},X\neq\emptyset$. Sia $f:X\rightarrow\mathbb{R}$. Sia $x_0\in\mathbb{R}$ tale per cui esista 
+    $R>0$ tale che
+    \begin{equation*}
+        X\supseteq(x_0-R,x_0+R)\setminus\{x_0\}
+    \end{equation*}
+    Sia $\ell\in\mathbb{R}$. Si dice che $\ell$ è il limite di $f$ per $x$ che tende a $x_0$ se
+    \begin{equation*}
+        \forall\varepsilon>0,\exists\delta>0:|x-x_0|<\delta\implies|f(x)-\ell|<\varepsilon
+    \end{equation*}
+\end{definition}
+$x_0$ non deve necessariamente far parte del dominio della funzione.
+\begin{definition}
+    Sia $X\subset\mathbb{R},X\neq\emptyset$. Sia $f:X\rightarrow\mathbb{R}$. Sia $x_0\in\mathbb{R}$ tale per cui esista 
+    $R>0$ tale che 
+    \begin{equation*}
+        X\supseteq(x_0-R,x_0+R)\setminus\{x_0\}
+    \end{equation*}
+    \begin{enumerate}
+        \item si dice che $+\infty$ è il limite di $f$ per $x$ che tende a $x_0$ se 
+        \begin{equation*}
+            \forall M>0,\exists\delta>0:|x-x_0|<\delta\implies f(x)>M
+        \end{equation*}
+        \item si dice che $-\infty$ è il limite di $f$ per $x$ che tende a $x_0$ se 
+        \begin{equation*}
+            \forall M>0,\exists\delta>0:|x-x_0|<\delta\implies f(x)<-M
+        \end{equation*}
+    \end{enumerate}
+\end{definition}
+\begin{definition}
+    Sia $X\subset\mathbb{R},X\neq\emptyset$.
+    \begin{enumerate}
+        \item Supponiamo che esista $a\in\mathbb{R}$ per cui si abbia
+        \begin{equation*}
+            X\supseteq(a,+\infty)
+        \end{equation*}
+        Sia $f:X\rightarrow\mathbb{R}$. Sia $\ell\in\mathbb{R}$. Si dice che $\ell$ è il limite di $f$ per $x$ che tende
+        a $+\infty$ se 
+        \begin{equation*}
+            \forall\varepsilon>0,\exists N>0:x>N\implies|f(x)-\ell|<\varepsilon
+        \end{equation*}
+        \item Supponiamo che esista $a\in\mathbb{R}$ per cui si abbia
+        \begin{equation*}
+            X\supseteq(-\infty,a)
+        \end{equation*}
+        Sia $f:X\rightarrow\mathbb{R}$. Sia $\ell\in\mathbb{R}$. Si dice che $\ell$ è il limite di $f$ per $x$ che tende
+        a $-\infty$ se 
+        \begin{equation*}
+            \forall\varepsilon>0,\exists N>0:x<-N\implies|f(x)-\ell|<\varepsilon
+        \end{equation*}
+    \end{enumerate}
+\end{definition}
+\begin{definition}
+    Sia $X\subset\mathbb{R},X\neq\emptyset$.
+    \begin{enumerate}
+        \item Supponiamo che esista $a\in\mathbb{R}$ per cui si abbia
+        \begin{equation*}
+            X\supseteq(a,+\infty)
+        \end{equation*}
+        Sia $f:X\rightarrow\mathbb{R}$. Si dice che $+\infty$ è il limite di $f$ per $x$ che tende
+        a $+\infty$ se 
+        \begin{equation*}
+            \forall M>0,\exists N>0:x>N\implies f(x)>M
+        \end{equation*}
+        \item Supponiamo che esista $a\in\mathbb{R}$ per cui si abbia
+        \begin{equation*}
+            X\supseteq(a,+\infty)
+        \end{equation*}
+        Sia $f:X\rightarrow\mathbb{R}$. Si dice che $-\infty$ è il limite di $f$ per $x$ che tende
+        a $-\infty$ se 
+        \begin{equation*}
+            \forall M>0,\exists N>0:x>N\implies f(x)<-M
+        \end{equation*}
+        \item Supponiamo che esista $a\in\mathbb{R}$ per cui si abbia
+        \begin{equation*}
+            X\supseteq(-\infty,a)
+        \end{equation*}
+        Sia $f:X\rightarrow\mathbb{R}$. Si dice che $+\infty$ è il limite di $f$ per $x$ che tende
+        a $-\infty$ se 
+        \begin{equation*}
+            \forall M>0,\exists N>0:x<-N\implies f(x)>M
+        \end{equation*}
+        \item Supponiamo che esista $a\in\mathbb{R}$ per cui si abbia
+        \begin{equation*}
+            X\supseteq(-\infty,a)
+        \end{equation*}
+        Sia $f:X\rightarrow\mathbb{R}$. Si dice che $-\infty$ è il limite di $f$ per $x$ che tende
+        a $-\infty$ se 
+        \begin{equation*}
+            \forall M>0,\exists N>0:x<-N\implies f(x)<-M
+        \end{equation*}
+    \end{enumerate}
+\end{definition}
+\section{Limite destro e limite sinistro}
+\begin{definition}[Limite destro]
+    Sia $X\subset\mathbb{R},X\neq\emptyset$. Sia $f:X\rightarrow\mathbb{R}$. Sia $x_0$ tale per cui esista $R>0$ tale che 
+    \begin{equation*}
+        X\supseteq(x_0x,x_0+R)\quad\textnormal{($X$ contiene un intorno destro di $x_0$)}
+    \end{equation*}
+    \begin{enumerate}
+        \item Sia $\ell\in\mathbb{R}$. Si dice che $\ell$ è il limite destro di $f$ per $x$ che tende a $x_0$ da destra 
+        se 
+        \begin{equation*}
+            \forall\varepsilon>0,\exists\delta>0:|x\in(x_0,x_0+\delta)\implies|f(x)-\ell|<\varepsilon
+        \end{equation*}
+        \item Si dice che $+\infty$ è il limite destro di $f$ per $x$ che tende a $x_0$ da destra 
+        se 
+        \begin{equation*}
+            \forall M>0,\exists\delta>0:|x\in(x_0,x_0+\delta)\implies f(x)>M
+        \end{equation*}
+        \item Si dice che $-\infty$ è il limite destro di $f$ per $x$ che tende a $x_0$ da destra 
+        se 
+        \begin{equation*}
+            \forall M>0,\exists\delta>0:|x\in(x_0,x_0+\delta)\implies f(x)<-M
+        \end{equation*}
+    \end{enumerate}
+\end{definition}
+\begin{definition}[Limite sinistro]
+    Sia $X\subset\mathbb{R},X\neq\emptyset$. Sia $f:X\rightarrow\mathbb{R}$. Sia $x_0$ tale per cui esista $R>0$ tale che 
+    \begin{equation*}
+        X\supseteq(x_0x,x_0+R)\quad\textnormal{($X$ contiene un intorno destro di $x_0$)}
+    \end{equation*}
+    \begin{enumerate}
+        \item Sia $\ell\in\mathbb{R}$. Si dice che $\ell$ è il limite sinistro di $f$ per $x$ che tende a $x_0$ da destra 
+        se 
+        \begin{equation*}
+            \forall\varepsilon>0,\exists\delta>0:|x\in(x_0-\delta,x_0)\implies|f(x)-\ell|<\varepsilon
+        \end{equation*}
+        \item Si dice che $+\infty$ è il limite sinistro di $f$ per $x$ che tende a $x_0$ da destra 
+        se 
+        \begin{equation*}
+            \forall M>0,\exists\delta>0:|x\in(x_0-\delta,x_0)\implies f(x)>M
+        \end{equation*}
+        \item Si dice che $-\infty$ è il limite sinistro di $f$ per $x$ che tende a $x_0$ da destra 
+        se 
+        \begin{equation*}
+            \forall M>0,\exists\delta>0:|x\in(x_0-\delta,x_0)\implies f(x)<-M
+        \end{equation*}
+    \end{enumerate}
+\end{definition}
+\begin{theorem}
+    Sia $X\subset\mathbb{R},X\neq\emptyset$. Sia $f:X\rightarrow\mathbb{R}$. Sia $x_0\in\mathbb{R}$ tale per cui esista
+    $R>0$ tale che 
+    \begin{equation*}
+        X\supseteq(x_0-R,x_0+R)\setminus\{x_0\}
+    \end{equation*}
+    Allora
+    \begin{equation*}
+        \lim_{x\rightarrow x_0}f(x)
+    \end{equation*}
+    esiste se e solo se esistono e coincidono tra di loro 
+    \begin{align*}
+        \lim_{x\rightarrow x_0^-}&f(x) & \lim_{x\rightarrow x_0^+}&f(x)
+    \end{align*}
+\end{theorem}
+\section{Operazioni tra limiti}
+\begin{theorem}
+    Sia $X\subset\mathbb{R},X\neq\emptyset$. Sia $f:X\rightarrow\mathbb{R}$. Supponiamo che le funzioni $f$ e $g$ 
+    ammettano limiti finiti. Allora si ha:
+    \begin{enumerate}
+        \item $\lim_{x\rightarrow x_0}(f(x)+g(x))=\ell_1+\ell_2$
+        \item $\lim_{x\rightarrow x_0}(f(x)-g(x))=\ell_1-\ell_2$
+        \item $\lim_{x\rightarrow x_0}(f(x)\cdot g(x))=\ell_1\cdot \ell_2$
+        \item se $c\in\mathbb{R}$, $\lim_{x\rightarrow x_0}cf(x)=c\lim_{x\rightarrow x_0}f(x)$
+        \item se $g(x)\neq 0$ e $\ell_2\neq 0$, $\lim_{x\rightarrow x_0}(f(x)/g(x))=\ell_1/\ell_2$
+    \end{enumerate}
+\end{theorem}
+\section{Forme indeterminate}
+
 \end{document}
