@@ -12,9 +12,6 @@
 \title{Appunti Analisi Matematica}
 
 \newtheorem{theorem}{Teorema}[chapter]
-\newtheorem*{proprietà}{Proprietà}
-\newtheorem*{lemma}{Lemma}
-\newtheorem*{corollary}{Corollario}
 \newtheorem{definition}{Definizione}[chapter]
 
 \hypersetup{
@@ -500,6 +497,158 @@ $x_0$ non deve necessariamente far parte del dominio della funzione.
         \item se $g(x)\neq 0$ e $\ell_2\neq 0$, $\lim_{x\rightarrow x_0}(f(x)/g(x))=\ell_1/\ell_2$
     \end{enumerate}
 \end{theorem}
-\section{Forme indeterminate}
+\section{Cambiamento di variabile e continuità}
+\begin{theorem}[Cambiamento di variabile]
+    Siano $X,Y\subseteq\mathbb{R}$ insiemi non vuoti e siano date due funzioni $f:Y\rightarrow\mathbb{R}$ e $g:X\rightarrow\mathbb{R}$.
+    Siano $x_0,y_0\in\mathbb{R}\cup\{\pm\infty\}$ e sia $\ell\in\mathbb{R}\cup\{\pm\infty\}$ tali che si abbia 
+    \begin{align*}
+        \lim_{x\rightarrow x_0}g(x)&=y_0 & \lim_{y\rightarrow y_0}f(y)&=\ell
+    \end{align*}
+    Supponiamo inoltre che $g(x)\neq y_0$ per ogni $x\in X\setminus\{x_0\}$. Allora si ha 
+    \begin{equation*}
+        \lim_{x\rightarrow x_0}f(g(x))=\ell
+    \end{equation*}
+\end{theorem}
+Supponiamo di dover calcolare un limite che si presenta nella forma:
+\begin{equation*}
+    \lim_{x\rightarrow x_0}f(g(x))
+\end{equation*}
+Si introduce una nuova variabile $y=g(x)$:
+\begin{equation*}
+    x\rightarrow x_0 \implies y=g(x)\rightarrow y_0 \implies y\rightarrow y_0
+\end{equation*}
+sostituisco $g(x)$ con $y$ nel limite:
+\begin{equation*}
+    \lim_{y\rightarrow y_0}f(y)
+\end{equation*}
+\begin{definition}[Continuità]
+    Sia $X\subseteq\mathbb{R}$ non vuoto e sia $f:X\rightarrow\mathbb{R}$. Dato $x_0\in X$ si dice che $f$ è continua in 
+    $x_0$ se vale la seguente condizione:
+    \begin{equation*}
+        \forall\varepsilon>0,\exists\delta>0:|x-x_0|<\delta\implies|f(x)-f(x_0)|<\varepsilon
+    \end{equation*}
+    Si dice che $f$ è continua su $A\subseteq X$ se è continua in ogni punto di $A$.
+\end{definition}
+Se $x_0$ e $X$ sono tali per cui esiste $R>0$ per cui $(x_0-R,x_0+R)\subseteq X$ allora $f$ è continua in $x_0$ se e soltanto
+se $\lim_{x\rightarrow x_0}f(x)=s(x_0)$.
 
+Le funzioni elementari sono continue in ogni punto del loro dominio naturale.
+\begin{theorem}[Teorema del confronto]
+    Sia $X\subset\mathbb{R}$ e siano $f:X\rightarrow\mathbb{R}$ e $g:X\rightarrow\mathbb{R}$ tali che 
+    \begin{equation*}
+        f(x)\leq g(x), \forall x\in X
+    \end{equation*}
+    Supponiamo che esistano, finiti o infiniti, i limiti
+    \begin{align*}
+        \lim_{x\rightarrow x_0}&f(x) & \lim_{x\rightarrow x_0}&g(x)
+    \end{align*}
+    con $x_0\in\mathbb{R}\cup\{\pm\infty\}$. Allora si ha 
+    \begin{equation*}
+        \lim_{x\rightarrow x_0}f(x)\leq\lim_{x\rightarrow x_0}g(x)
+    \end{equation*}
+\end{theorem}
+\begin{proof}
+    Dalla definizione di limite si deduce che 
+    \begin{align*}
+        \forall\varepsilon>0,\exists\delta_1>0:|x-x_0|<\delta_1\implies|f(x)-\ell_1|<\varepsilon\\
+        \forall\varepsilon>0,\exists\delta_2>0:|x-x_0|<\delta_2\implies|g(x)-\ell_2|<\varepsilon
+    \end{align*}
+    Posto $\delta=min\{\delta_1,\delta_2\}$ per ogni $x\in X$ tale che $0<|x-x_0|<\delta$ si ha:
+    \begin{align*}
+        |f(x)-\ell_1|<\varepsilon\implies \ell_1-\varepsilon<f(x)<\ell_1+\varepsilon\\
+        |g(x)-\ell_2|<\varepsilon\implies \ell_2-\varepsilon<g(x)<\ell_2+\varepsilon
+    \end{align*}
+    ed in particolare si ottiene
+    \begin{equation*}
+        \ell_1-\varepsilon<f(x)\leq g(x)<\ell_2+\varepsilon\implies\ell_1-\varepsilon<\ell_2+\varepsilon\implies\ell_1-\ell_2<2\varepsilon\implies\ell_1\leq\ell_2
+    \end{equation*}
+\end{proof}
+\begin{theorem}[Teorema dei due Carabinieri]
+    Sia $X\subseteq\mathbb{R}$ e siano $f:X\rightarrow\mathbb{R},g:X\rightarrow\mathbb{R},h:X\rightarrow\mathbb{R}$ tali 
+    che 
+    \begin{equation*}
+        g(x)\leq f(x)\leq h(x)\quad\forall x\in X
+    \end{equation*}
+    Supponiamo che 
+    \begin{equation*}
+        \lim_{x\rightarrow x_0}g(x)=\lim_{x\rightarrow x_0}h(x)
+    \end{equation*}
+    e sia $\ell\in\mathbb{R}\cup\{\pm\infty\}$ il valore comune di questi due limiti. Allora anche $f$ ammette limite 
+    per $x\rightarrow x_0$ ed inoltre
+    \begin{equation*}
+        lim_{x\rightarrow x_0}f(x)=\ell
+    \end{equation*}
+\end{theorem}
+\begin{proof}
+    Dalla definizione di limite si deduce che 
+    \begin{align*}
+        \forall\varepsilon>0,\exists\delta_1>0:|x-x_0|<\delta_1\implies|g(x)-\ell|<\varepsilon\\
+        \forall\varepsilon>0,\exists\delta_2>0:|x-x_0|<\delta_2\implies|h(x)-\ell|<\varepsilon
+    \end{align*}
+    Posto $\delta=min\{\delta_1,\delta_2\}$ per ogni $x\in X$ tale che $0<|x-x_0|<\delta$ si ha:
+    \begin{align*}
+        |g(x)-\ell|<\varepsilon\implies \ell-\varepsilon<g(x)<\ell+\varepsilon\\
+        |h(x)-\ell|<\varepsilon\implies \ell-\varepsilon<h(x)<\ell+\varepsilon
+    \end{align*}
+    ed in particolare si ottiene
+    \begin{equation*}
+        \ell-\varepsilon<g(x)\leq f(x)\leq h(x)<\ell+\varepsilon\implies\ell-\varepsilon<f(x)<\ell+\varepsilon\implies|f(x)-\ell|<\varepsilon
+    \end{equation*}
+\end{proof}
+\section{Relazione di asintotico e asintoti}
+\begin{definition}
+    Sia $X\subseteq\mathbb{R}$ e siano $f:X\rightarrow\mathbb{R},g:X\rightarrow\mathbb{R}$. Sia $x_0\in\mathbb{R}\cup\{\pm\infty\}$
+    tale che $X$ contenga $U\setminus\{x_0\}$ con $U$ intorno di $x_0$. Supponiamo che $f(x)\neq 0$ e $g(x)\neq 0$ per 
+    ogni $x\in X\setminus\{x_0\}$. Si dice che $f(x)$ è asintotica a $g(x)$ per $x\rightarrow x_0$ se 
+    \begin{equation*}
+        \lim_{x\rightarrow x_0} \frac{f(x)}{g(x)}=1
+    \end{equation*}
+\end{definition}
+Si usa la notazione
+\begin{equation*}
+    f(x)\sim g(x)\quad\textnormal{per } x\rightarrow x_0
+\end{equation*}
+Si tratta di una relazione di equivalenza poichè possiede la proprietà riflessiva, simmetrica e transitiva.
+\begin{itemize}
+    \item proprietà riflessiva: $f(x)\sim f(x)$ per $x\rightarrow x_0$
+    \item proprietà simmetrica: se $f(x)\sim g(x)$ per $x\rightarrow x_0$, allora per $g(x)\sim f(x)$ per $x\rightarrow x_0$
+    \item proprietà transitiva: se $f(x)\sim g(x)$ e $g(x)\sim h(x)$ per $x\rightarrow x_0$, allora  $f(x)\sim h(x)$ per $x\rightarrow x_0$
+\end{itemize}
+Nel calcolo dei limiti si potrà sostituire in alcune situazioni una funzione con un'altra ad essa asintotica.
+
+Le funzioni asintotiche si possono sostituire solo in presenza di moltiplicazione e divisione.
+\subsection{Asintoti}
+\subsubsection*{Asintoto verticale}
+Si dice che una funzione $f$ possiede un asintoto vertical in $x_0$ se almeno uno tra 
+\begin{equation*}
+    \lim_{x\rightarrow x_0^+}f(x)\qquad\textnormal{e}\qquad\lim_{x\rightarrow x_0^-}f(x)
+\end{equation*}
+esiste ed è infinito. In tal caso, si dice che la retta verticale di equazione $x=x_0$ è un asintoto verticale per $f$.
+\subsubsection*{Asintoto orizzontale}
+Si dice che una funzione $f$ possiede un asintoto orizzontale a $+\infty$ se esiste ed è finito
+\begin{equation*}
+    \lim_{x\rightarrow +\infty}f(x)=\ell\in\mathbb{R}
+\end{equation*}
+In tal caso si dice che la retta orizzontale di equazione $y=\ell$ è un asintoto orizzontale per $f$ a $+\infty$.
+
+Analogamente si parla di asintoto orizzontale a $-\infty$ se esiste ed è finito
+\begin{equation*}
+    \lim_{x\rightarrow -\infty}f(x)=\ell\in\mathbb{R}
+\end{equation*}
+In tal caso si dice che la retta orizzontale di equazione $y=\ell$ è un asintoto orizzontale per $f$ a $-\infty$.
+\subsubsection*{Asintoto obliquo}
+Si dice che una funzione $f$ possiede un asintoto obliquo a $+\infty$ se esistono e sono finiti i seguenti limiti
+\begin{equation*}
+    m=\lim_{x\rightarrow +\infty}\frac{f(x)}{x}\in\mathbb{R}\setminus\{0\}, q=\lim_{x\rightarrow +\infty}[f(x)-mx]
+\end{equation*}
+In tal caso si dice che la retta di equazione $y=mx+q$ è un asintoto orizzontale per $f$ a $+\infty$.
+\section{Forme indeterminate di tipo esponenziale}
+Siccome $f(x)>0$ per ogni $x\in X\setminus\{x_0\}$ si ha 
+\begin{equation*}
+    f(x)=e^{ln(f(x))}\implies(f(x))^{g(x)}=[e^{ln(f(x))}]=e^{g(x)ln(f(x))}
+\end{equation*}
+Nel caso in qui esista $L=\lim_{x\rightarrow x_0}g(x)\ln(f(x))\in\mathbb{R}\{\pm\infty\}$, allora
+\begin{equation*}
+    \lim_{x\rightarrow x_0}(f(x))^{g(x)}=\lim_{x\rightarrow x_0}e^{g(x)\ln(f(x))}=e^L
+\end{equation*}
 \end{document}
