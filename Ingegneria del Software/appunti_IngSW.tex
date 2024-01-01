@@ -549,5 +549,121 @@ Attributi di UP:
     \item rapidità media: prevede prototipo evolutivo, feedback del committente e gestione dei rischi
 \end{itemize}
 \section{Modelli di processo agili}
+L'approccio \textit{agile} è pronto al cambiamento e flessibile. Lo scopo è la consegna rapida di un prodotto e riguarda
+progetti limitati.
+\subsection{eXtreme Programming}
+L'\textit{eXtreme Programming} (XP) è una forma estrema di sviluppo evolutivo, dove la rapidità è l'obiettivo fondamentale.
+Ci si concentra sulla fase di implementazione, mentre le altre fasi si seguono solo ad alto livello per guadagnare tempo.
+\subsubsection*{Specifica}
+La specifica è realizzata ad alto livello: gli scenari sono ordinati per priorità ed ogni scenario è diviso in incrementi.
+Insieme al committentte vengono stabiliti quali incrementi saranno realizzati dalla prossima realease, i tempi di consegna 
+e i test da eseguire nella fase di collaudo.
+\subsubsection*{Progettazione}
+Si definisce o si aggiorna l'architettura ad alto livello, i dettagli vengono stabiliti durante l'implementazione.
+\subsubsection*{Implementazione}
+Sono implementate varie strategie durante la fase di implementazione.
 
+La programmazione avviene \textit{a coppie}:
+\begin{itemize}
+    \item aumenta la probabilità di notare errori nel codice 
+    \item il driver scrive il codice, il navigatore lo controlla e fa il refactoring: il codice diventa più chiaro e 
+    mantenibile
+    \item la conoscenza del codice viene condivisa 
+\end{itemize}
+
+\textit{Test Driven Development}: test case sono definiti durante la fase di pianificazione, prima dell'implementazione.
+
+Inoltre, ogni programmatore può modificare qualunque parte del codice (\textit{possesso collettivo}).
+\subsubsection*{Collaudo}
+Vengono eseguiti tre tipi di testing ad ogni incremento:
+\begin{itemize}
+    \item testing dell'incremento (unit test): svolto sull'incremento
+    \item testing d'integrazione: i test precedenti sono ripetuti
+    \item test di accettazione: il committente controlla il soddisfacimento dei requisiti
+\end{itemize}
+Vengono usati gli strumenti CASE per ridurre il tempo di collaudo.
+\subsubsection*{Attributi}
+Il committente è attivamente coinvolto nel processo, in quanto assegna priorità ai requisiti, il contenuto e la scadenza 
+delle release, definisce e controlla i test-case.
+
+XP è caratterizzato da:
+\begin{itemize}
+    \item visibilità bassa: la documentazione è composta da test-case, scenari e codice; i requisiti vengono spesso 
+    modificati
+    \item rapidità alta: le release sono molto frequenti e vengono usati strumenti CASE durante il collaudo 
+    \item affidabilità alta: lo sviluppo è guidato dai test, il committente può verificare la qualità del prodotto 
+    costantemente
+    \item robustezza alta: il processo supporta il cambiamento dei requisiti e il codice rimane ben strutturato e definito
+\end{itemize}
+\subsubsection*{Refactoring}
+Il codice è soggetto a frequenti modifiche. Il refactoring non modifica il comportamento del codice, ma ne migliora la 
+struttura interna.
+Durante il refactoring:
+\begin{itemize}
+    \item viene eliminato il codice duplicato
+    \item viene ridotta la lunghezza dei metodi/funzioni 
+    \item vengono dati nomi significativi alle variabili ed alle classi 
+    \item viene uniformata l'indentazione 
+\end{itemize}
+\subsection{Scrum}
+\textit{Scrum} è un altro modello di processo agile. Le fasi del processo prevedono la definizione del \textit{product
+backlog}, l'insieme di requisiti, e da 3 a 8 \textit{sprint}. Ogni sprint contiene una micro-cascata (progettazione, 
+implementazione e collaudo), genera un prototipo evolutivo da mostrare al committente e dura un mese.
+
+Il \textit{product backlog} è l'elenco di tutti i requisiti e relative priorità. È definito all'inizio del processo dal 
+product owner, ed è aggiornato dopo ogni sprint.
+
+Lo \textit{sprint backlog} è il sottoinsieme del product backlog da sviluppare durante uno specifico sprint.
+\subsubsection*{Meeting}
+Lo \textit{sprint planing meeting} è la riunione all'inizio di ogni sprint. Viene aggiornato il product backlog (se 
+necessario), viene definito lo sprint backlog e lo sprint goal (obiettivo dell sprint corrente).
+
+Lo \textit{scrum meeting} è la riunione giornaliera. Ogni sviluppatore descrive ciò che ha fatto il giorno prima e cosa 
+farà nel giorno attuale. Si controlla l'avanzamento del lavoro, si aggiorna lo sprint backlog e si cercano soluzioni ai 
+problemi riscontrati.
+
+Lo \textit{sprint review meeting} è la riunione alla fine di ogni sprint. Si mostra il prototipo corrente e il product 
+owner decide se lo sprint goal è stato raggiunto o meno.
+\subsubsection*{Attributi}
+\begin{itemize}
+    \item visibilità media: l'avanzamento del lavoro è controllato giornalmente, ma non è possibile sapere a priori il 
+    numero degli sprint  
+    \item affidabilità alta: il committente è costantemente coinvolto e il collaudo è eseguito su ogni prototipo
+    \item robustezza alta: gli impedimenti sono notificati e risolti giornalmente, il backlog può essere aggiornato ad 
+    ogni sprint
+    \item rapidità alta: un prototipo viene rilasciato ogni mese
+\end{itemize}
+\subsection{DevOps}
+Il \textit{DevOps} è caratterizzato da collaborazione tra team di sviluppo (Dev) e amministratori di sistemi (Ops). 
+DevOps è scaturito dalla necessità di mantenere "systems of engagement", ossia applicazioni mobili o social media, che 
+richiedono prestazioni elevate e tempi rapidi di sviluppo e manutenzione.
+
+Lo scopo di DevOps è quello di creare un "ponte" tra sviluppatori, amministratori e utenti, in modo da rilasciare aggiornamenti 
+continui e ricevere feedback frequenti.
+\subsubsection*{Processi interni}
+\begin{itemize}
+    \item Dev: sviluppare e testare come in un ambiente di produzione
+    \item Release: distribuire con processi automatici 
+    \item Ops: monitorare la qualità operativa 
+    \item Ritorno di feedback da parte degli utenti 
+\end{itemize}
+
+Nel processo \textit{CI} (Continuous Integration and testing), gli sviluppatori integrano il codice diverse volte al giorno
+tramite repo condiviso. Il codice viene assemblato da uno strumento di build automatico per rilevare eventuali problemi 
+e si eseguono test funzionali e non in modo automatico.
+
+Nel processo \textit{CD} (Continuous Delivery and deployment), l'obiettivo è quello di costruire il software in modo da 
+rilasciarlo in qualsiasi momento. Ogni singola modifica che passa con successo i test viene automaticamente distribuita.
+
+Nel processo \textit{CO} (Continuous Operations), il sistema viene monitorato costantemente.
+
+Nel processo \textit{CA} (Continuous Assessment), si ascolta il feedback degli utenti e si pianificano di conseguenza le 
+azioni da compiere in futuro (anche a livello finanziario).
+\subsubsection*{Attributi}
+\begin{itemize}
+    \item visibilità media: non si conosce la frequenza di release 
+    \item affidabilità alta: integrazione e collaudo automatico dopo ogni release 
+    \item robustezza alta: feedback frequenti e monitoring costante 
+    \item rapidità alta: software rilasciato in modo continuo e automatico
+\end{itemize}
 \end{document}
