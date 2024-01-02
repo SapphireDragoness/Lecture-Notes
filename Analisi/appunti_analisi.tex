@@ -642,13 +642,84 @@ Si dice che una funzione $f$ possiede un asintoto obliquo a $+\infty$ se esiston
     m=\lim_{x\rightarrow +\infty}\frac{f(x)}{x}\in\mathbb{R}\setminus\{0\}, q=\lim_{x\rightarrow +\infty}[f(x)-mx]
 \end{equation*}
 In tal caso si dice che la retta di equazione $y=mx+q$ è un asintoto orizzontale per $f$ a $+\infty$.
-\section{Forme indeterminate di tipo esponenziale}
-Siccome $f(x)>0$ per ogni $x\in X\setminus\{x_0\}$ si ha 
+\section{Successioni}
+Sia $X$ un insieme non vuoto. Una funzione $a:\mathbb{N}\rightarrow X$ viene detta successione. Quando $X=\mathbb{R}$ si 
+parla di successioni reali o successioni in $\mathbb{R}$.
+\begin{definition}
+    Sia $\{a_n\}$ una successione in $\mathbb{R}$.
+    \begin{enumerate}
+        \item Si dice che $\ell\in\mathbb{R}$ è il limite di $\{a_n\}$ per $n\rightarrow +\infty$ se 
+        \begin{equation*}
+            \forall\varepsilon>0,\exists N\in\mathbb{N}:n>N\implies|a_n-\ell|<\varepsilon
+        \end{equation*}
+        Si scrive 
+        \begin{equation*}
+            \lim_{n\rightarrow +\infty}a_n=\ell
+        \end{equation*}
+        \item Si dice che $+\infty$ è il limite di $\{a_n\}$ per $n\rightarrow +\infty$ se 
+        \begin{equation*}
+            \forall M>0,\exists N\in\mathbb{N}:n>N\implies a_n>M
+        \end{equation*}
+        Si scrive 
+        \begin{equation*}
+            \lim_{n\rightarrow +\infty}a_n=+\infty
+        \end{equation*}
+        \item Si dice che $-\infty$ è il limite di $\{a_n\}$ per $n\rightarrow +\infty$ se
+        \begin{equation*}
+            \forall M>0,\exists N\in\mathbb{N}:n>N\implies a_n<-M
+        \end{equation*}
+        Si scrive 
+        \begin{equation*}
+            \lim_{n\rightarrow +\infty}a_n=-\infty
+        \end{equation*}
+    \end{enumerate}
+\end{definition}
+Le tecniche di calcolo dei limiti delle successioni sono essentialmente le stesse che si usano per il calcolo dei limiti 
+per $x\rightarrow +\infty$ nel caso delle funzioni di variabile reale.
+
+Anche nelle successioni è possibile definire relazioni di asintotico: date due successioni $\{a_n\}$ e $\{b_n\}$ con 
+$a_n\neq 0$ e $b_n\neq 0$ per ogni $n\in\mathbb{N}$ si dice che 
 \begin{equation*}
-    f(x)=e^{ln(f(x))}\implies(f(x))^{g(x)}=[e^{ln(f(x))}]=e^{g(x)ln(f(x))}
+    a_n\sim b_n\qquad\textnormal{per }n\rightarrow +\infty\qquad\textnormal{se }\lim_{n\rightarrow +\infty}\frac{a_n}{b_n}=1
 \end{equation*}
-Nel caso in qui esista $L=\lim_{x\rightarrow x_0}g(x)\ln(f(x))\in\mathbb{R}\{\pm\infty\}$, allora
-\begin{equation*}
-    \lim_{x\rightarrow x_0}(f(x))^{g(x)}=\lim_{x\rightarrow x_0}e^{g(x)\ln(f(x))}=e^L
-\end{equation*}
+\chapter{Continuità}
+\begin{definition}[Continuità]
+    Sia $X\subseteq\mathbb{R}$ non vuoto e sia $f:X\rightarrow\mathbb{R}$. Dato $x_0\in X$ si dice che $f$ è continua in 
+    $x_0$ se vale la seguente condizione:
+    \begin{equation*}
+        \forall\varepsilon>0,\exists\delta>0:|x-x_0|<\delta\implies|f(x)-f(x_0)|<\varepsilon
+    \end{equation*}
+    Si dice che $f$ è continua su $A\subseteq X$ se è continua in ogni punto di $A$.
+\end{definition}
+\begin{theorem}
+    Sia $X\subseteq\mathbb{R}$ insieme non vuoto e siano $f:X\rightarrow\mathbb{R}$ e $g:X\rightarrow\mathbb{R}$. Supponiamo
+    che $f$ e $g$ siano continue in un punto $x_0\in X$. Allora valgono le seguenti:
+    \begin{enumerate}
+        \item $f+g$ è continua in $x_0$
+        \item $f-g$ è continua in $x_0$
+        \item $f\cdot g$ è continua in $x_0$
+        \item se $g(x)\neq 0$ per ogni $x\in X$ allora $\frac{f}{g}$ è continua in $x_0$
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}[Continuità delle funzioni composte]
+    Siano $X,Y\subseteq\mathbb{R}$ insiemi non vuoti e siano $f:Y\rightarrow\mathbb{R}$ e $g:X\rightarrow Y$. Supponiamo 
+    che $g$ sia continua in un punto $x_0\in X$ e che $f$ sia continua in $y_0=g(x_0)\in Y$. Allora la funzione composta 
+    $f\circ g:X\rightarrow\mathbb{R}$ è continua in $x_0$.
+\end{theorem}
+\begin{definition}[Massimo e minimo di una funzione]
+    Sia $X$ insieme non vuoto e sia 
+    \begin{equation*}
+        f:X\rightarrow\mathbb{R}
+    \end{equation*}
+    \begin{enumerate}
+        \item Si dice che $f$ ammette massimo in $X$ se l'insieme $f(X)$ ammette massimo. Si pone inoltre 
+        \begin{equation*}
+            \max_{x\in X}f(x)=\max(f(X))
+        \end{equation*}
+        \item Si dice che $f$ ammette minimo in $X$ se l'insieme $f(X)$ ammette massimo. Si pone inoltre 
+        \begin{equation*}
+            \min_{x\in X}f(x)=\min(f(X))
+        \end{equation*}
+    \end{enumerate}
+\end{definition}
 \end{document}
