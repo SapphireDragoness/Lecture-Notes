@@ -1,0 +1,113 @@
+\documentclass[11pt]{book}
+\usepackage[margin=1in]{geometry}
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+
+\title{Appunti Basi di Dati - Teoria}
+
+\begin{document}
+\chapter{Introduzione alle Basi di Dati}
+\section{Sistemi informativi, informazioni e dati}
+Ogni organizzazione è dotata di un \textit{sistema informativo}, che organizza e gestisce le informazioni necessarie per 
+perseguire gli scopi dell'organizzazione stessa.
+
+Per indicare la porzione automatizzata del sistema informativo di solito viene utilizzato il termina \textit{sistema informatico}.
+Nei sistemi informatici le informazioni vengono rappresentate per mezzo di \textit{dati}.
+
+Una \textit{base di dati} è una collezione di dati, utilizzati per rappressentare le informazioni di interesse per un 
+sistema informativo.
+\section{Basi di dati e sistemi di gestione di basi di dati}
+Un \textit{sistema di gestione di basi di dati} (DBMS) è un sistema software in grado di gestire collezioni di dati che 
+siano 
+\begin{itemize}
+    \item \textit{grandi}: in termini di occupazione di memoria
+    \item \textit{condivise}: applicazioni e utenti diversi devono poter accedervi
+    \item \textit{persistenti}: persistono anche dopo l'esecuzione del programma che le utilizza
+\end{itemize}
+assicurando la loro
+\begin{itemize}
+    \item \textit{affidabilità}: mantengono intatti i dati 
+    \item \textit{privatezza}: mantengono sicuri e privati i dati
+\end{itemize}
+ed essendo
+\begin{itemize}
+    \item \textit{efficiente}: le operazioni vengono svolte rapidamente
+    \item \textit{efficace}: rendono produttive le attività dei loro utenti
+\end{itemize}
+\section{Modelli dei dati}
+Un \textit{modello di dati} è un insieme di concetti utilizzati per organizzare i dati di interesse e descriverne la 
+struttura in modo che essa risulti comprensibile a un elaboratore.
+
+Il \textit{modello relazionale} dei dati permette di definire tipi per mezzo del costruttore \textit{relazione}, che 
+consente di organizzare i dati in insiemi di record a struttura fissa.
+
+I \textit{modelli concettuali} vengono utilizzati per descrivere i dati in maniera indipendente dal modello logico. Un 
+tipo di modello concettuale è il modello \textit{Entità-Relazione}.
+\subsection{Schemi e istanze}
+Nelle basi di dati esiste una parte sostanzialmente invariante nel tempo, detta \textit{schema} della base di dati, 
+costituita dalle caratteristiche dei dati, e una parte variabile nel tempo, detta \textit{istanza} o \textit{stato} della 
+base di dati, costituita dai valori effettivi.
+
+Lo schema di una relazione è costituito dalla sua intestazioen, cioè dal nome della relazione seguito dai nomi dei suoi 
+attributi, ad esempio:
+\begin{center}
+    \textbf{Docenza}(Corso,NomeDocente)
+\end{center}
+L'\textit{istanza di una relazione} è costituita dall'insieme, variante nel tempo, delle sue righe.
+\chapter{Il modello relazionale}
+\section{Il modello relazionale: strutture}
+\subsection{Relazioni e tabelle}
+Dati due insiemi $D_1$ e $D_2$, si chiama \textit{prodotto cartesiano} di $D_1$ e $D_2$ l'insieme di coppie ordinate 
+$(v_1,v_2)$ tali che $v_1$ è un elemento di $D_1$ e $v_2$ è un elemento di $D_2$.
+Il numero $n$ delle componenti del prodotto cartesiano viene detto $grado$ del prodotto cartesiano e della relazione. Il 
+numero degli elementi ($n$-uple) della relazione viene chiamato \textit{cardinalità} della relazione.
+\subsection{Relazioni con attributi}
+Nelle basi di dati, ciascuna $n$-upla contiene dati fra loro collegati. Inoltre, una relazione è un insieme, quindi:
+\begin{itemize}
+    \item non è definito alcun ordinamento fra le $n$-uple
+    \item le $n$-uple di una relazione sono distinte l'una dall'altra, in quanto tra gli elementi di un insieme non ce ne 
+    possono essere presenti due uguali tra loro 
+\end{itemize} 
+Ciascuna $n$-upla è, al proprio interno, ordinata: l'$i$-esimo valore di ciascuna proviene dall'$i$-esimo dominio.
+
+Indichiamo con $D$ l'insieme dei domini e specifichiamo la corrispondeza tra attributi e domini per mezzo della funzione 
+$dom:X\rightarrow D$, che associa a ciascun attributo $A\in X$ un dominio $dom(A)\in D$. Diciamo che una \textit{tupla} 
+su un insieme di attributi $X$ è una funzione $t$ che associa a ciascun attributo $A\in R$ un valore del dominio $dom(A)$.
+Una \textit{relazione} su $X$ è un insieme di tuple su $X$.
+\subsection{Relazioni e basi di dati}
+Uno \textit{schema di relazione} è costituito da un simbolo $R$, detto \textit{nome della relazione}, e da un insieme di 
+\textit{attributi} $X=\{A_1,A_2,\dots A_n\}$, indicato con $R(X)$. A ciascun attributo è associato un dominio.
+
+Uno \textit{schema di base di dati} è un insieme di schemi di relazione con nomi diversi:
+\begin{equation*}
+    R=\{R_1(X_1),R_2(X_2),\dots,R_n(X_n)\}
+\end{equation*}
+I nomi di relazione hanno come scopo principale quello di distinguere le varie relazioni nella base di dati.
+
+Un \textit{istanza di relazione} su uno schema $R(X)$ è un insieme $r$ di tuple su $X$.
+
+Un \textit{istanza di base di dati} su uno schema $R=\{R_1(X_1),R_2(X_2),\dots,R_n(X_n)\}$ è un insieme di relazioni dove 
+ogni relazione è una relazione sullo schema $R_i(X_i)$.
+\section{Vincoli d'integrità}
+Il \textit{vincolo d'integrità} è una proprietà che deve essere soddisfatta dalle istanze che rappresentano informazioni 
+corrette per l'applicazione. Ogni vincolo può essere visto come un \textit{predicato} che associa a ogni istanza il valore 
+\textit{vero} o \textit{falso}. Se il predicato assume il valore vero, allora diciamo che l'istanza \textit{soddisfa} il 
+vincolo. Sono presenti deu categorie di vincoli:
+\begin{itemize}
+    \item Un vincolo è \textit{intrarelazionale} se il suo soddisfacimento è definito rispetto a singole relazioni della 
+    base di dati 
+    \begin{itemize}
+        \item un \textit{vincolo di tupla} è un vincolo che può essere valutato su ciascuna tupla indipendentemente dalle 
+        altre
+        \item un vincolo definito con riferimento a singoli valori viene detto \textit{vincolo su valori} o \textit{vincolo 
+        di dominio}
+    \end{itemize}
+    \item Un vincolo è \textit{interrelazionale} se coinvolge più relazioni
+\end{itemize}
+\subsection{Vincoli di tupla}
+I vincoli di tupla esprimono condizioni sui valori di ciascuna tupla, indipendentemente dalle altre tuple.
+\subsubsection{Chiavi}
+Una chiave è un insieme di attributi utilizzato per identificare univocamente le tuple di una relazione.
+Un insieme $K$ di attributi è \textit{superchiave} di una relazione $r$ se $r$ non contiene due tuple distinte $t_1$ e 
+$t_2$ con $t_1[K]=t_2[K]$
+\end{document}
