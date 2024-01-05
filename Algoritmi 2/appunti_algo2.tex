@@ -1,5 +1,5 @@
-\documentclass[11pt]{article}
-\usepackage[margin=.8in]{geometry}
+\documentclass[11pt]{book}
+\usepackage[margin=1in]{geometry}
 \usepackage[italian]{babel}
 \usepackage{tikz}
 \usepackage{amsfonts} 
@@ -30,70 +30,78 @@
 \urlstyle{same}
 
 \begin{document}
+
 \pagenumbering{roman}
 \tableofcontents
 \listofalgorithms
+
 \newpage
 \pagenumbering{arabic}
-\section{Grafi come strutture dati}
-\subsection{Introduzione e terminologia}
-Un grafo è una coppia di elementi (insiemi) \textbf{G=(V,E)} e consiste in:
+\chapter{Grafi come strutture dati}
+\section{Introduzione e terminologia}
+Un grafo è una coppia di elementi (insiemi) \textit{G=(V,E)} e consiste in:
 \begin{itemize}
-    \item un insieme $V$ di \textbf{vertici} (o \textbf{nodi})
-    \item un insieme $E$ ($E$ sottoinsieme del prodotto cartesiano $V\times V$) di coppie di vertici, detti \textbf{archi}
-    o \textbf{spigoli}; ogni arco connette due vertici
+    \item un insieme $V$ di \textit{vertici} (o \textit{nodi})
+    \item un insieme $E$ ($E$ sottoinsieme del prodotto cartesiano $V\times V$) di coppie di vertici, detti \textit{archi}
+    o \textit{spigoli}; ogni arco connette due vertici
 \end{itemize}
 I grafi possono essere:
 \begin{itemize}
-    \item \textbf{orientati}: relazioni asimmetriche, insieme di coppie ordinate
-    \item \textbf{non orientati}: relazioni simmetriche, insieme di coppie non ordinate
+    \item \textit{orientati}: relazioni asimmetriche, insieme di coppie ordinate
+    \item \textit{non orientati}: relazioni simmetriche, insieme di coppie non ordinate
 \end{itemize}
-Un arco è \textbf{incidente} per i nodi che si toccano.\\
-Il \textbf{grado} di un vertice è dato dal numero di archi incidenti.\\
-Un vertice $B$ è \textbf{adiacente} ad $A$ se da $B$ si può percorrere un solo arco e giungere ad $A$.\\
-Un \textbf{sottografo} è una porzione di grafo (notazione $H\subseteq G$): i vertici di $H$ sono sottoinsieme dei vertici di $G$ 
-e gli archi di $H$ sono sottoinsieme degli archi di $G$.\\
-Un \textbf{cammino} è una sequenza ordinata di archi che collegano due nodi. I cammini devono rispettare l'orientamento 
-degli archi. La \textbf{lunghezza} è il numero di archi di cui è composto un cammino.\\ Un cammino si dice \textbf{semplice} 
-se non passa due volte per lo stesso vertice. Se esiste almeno un cammino $p$ tra i vertici $v$ e $w$, si dice che $w$ è 
-\textbf{raggiungibile} da $v$. Inoltre $v$ è un \textbf{antenato} di $w$ e $w$ è un \textbf{discendente} di $v$.\\ 
-Un cammino tra due nodi $v$ e $w$ si dice \textbf{minimo} se tra $v$ e $w$ non esiste nessun altro cammino di lunghezza 
-minore. La lunghezza del cammino minimo è detta \textbf{distanza} ($\delta (v,w)$).\\
-Un grafo può essere \textbf{pesato}. La funzione peso è definita come $W:E\rightarrow \mathbb{R}$; per ogni arco
-$(v,w)\in E,W(v,w)$ definisce il \textbf{peso} di $(v,w)$. In un grafo pesato, la lunghezza/peso di un cammino si calcola 
-sommando i pesi degli archi che contiene.\\
+Diamo un po' di definizioni:
+\begin{itemize}
+    \item Un arco è \textit{incidente} per i nodi che si toccano.
+    \item Il \textit{grado} di un vertice è dato dal numero di archi incidenti.
+    \item Un vertice $B$ è \textit{adiacente} ad $A$ se da $B$ si può percorrere un solo arco e giungere ad $A$.
+    \item Un \textit{sottografo} è una porzione di grafo (notazione $H\subseteq G$): i vertici di $H$ sono sottoinsieme 
+    dei vertici di $G$ e gli archi di $H$ sono sottoinsieme degli archi di $G$.
+    \item Un \textit{cammino} è una sequenza ordinata di archi che collegano due nodi. I cammini devono rispettare l'orientamento 
+    degli archi. La \textit{lunghezza} è il numero di archi di cui è composto un cammino.
+    \item Un cammino si dice \textit{semplice} se non passa due volte per lo stesso vertice. Se esiste almeno un cammino 
+    $p$ tra i vertici $v$ e $w$, si dice che $w$ è \textit{raggiungibile} da $v$. Inoltre $v$ è un \textit{antenato} di 
+    $w$ e $w$ è un \textit{discendente} di $v$.
+    \item Un cammino tra due nodi $v$ e $w$ si dice \textit{minimo} se tra $v$ e $w$ non esiste nessun altro cammino di lunghezza 
+    minore. La lunghezza del cammino minimo è detta \textit{distanza} ($\delta (v,w)$).
+    \item Un grafo può essere \textit{pesato}. La funzione peso è definita come $W:E\rightarrow \mathbb{R}$; per ogni arco
+    $(v,w)\in E,W(v,w)$ definisce il \textit{peso} di $(v,w)$. In un grafo pesato, la lunghezza/peso di un cammino si calcola 
+    sommando i pesi degli archi che contiene.
+\end{itemize}
 I grafi non orientati possono essere:
 \begin{itemize}
-    \item \textbf{connessi}: esiste un cammino da ogni vertice verso ogni altro vertice
-    \item \textbf{non connessi}
+    \item \textit{connessi}: esiste un cammino da ogni vertice verso ogni altro vertice
+    \item \textit{non connessi}
 \end{itemize}
 I grafi orientati possono essere:
 \begin{itemize}
-    \item \textbf{fortemente connessi}: esiste un cammino da ogni vertice verso ogni altro vertice
-    \item \textbf{debolmente connessi}: ignorando il verso degli archi
+    \item \textit{fortemente connessi}: esiste un cammino da ogni vertice verso ogni altro vertice
+    \item \textit{debolmente connessi}: ignorando il verso degli archi
 \end{itemize}
-Un cammino $\langle w_1,w_2,...,w_n \rangle$ si dice \textbf{chiuso} se $w_1=w_n$. Un cammino chiuso, semplice, di lunghezza 
-almeno 1 si dice \textbf{ciclo}. Se un grafo non contiene cicli, si dice \textbf{aciclico}.\\
-Un \textbf{grafo completo} è un grafo con un arco per ogni coppia di vertici. Un grafo completo ha numero di archi $E$ pari 
-a $|E| = \frac{|V|(|V|-1)}{2}$.\\
-Un grafo non orientato, connesso e aciclico è definito \textbf{albero libero}. Se un vertice è designato ad essere radice, 
-si definisce \textbf{albero radicato}. Un grafo non orientato, aciclico ma non connesso è definito \textbf{foresta}.
-\subsection{Rappresentazione}
-Per valutare un approccio di rapppresentazione, bisogna considerare lo \textbf{spazio} occupato dalla struttura dati e il 
-\textbf{costo computazionale} delle operazioni da effettuare su di essa.
+Un cammino $\langle w_1,w_2,...,w_n \rangle$ si dice \textit{chiuso} se $w_1=w_n$. Un cammino chiuso, semplice, di lunghezza 
+almeno 1 si dice \textit{ciclo}. Se un grafo non contiene cicli, si dice \textit{aciclico}.
+
+Un \textit{grafo completo} è un grafo con un arco per ogni coppia di vertici. Un grafo completo ha numero di archi $E$ pari 
+a $|E| = \frac{|V|(|V|-1)}{2}$.
+
+Un grafo non orientato, connesso e aciclico è definito \textit{albero libero}. Se un vertice è designato ad essere radice, 
+si definisce \textit{albero radicato}. Un grafo non orientato, aciclico ma non connesso è definito \textit{foresta}.
+\section{Rappresentazione}
+Per valutare un approccio di rapppresentazione, bisogna considerare lo \textit{spazio} occupato dalla struttura dati e il 
+\textit{costo computazionale} delle operazioni da effettuare su di essa.
 \subsubsection{Lista di archi}
 Dati $n$ (numero di vertici) e $m$ (numero di archi), lo spazio occupato è $\mathcal{O}(n+m)$: è una rappresentazione 
 inefficiente, in quanto bisogna percorrere tutto il grafo per scandire la lista di archi. Introdurre un vertice o arco ha 
 costo $\mathcal{O}(1)$, ma la rimozione ha costo $\mathcal{O}(m)$.
 \subsubsection{Liste di adiacenza}
 Ogni vertice $v$ ha una lista contenente i vertici ad esso adiacenti. Calcolare il grado di un vertice è un'operazione 
-semplice, in quanto basta scorrere la lista di adiacenza. Occupa spazio $\mathcal{O}(n+m)$, ed è adatta per grafi \textbf{sparsi} 
+semplice, in quanto basta scorrere la lista di adiacenza. Occupa spazio $\mathcal{O}(n+m)$, ed è adatta per grafi \textit{sparsi} 
 (il numero di archi è molto minore del numero di vertici).
 \subsubsection{Liste di incidenza}
 Ogni vertice $v$ ha una lista contenente un riferimento agli archi ad esso incidenti. Occupa spazio $\mathcal{O}(n+m)$.
 \subsubsection{Matrici di adiacenza}
 Il grafo è rappresentato tramite una matrice di interi di grandezza $n \times n$ (spazio occupato $\mathcal{O}(n^2)$); è 
-adatta per grafi \textbf{densi}. Calcolare il grado e archi incidenti ha costo $\mathcal{O}(n)$ (basta scorrere la matrice). 
+adatta per grafi \textit{densi}. Calcolare il grado e archi incidenti ha costo $\mathcal{O}(n)$ (basta scorrere la matrice). 
 La modifica dei vertici ha costo $\mathcal{O}(n^2)$ in quanto bisogna ricostruire completamente la matrice.
 Una matrice di adiacenza rappresenta anche la presenza di un cammino di lunghezza 1 tra ogni coppia di vertici $v$ e $w$. 
 In particolare, $v \rightarrow_1 w$ se e solo se $M[v,w]\neq 0$: moltiplicando la matrice per sè stessa, il risultato è 
@@ -101,16 +109,16 @@ diverso da 0 solo se esiste un cammino di lunghezza 2 (e via dicendo).
 \subsubsection{Matrici di incidenza}
 Il grafo è rappresentato tramite una matrice di interi di grandezza $n \times m$ (spazio occupato $\mathcal{O}(n \times m)$), 
 in cui le righe indicizzano i vertici e le colonne indicizzano gli archi.
-\section{Visite}
-\subsection{Visita generica}
-Una \textbf{visita} di un grafo $G$ permette di esaminare i nodi e gli archi in maniera sistematica, senza passare due 
+\chapter{Visite}
+\section{Visita generica}
+Una \textit{visita} di un grafo $G$ permette di esaminare i nodi e gli archi in maniera sistematica, senza passare due 
 volte per lo stesso nodo.
 \subsubsection{Inizializzazione}
 Una tattica per evitare di visitare un nodo più volte è quella di mappare lo stato della visita ad un colore:
 \begin{itemize}
-    \item \textbf{bianco} (o \textbf{nodi inesplorati}): vertice non ancora esplorato
-    \item \textbf{grigio} (o \textbf{nodi aperti}): vertice visitato, ma con nodi adiacenti ancora inesplorati
-    \item \textbf{nero} (o \textbf{nodi chiusi}): vertice visitato, con adiacenti esplorati
+    \item \textit{bianco} (o \textit{nodi inesplorati}): vertice non ancora esplorato
+    \item \textit{grigio} (o \textit{nodi aperti}): vertice visitato, ma con nodi adiacenti ancora inesplorati
+    \item \textit{nero} (o \textit{nodi chiusi}): vertice visitato, con adiacenti esplorati
 \end{itemize}
 Dati $n$ nodi, si utilizza un vettore \textit{color} di colori, di grandezza $n$: all'inizio della visita, tutte le celle 
 del vettore \textit{color} sono impostate a \textit{white}.
@@ -119,17 +127,11 @@ del vettore \textit{color} sono impostate a \textit{white}.
     \begin{algorithmic}
         \State color $\gets$ vettore di lunghezza n
         \For{ogni $u\in V$}
-        \algstore{1}
-    \end{algorithmic}
-\end{algorithm}
-\begin{algorithm}[h]
-    \begin{algorithmic}
-        \algrestore{1}
             \State color[$u$] $\gets$ white
         \EndFor
     \end{algorithmic}
 \end{algorithm}
-La visita parte da un nodo $s$, detto \textbf{nodo sorgente}.
+La visita parte da un nodo $s$, detto \textit{nodo sorgente}.
 \begin{algorithm}[H]
     \caption{VISITA(G,s)}
     \begin{algorithmic}
@@ -138,6 +140,12 @@ La visita parte da un nodo $s$, detto \textbf{nodo sorgente}.
         \State \{visita $s$\}
         \While{ci sono vertici grigi}
             \State $u \gets$ scegli un vertice grigio
+            \algstore{2}
+    \end{algorithmic}
+\end{algorithm}
+\begin{algorithm}[H]
+    \begin{algorithmic}
+        \algrestore{2}
             \If{esiste $v$ bianco adiacente ad $u$}
                 \State color[$v$] $\gets$ gray
                 \State \{visita $v$\}
@@ -146,9 +154,9 @@ La visita parte da un nodo $s$, detto \textbf{nodo sorgente}.
         \EndWhile
     \end{algorithmic}
 \end{algorithm}
-Il cambiamento di colore è \textbf{monotono} (bianco $\rightarrow$ grigio $\rightarrow$ nero).
+Il cambiamento di colore è \textit{monotono} (bianco $\rightarrow$ grigio $\rightarrow$ nero).
 \subsubsection{Invarianti}
-Un'\textbf{invariante} è una condizione che è verificabile come vera sia all'inizio sia alla fine di un ciclo:
+Un'\textit{invariante} è una condizione che è verificabile come vera sia all'inizio sia alla fine di un ciclo:
 \begin{itemize}
     \item Invariante 1: se esiste un arco $(u,v)\in E$ ed $u$ è nero, allora $v$ è grigio o nero 
     \item Invariante 2: tutti i vertici grigi o neri sono raggiungibili dalla sorgente 
@@ -173,13 +181,7 @@ vertice che ha permesso di scoprirlo.
         \State INIZIALIZZA(G)
         \State color $\gets$ gray
         \State \{visita $s$\}
-        \While{ci sono vertici grigi}        
-        \algstore{3}
-    \end{algorithmic}
-\end{algorithm}
-\begin{algorithm}[H]
-    \begin{algorithmic}
-        \algrestore{3}
+        \While{ci sono vertici grigi}  
         \State $u \gets$ scegli un vertice grigio
             \If{esiste $v$ bianco adiacente ad $u$}
                 \State color[$v$] $\gets$ gray
@@ -194,7 +196,7 @@ vertice che ha permesso di scoprirlo.
     Al termine dell'esecuzione di VISITA(G,s), tutti e soli i vertici neri diversi da $s$ hanno predecessore diverso da 
     NULL.
 \end{proprietà}
-Il sottografo dei predecessori è un albero (\textbf{albero dei predecessori}) di radice $s$.\\
+Il sottografo dei predecessori è un albero (\textit{albero dei predecessori}) di radice $s$.\\
 Se il grafo non è connesso:
 \begin{algorithm}[H]
     \caption{VISITA TUTTI I VERTICI(G)}
@@ -208,16 +210,16 @@ Se il grafo non è connesso:
     \end{algorithmic}
 \end{algorithm}
 \subsubsection{Gestione dei vertici grigi}
-Per gestire i nodi grigi si usa una struttura dati ordinata $D$ (\textbf{frangia}). Sulla frangia è possibile eseguire le 
+Per gestire i nodi grigi si usa una struttura dati ordinata $D$ (\textit{frangia}). Sulla frangia è possibile eseguire le 
 seguenti operazioni:
 \begin{itemize}
-    \item \textbf{Create()}: restituisce una $D$ vuota
-    \item \textbf{Add(D,x)}: aggiunge un elemento x a $D$
-    \item \textbf{First(D)}: restituisce il primo elemento di $D$
-    \item \textbf{RemoveFirst(D)}: elimina il primo elemento di $D$
-    \item \textbf{NotEmpty(D)}: restituisce vero se D contiene almeno un elemento, falso altrimenti
+    \item \textit{Create()}: restituisce una $D$ vuota
+    \item \textit{Add(D,x)}: aggiunge un elemento x a $D$
+    \item \textit{First(D)}: restituisce il primo elemento di $D$
+    \item \textit{RemoveFirst(D)}: elimina il primo elemento di $D$
+    \item \textit{NotEmpty(D)}: restituisce vero se D contiene almeno un elemento, falso altrimenti
 \end{itemize}
-$D$ è una \textbf{coda} se Add(D,x) aggiunge l'elemento in coda a $D$, uno \textbf{stack} se Add(D,x) aggiunge l'elemento 
+$D$ è una \textit{coda} se Add(D,x) aggiunge l'elemento in coda a $D$, uno \textit{stack} se Add(D,x) aggiunge l'elemento 
 in testa a $D$.
 \begin{algorithm}[H]
     \caption{VISITA(G,s)}
@@ -260,10 +262,10 @@ Il costo di $adj$ è:
     giunge alla fine della lista, il primo elemento è colorato di nero. Ogni lista è percorsa una volta sola, in tutte le 
     iterazioni del ciclo. Complessità: $\mathcal{O}(n+m)$.
 \end{itemize}
-\subsection{Visita in ampiezza}
+\section{Visita in ampiezza}
 \subsubsection{Inizializzazione}
-La \textbf{visita in ampiezza} (\textbf{BFS}, Breadth First Search), esamina i vertici del grafo in un ordine ben preciso,
-costruendo un albero di visita chiamato \textbf{albero BFS}. Nell'albero BFS, ogni vertice si trova il più vicino possibile 
+La \textit{visita in ampiezza} (\textit{BFS}, Breadth First Search), esamina i vertici del grafo in un ordine ben preciso,
+costruendo un albero di visita chiamato \textit{albero BFS}. Nell'albero BFS, ogni vertice si trova il più vicino possibile 
 alla radice. La visita è realizzata usando la frangia come coda: quando un nodo grigio ha tutti gli adiacenti grigi, esso 
 è rimosso dalla cosa (il vertice in testa rimane nella coda finchè non diventa nero).
 \begin{algorithm}[h]
@@ -297,7 +299,7 @@ alla radice. La visita è realizzata usando la frangia come coda: quando un nodo
 \subsubsection{Albero di visita}
 L'albero BFS viene costruito a livelli; l'albero rappresenta i cammini minimi. Anche se le liste di adiacenza vengono 
 invertite, i nodi per livello non cambiano.
-Si può inizializzare un \textbf{vettore di distanze} (stimate) $d$, inizializzato ad infinito: se un determinato vertice non
+Si può inizializzare un \textit{vettore di distanze} (stimate) $d$, inizializzato ad infinito: se un determinato vertice non
 è stato trovato (distanza $\infty$ a fine BFS), allora non è raggiungibile da $s$.
 \subsubsection{Proprietà}
 \begin{proprietà}[1]
@@ -330,11 +332,11 @@ Si può inizializzare un \textbf{vettore di distanze} (stimate) $d$, inizializza
 \begin{lemma}[Invariante 4]
     $d[v]=\delta(s,v)$ per tutti i vertici grigi o neri.
 \end{lemma}
-\textit{\textbf{Dimostrazione $d[v] \geq \delta(s,v)$.}} Dato che l'albero dei predecessori $\pi$ contiene solo archi appartenenti 
+\textit{\textit{Dimostrazione $d[v] \geq \delta(s,v)$.}} Dato che l'albero dei predecessori $\pi$ contiene solo archi appartenenti 
 a $G$, il cammino da $s$ a $v$ è un cammino che appartiene anche a $G$, quindi la lunghezza del cammino da $s$ a $v$ 
 nell'albero è maggiore o uguale alla distanza tra $s$ e $v$.
 
-\textit{\textbf{Dimostrazione $d[v] \leq \delta(s,v)$.}} Definiamo l'insieme dei vertici a distanza $k$ dalla sorgente nel grafo 
+\textit{\textit{Dimostrazione $d[v] \leq \delta(s,v)$.}} Definiamo l'insieme dei vertici a distanza $k$ dalla sorgente nel grafo 
 come $V_k={v\in V|\delta(s,v)=k}$ ($v_0$ contiene solo la sorgente).\\ Nel caso base, $d[v_0]\leq \delta(s,v)$ (distanza di 
 $s$ da sè stesso: $0\leq 0$). Sia $v\in V_k$: allora $\delta(s,v)=k$ (per definizione).\\ Con $k>0$ (passo), esisterà almeno 
 un vertice $w$ tale che $\delta(s,w)=k-1$ e $(w,v)\in E$, ovvero un arco che va da $v$ a $w$. Definiamo l'insieme dei vertici 
@@ -355,12 +357,12 @@ Quindi, quando inseriremo $v$ nell'albero:
 \begin{proof}
     caso base: se $v$ non è raggiungibile da $s$, allora $d[v]$ rimane $\infty$.\\
     altrimenti, $v$ è nero (per invariante 2). Per ogni vertice $v$ raggiungibile da $s$, il cammino da $s$ a $v$ sull'albero 
-    ottenuto dalla visita è un \textbf{cammino minimo}.
+    ottenuto dalla visita è un \textit{cammino minimo}.
 \end{proof}
-\subsection{Visita in profondità}
+\section{Visita in profondità}
 \subsubsection{Inizializzazione}
-La \textbf{visita in profondità} (\textbf{DFS}, Depth First Search), esamina i vertici del grafo partendo dall'ultimo 
-vertice incontrato. Si ottiene dall'algoritmo di visita generico, implementando la frangia come \textbf{stack}.
+La \textit{visita in profondità} (\textit{DFS}, Depth First Search), esamina i vertici del grafo partendo dall'ultimo 
+vertice incontrato. Si ottiene dall'algoritmo di visita generico, implementando la frangia come \textit{stack}.
 \begin{algorithm}
     \caption{VISITA DFS (ottimizzata)}
     \begin{algorithmic}
@@ -384,7 +386,7 @@ vertice incontrato. Si ottiene dall'algoritmo di visita generico, implementando 
 \end{algorithm}
 \subsubsection{Caratteristiche dell'albero DFS}
 Un vertice viene chiuso (colorato di nero) solo quando tutti i suoi discendenti sono stati chiusi.\\
-Gli intervalli di attivazione di una qualunque coppia di vertici sono o \textbf{disgiunti} o \textbf{uno contenuto interamente 
+Gli intervalli di attivazione di una qualunque coppia di vertici sono o \textit{disgiunti} o \textit{uno contenuto interamente 
 nell'altro}. Questo è l'ordine delle attivazioni delle chiamate di una procedura ricorsiva, ed è quindi possibile costruire 
 un algoritmo DFS ricorsivo. Inoltre, è possibile introdurre un contatore per ricordare l'ordine delle attivazioni.
 \begin{algorithm}[H]
@@ -415,8 +417,8 @@ un algoritmo DFS ricorsivo. Inoltre, è possibile introdurre un contatore per ri
 \begin{theorem}[Parentesi]
     In ogni visita DFS di un grafo, per ogni coppia di vertici $u$, $v$, una ed una sola delle seguenti condizioni è soddisfatta: 
     \begin{itemize}
-        \item $d[u]<d[v]<f[v]<f[u]$ ed $u$ è un \textbf{antenato} di $v$ in un albero della foresta DFS 
-        \item $d[v]<d[u]<f[u]<f[v]$ ed $u$ è un \textbf{discendente} di $v$ in un albero della foresta DFS
+        \item $d[u]<d[v]<f[v]<f[u]$ ed $u$ è un \textit{antenato} di $v$ in un albero della foresta DFS 
+        \item $d[v]<d[u]<f[u]<f[v]$ ed $u$ è un \textit{discendente} di $v$ in un albero della foresta DFS
         \item $d[u]<f[u]<d[v]<f[v]$ e tra $u$ e $v$ non esiste relazione (non sono adiacenti)
     \end{itemize}
 \end{theorem}
@@ -429,42 +431,42 @@ un algoritmo DFS ricorsivo. Inoltre, è possibile introdurre un contatore per ri
     $u$ con un cammino contenente solo vertici bianchi.
 \end{theorem}
 La complessità della visita DFS è $\mathcal(O)(m+n)$ (come la visita generica).
-\section{Aciclicità}
+\chapter{Aciclicità}
 È possibile verificare la presenza di un ciclo tramite una visita DFS.
-\subsection{Grafi orientati}
-Un arco $\langle u,v \rangle$ viene \textbf{percorso} quando si incontra $v$ nella lista degli adiacenti ad $u$. Durante 
+\section{Grafi orientati}
+Un arco $\langle u,v \rangle$ viene \textit{percorso} quando si incontra $v$ nella lista degli adiacenti ad $u$. Durante 
 la DFS di un grafo orientato, ogni arco è percorso una volta sola. Definiamo:
 \begin{itemize}
-    \item \textbf{Arco dell'albero}: arco inserito nella foresta DFS
-    \item \textbf{Arco all'indietro}: arco che collega un vertice ad un suo antenato
-    \item \textbf{Arco in avanti}: arco che collega un vertice ad un suo discendente 
-    \item \textbf{Arco di attraversamento}: arco che collega due vertici che non sono in relazione 
+    \item \textit{Arco dell'albero}: arco inserito nella foresta DFS
+    \item \textit{Arco all'indietro}: arco che collega un vertice ad un suo antenato
+    \item \textit{Arco in avanti}: arco che collega un vertice ad un suo discendente 
+    \item \textit{Arco di attraversamento}: arco che collega due vertici che non sono in relazione 
 \end{itemize}
 Durante la visita di un grafo orientato, un arco $\langle u,v \rangle$ viene percorso quando si incontra $v$ nella lista 
 degli adiacenti ad $u$. In quel momento, color[$v$] può essere:
 \begin{itemize}
-    \item \textbf{bianco}: $\langle u,v \rangle$ è un \textbf{arco dell'albero}
-    \item \textbf{grigio}: $u$ è un discendente di $v$, $\langle u,v \rangle$ è un \textbf{arco all'indietro} 
-    \item \textbf{nero}: $\langle u,v \rangle$ è un arco
+    \item \textit{bianco}: $\langle u,v \rangle$ è un \textit{arco dell'albero}
+    \item \textit{grigio}: $u$ è un discendente di $v$, $\langle u,v \rangle$ è un \textit{arco all'indietro} 
+    \item \textit{nero}: $\langle u,v \rangle$ è un arco
     \begin{itemize}
-        \item \textbf{in avanti} se $v$ è discendente di $u$
-        \item \textbf{di attraversamento} altrimenti
+        \item \textit{in avanti} se $v$ è discendente di $u$
+        \item \textit{di attraversamento} altrimenti
     \end{itemize}
 \end{itemize}
-\subsection{Grafi non orientati}
+\section{Grafi non orientati}
 Durante la DFS di un grafo orientato, ogni arco è percorso esattamente due volte. Definiamo:
 \begin{itemize}
-    \item \textbf{Arco dell'albero}: arco inserito nella foresta DFS
-    \item \textbf{Arco all'indietro}: arco che collega un vertice ad un suo antenato
+    \item \textit{Arco dell'albero}: arco inserito nella foresta DFS
+    \item \textit{Arco all'indietro}: arco che collega un vertice ad un suo antenato
 \end{itemize}
 Durante la visita di un grafo orientato, un arco $\langle u,v \rangle$ viene percorso quando si incontra $v$ nella lista 
 degli adiacenti ad $u$. In quel momento, color[$v$] può essere:
 \begin{itemize}
-    \item \textbf{bianco}: $(u,v)$ è un \textbf{arco dell'albero}
-    \item \textbf{grigio}: $u$ è un discendente di $v$, $\langle u,v \rangle$ è un \textbf{arco all'indietro} 
-    \item \textbf{nero}: $\langle u,v \rangle$ è un \textbf{arco all'indietro}
+    \item \textit{bianco}: $(u,v)$ è un \textit{arco dell'albero}
+    \item \textit{grigio}: $u$ è un discendente di $v$, $\langle u,v \rangle$ è un \textit{arco all'indietro} 
+    \item \textit{nero}: $\langle u,v \rangle$ è un \textit{arco all'indietro}
 \end{itemize}
-\subsection{Test di aciclicità}
+\section{Test di aciclicità}
 \begin{theorem}[Grafo aciclico]
     Se un grafo (orientato o non orientato) contiene un ciclo, allora esiste un arco all'indietro. Viceversa, se una visita 
     in profondità produce un arco all'indietro, il grafo contiene un ciclo. Quindi, un grafo è aciclico se e solo se una 
@@ -475,11 +477,11 @@ degli adiacenti ad $u$. In quel momento, color[$v$] può essere:
     \begin{algorithmic}
         \State INIZIALIZZA(G)
         \For{ogni nodo $u$ di $G$}
-            \If{color[$u$] = white \textbf{and} VISITA RICORSIVA CICLO(G,u)}
-                \State \textbf{return} true
+            \If{color[$u$] = white \textit{and} VISITA RICORSIVA CICLO(G,u)}
+                \State \textit{return} true
             \EndIf 
         \EndFor
-        \State \textbf{return} false
+        \State \textit{return} false
     \end{algorithmic}
 \end{algorithm}
 \begin{algorithm}[H]
@@ -490,33 +492,33 @@ degli adiacenti ad $u$. In quel momento, color[$v$] può essere:
             \If{color[$v$ = white]}
                 \State $\pi[v] \gets u$
                 \If{VISITA RICORSIVA CICLO(G,v)}
-                    \State \textbf{return} true
+                    \State \textit{return} true
                 \EndIf
                 \ElsIf{$v\neq \pi[u]$ (color[$v$] = gray \textit{per grafi orientati})}
-                    \State \textbf{return} true
+                    \State \textit{return} true
             \EndIf 
         \EndFor 
         \State color[$u$] $\gets$ black 
-        \State \textbf{return} false
+        \State \textit{return} false
     \end{algorithmic}
 \end{algorithm}
-\section{Ordinamento topologico}
-Dato un \textbf{grafo orientato aciclico} (DAG) è sempre possibile ordinare i nodi in un \textbf{ordine topologico}, cioè 
+\chapter{Ordinamento topologico}
+Dato un \textit{grafo orientato aciclico} (DAG) è sempre possibile ordinare i nodi in un \textit{ordine topologico}, cioè 
 in modo che non ci sia nessun arco all'indietro nell'ordinamento.
-\subsection{Raggiungibilità}
-In un DAG, la relazione di \textbf{raggiungibilità} è una relazione di ordine parziale:
+\section{Raggiungibilità}
+In un DAG, la relazione di \textit{raggiungibilità} è una relazione di ordine parziale:
 \begin{itemize}
     \item è riflessiva: ogni vertice è raggiungibile da se stesso 
     \item è antisimmetrica: se $v$ è raggiungibile da $u$ ed $u$ è raggiugibile da $v$, allora $v$ e $u$ sono coincidenti
     \item è transitiva: se $v$ è raggiungibile da $u$ e $w$ è raggiungibile da $v$, allora $w$ è raggiungibile da $u$
 \end{itemize}
-\subsection{Ordine topologico}
-Dato un DAG, un \textbf{ordine topologico} è un ordine lineare dei suoi nodi tale che, se nel grafo vi è un arco $(u,v)$, 
+\section{Ordine topologico}
+Dato un DAG, un \textit{ordine topologico} è un ordine lineare dei suoi nodi tale che, se nel grafo vi è un arco $(u,v)$, 
 allora $u$ precede $v$ nell'ordine. Un grafo aciclico possiede sempre un ordine topologico; un DAG può possedere diversi 
 ordini topologici.
 \subsubsection{Algoritmo astratto}
-Il metodo più semplice ma meno efficiente per trovare un'ordinamento topologico. Si definiscono: \textbf{nodo sorgente} 
-come nodo che non ha archi entranti, e \textbf{nodo pozzo} come nodo che non ha archi uscenti. Questo algoritmo funziona
+Il metodo più semplice ma meno efficiente per trovare un'ordinamento topologico. Si definiscono: \textit{nodo sorgente} 
+come nodo che non ha archi entranti, e \textit{nodo pozzo} come nodo che non ha archi uscenti. Questo algoritmo funziona
 rimuovendo nodi sorgente dal grafo $G'$ (memorizzandoli in una lista, $ord$) e sviluppando un sottoproblema.
 \begin{theorem}
     $ord$ è un'ordinamento topologico di $G$. Denotiamo con $ord_i$ e $G'$ (copia del grafo $G$) il contenuto di $ord$ e
@@ -576,15 +578,15 @@ dal più al meno recente.
     \end{algorithmic}
 \end{algorithm}
 La complessità è $\mathcal{O}(m+n)$.
-\section{Componenti connesse e fortemente connesse}
-\subsection{Componenti connesse}
+\chapter{Componenti connesse e fortemente connesse}
+\section{Componenti connesse}
 In un grafo non orientato, la relazione di raggiungibilità è una relazione di equivalenza:
 \begin{itemize}
-    \item è \textbf{riflessiva}: per definizione, ogni vertice è raggiungibile da se stesso con un cammino degenere di 
+    \item è \textit{riflessiva}: per definizione, ogni vertice è raggiungibile da se stesso con un cammino degenere di 
     lunghezza 0
-    \item è \textbf{simmetrica}: se $v$ è raggiungibile da $u$ tramite un cammino $p$, allora $u$ è raggiungibile da $v$ 
+    \item è \textit{simmetrica}: se $v$ è raggiungibile da $u$ tramite un cammino $p$, allora $u$ è raggiungibile da $v$ 
     percorrendo all'indietro lo stesso cammino
-    \item è \textbf{transitiva}: se $v$ è raggiungibile da $u$ e $w$ è raggiungibile da $v$, allora $w$ è raggiungibile 
+    \item è \textit{transitiva}: se $v$ è raggiungibile da $u$ e $w$ è raggiungibile da $v$, allora $w$ è raggiungibile 
     da $u$, percorrendo il cammino da $u$ a $v$ e da $v$ a $w$.
 \end{itemize}
 In un grafo non orientato, le componenti connesse sono le classi di equivalenza della relazione di raggiungibilità. Una 
@@ -619,20 +621,20 @@ Il grafo è connesso se e solo se nell'albero di visita tutti i vertici hanno un
     \end{algorithmic}
 \end{algorithm}
 La complessità è $\mathcal{O}(m+n)$.
-\subsection{Componenti fortemente connesse}
-In un grafo orientato $G$, due nodi, $u$ e $v$ si dicono mutualmente raggiungibili o \textbf{fortemente connessi} se 
+\section{Componenti fortemente connesse}
+In un grafo orientato $G$, due nodi, $u$ e $v$ si dicono mutualmente raggiungibili o \textit{fortemente connessi} se 
 ognuno dei due è raggiungibile dall'altro, cioè esiste un cammino da $u$ a $v$ e da $v$ a $u$ ($u \leftrightarrow v$).
 La connessione forte è una relazione di equivalenza.
-Una \textbf{cfc} di un grafo orientato $G$ è un sottografo $G'$ di $G$ fortemente connesso e massimale: i nodi di $G'$ sono 
+Una \textit{cfc} di un grafo orientato $G$ è un sottografo $G'$ di $G$ fortemente connesso e massimale: i nodi di $G'$ sono 
 tutti fra loro fortemente connessi e nessun altro nodo di $G$ è fortemente connesso con nodi di $G'$. Ogni vertice del grafo 
 fa parte di una cfc, in quanto ogni nodo è almeno fortemente connesso con se stesso. Da un grafo fortemente connesso è possibile 
 ricavare un DAG (e quindi un ordinamento topologico). 
 
 Per trovare la cfc contenente un vertice $x$:
 \begin{itemize}
-    \item calcoliamo i \textbf{discendenti} di $x$ (D($x$)), ossia i vertici di $G$ raggiungibili da $x$
-    \item calcoliamo gli \textbf{antenati} di $x$ (A($x$)), ossia i vertici che raggiungono $x$
-    \item cfc[$x$] è data dall'\textbf{intersezione} tra l'insieme degli antenati e dei discendenti ($D(x)\cap A(x)$)
+    \item calcoliamo i \textit{discendenti} di $x$ (D($x$)), ossia i vertici di $G$ raggiungibili da $x$
+    \item calcoliamo gli \textit{antenati} di $x$ (A($x$)), ossia i vertici che raggiungono $x$
+    \item cfc[$x$] è data dall'\textit{intersezione} tra l'insieme degli antenati e dei discendenti ($D(x)\cap A(x)$)
 \end{itemize}
 Questo algoritmo è molto costoso, $\mathcal{O}(n^2+m)$.
 \begin{lemma}[Cammino fortemente connesso]
@@ -650,7 +652,7 @@ Questo algoritmo è molto costoso, $\mathcal{O}(n^2+m)$.
     Sia $r$ il primo vertice di una data cfc che viene scoperto dalla DFS: da $r$ sono raggiungibili tutti gli altri vertici 
     della cfc (per definizione). Poichè $r$ è il primo vertice ad essere stato scoperto, al momento della sua scoperta tutti 
     gli altri vertici della cfc saranno bianchi. Per il lemma precedente, tutti i cammini da $r$ agli altri vertici della 
-    cfc conterranno solo vertici bianchi che fanno parte della cfc. Allora, per il \textbf{teorema del cammino bianco}, 
+    cfc conterranno solo vertici bianchi che fanno parte della cfc. Allora, per il \textit{teorema del cammino bianco}, 
     tutti i vertici appartenenti alla cfc di $r$ saranno discendenti di $r$ nell'albero DFS.
 \end{proof}
 \begin{proprietà}[1]
@@ -663,16 +665,16 @@ Questo algoritmo è molto costoso, $\mathcal{O}(n^2+m)$.
 Siano $x$ e $y$ due vertici di un grafo $G$; assumiamo che $x$ non sia sulla stessa cfc di $y$. Dopo la DFS su $G$ si possono 
 presentare i seguenti casi:
 \begin{enumerate}
-    \item \textbf{$y$ è discendente di $x$} in un albero della foresta DFS di $G$. Esiste un cammino da $x$ a $y$, ma non
+    \item \textit{$y$ è discendente di $x$} in un albero della foresta DFS di $G$. Esiste un cammino da $x$ a $y$, ma non
     il contrario, quindi non esisterà un cammino da $x$ a $y$ in $G^T$ ($d[x]<d[y]<f[y]<f[x]$).
-    \item \textbf{$x$ e $y$ non sono uno discendente dell'altro} nella foresta DFS di $G$. Non può esistere nessun cammino 
+    \item \textit{$x$ e $y$ non sono uno discendente dell'altro} nella foresta DFS di $G$. Non può esistere nessun cammino 
     da $y$ a $x$, altrimenti $x$ sarebbe nel sottoalbero di $y$. Quindi, non eeisterà il cammino da $x$ a $y$ in $G^T$ 
     ($d[y]<f[y]<d[x]<f[x]$).
 \end{enumerate}
 In entrambi i casi, ($f[x]>f[y]$), quindi nella seconda visita i vertici saranno considerati in ordine decrescente di tempo 
 di fine visita.
 
-Da queste osservazioni, si ricava l'\textbf{algoritmo di Kosaraju}: 
+Da queste osservazioni, si ricava l'\textit{algoritmo di Kosaraju}: 
 \begin{enumerate}
     \item visita $G$ con l'algoritmo VISITA TUTTI I VERTICI DFS e costruisci una lista di vertici in ordine decrescente 
     dei tempi di fine visita 
@@ -680,7 +682,7 @@ Da queste osservazioni, si ricava l'\textbf{algoritmo di Kosaraju}:
     \item visita $G^T$ con l'algoritmo VISITA TUTTI I VERTICI DFS, considerando i vertici nell'ordine trovato al passo 1 
 \end{enumerate}
 La complessità è pari a $\mathcal{O}(n+m)$.
-Per dimostrare la correttezza dell'algoritmo, ci si avvale del \textbf{teorema del sottoalbero fortemente connesso} e dei 
+Per dimostrare la correttezza dell'algoritmo, ci si avvale del \textit{teorema del sottoalbero fortemente connesso} e dei 
 lemmi seguenti.
 \begin{lemma}[2]
     Un grafo orientato e il suo trasposto hanno le stesse cfc.
@@ -697,27 +699,27 @@ lemmi seguenti.
     lemma non vale (cioè $v$ non è discendente di $u$ nella visita di $G$) e sia $w$ il suo predecessore sul cammino. 
     L'enunciato è valido per $w$: $d[u]\leq d[w]<f[w]\leq f[u]$.\\
     Siccome la visita DFS di $G^T$ considera i vertici in ordine decrescente di fine visita, vale $f[v]<f[u]$.
-    Per il \textbf{teorema delle parentesi}, se $v$ non è discendente di $u$ nella prima visita, deve valere $d[v]<f[v]<d[u]<f[u]$.
+    Per il \textit{teorema delle parentesi}, se $v$ non è discendente di $u$ nella prima visita, deve valere $d[v]<f[v]<d[u]<f[u]$.
     Ma questo è impossibile, in quanto $v$ è adiacente a $w$ in $G$, e la visita di $v$ non può terminare prima che sia 
     iniziata la visita di un suo adiacente.\\
     Quindi in $G$ esiste un cammino da $u$ a $v$. Siccome $v$ è discendente di $u$ in $A^T$, esiste anche un cammino da 
     $u$ a $v$ in $G^T$, e quindi da $v$ a $u$ in $G$.
 \end{proof}
 L'algoritmo è quindi corretto.
-\section{Tecnica greedy}
-\subsection{Problemi}
-Un \textbf{problema P} è definito come una relazione $P\subseteq I\times S$: $I$ è l'insieme delle possibili \textbf{istanze}
-del problema e l'insieme $S$ è l'insieme delle possibili \textbf{soluzioni} del problema.
+\chapter{Tecnica greedy}
+\section{Problemi}
+Un \textit{problema P} è definito come una relazione $P\subseteq I\times S$: $I$ è l'insieme delle possibili \textit{istanze}
+del problema e l'insieme $S$ è l'insieme delle possibili \textit{soluzioni} del problema.
 Tipi di problemi:
 \begin{itemize}
-    \item \textbf{problemi di decisione}: problemi che richiedono di verificare una certa proprietà sull'input (risultato 
+    \item \textit{problemi di decisione}: problemi che richiedono di verificare una certa proprietà sull'input (risultato 
     o vero o falso)
-    \item \textbf{problemi di ricerca}: data un'istanza del problema, restituire una soluzione ammissibile
-    \item \textbf{problemi di ottimizzazione}: data un'istanza di un problema ed una funzione obiettivo valuta(Sol), che per 
+    \item \textit{problemi di ricerca}: data un'istanza del problema, restituire una soluzione ammissibile
+    \item \textit{problemi di ottimizzazione}: data un'istanza di un problema ed una funzione obiettivo valuta(Sol), che per 
     ogni soluzione Sol restituisce un valore di tale soluzione Sol ottima
 \end{itemize}
 Una soluzione di un problema di ottimizzazione è anche una soluzione di un equivalente problema di ricerca (ma non viceversa).
-\subsection{Problema dello zaino frazionario}
+\section{Problema dello zaino frazionario}
 \subsubsection{Definizione}
 Un ladro entra in un magazzino e trova $n$ oggetti. L'i-esimo oggetto $o_i$ ha un valore di $c_i$ euro e pesa $p_i$ chilogrammi.
 $v_i=c_i/p_i$ è il valore per unità di peso. Gli oggetti sono frazionabili, quindi il ladro ne può prendere anche solo una 
@@ -728,24 +730,24 @@ Quali oggetti e in quale quantità dovrà prendere il ladro per ottenere il mass
 \subsubsection{Formalizzazione}
 Il problema richiede di valorizzare $x_i$ per ogni $1\leq i \leq n$ in modo che $\sum x_ic_i$ sia massima. Due proprietà: 
 \begin{itemize}
-    \item \textbf{Ottimalità}. Tutte le soluzioni che massimizzano il valore totale dello zaino (la \textbf{funzione obiettivo}) 
+    \item \textit{Ottimalità}. Tutte le soluzioni che massimizzano il valore totale dello zaino (la \textit{funzione obiettivo}) 
     sono soluzioni ottime. 
-    \item \textbf{Ammissibilità}. Tutte le valorizzazioni dei vari $x_i$ tali che il peso sia minore di $P$ e che $x_i$ 
+    \item \textit{Ammissibilità}. Tutte le valorizzazioni dei vari $x_i$ tali che il peso sia minore di $P$ e che $x_i$ 
     sia compreso tra 0 e 1 sono soluzioni ammissibili.
 \end{itemize}
-\subsection{Sottostruttura ottima e scelta greedy}
-Un problema ha la proprietà della \textbf{sottostruttura ottima} se una soluzione ottima del problema include le soluzioni 
+\section{Sottostruttura ottima e scelta greedy}
+Un problema ha la proprietà della \textit{sottostruttura ottima} se una soluzione ottima del problema include le soluzioni 
 ottime dei suoi sottoproblemi.\\
 Se un problema di ottimizzazione gode delle proprietà della sottostruttura ottima, in genere può essere risolto con tecniche 
-di tipo \textbf{greedy} i di \textbf{programmazione dinamica}.
+di tipo \textit{greedy} i di \textit{programmazione dinamica}.
 
-Un problema gode della proprietà della \textbf{scelta greedy} se è sempre possibile scegliere in esso una variabile decisionale, 
+Un problema gode della proprietà della \textit{scelta greedy} se è sempre possibile scegliere in esso una variabile decisionale, 
 attribuirle un valore ammissibile e localmente ottimo, toglierla dal problema ed ottenere un sottoproblema la cui soluzione, 
 unita al valore di questa variabile, sia una soluzione ottima per il problema originario.
 
-Viene definito un \textbf{criterio di appetibilità}, che permette di effettuare efficientemente la scelta greedy. L'appetibilità 
+Viene definito un \textit{criterio di appetibilità}, che permette di effettuare efficientemente la scelta greedy. L'appetibilità 
 ordina le variabili in maniera che in ogni sottoproblema sia possibile effettuare efficientemente la scelta greedy.
-\subsection{Schema di algoritmo greedy}
+\section{Schema di algoritmo greedy}
 Passi di un algoritmo greedy:
 \begin{enumerate}
     \item scegli la variabile del problema con appetibilità maggiore 
@@ -768,7 +770,7 @@ selezionare un sottoinsieme $S$ di elementi ammissibile e ottimo.
     \end{algorithmic}
 \end{algorithm}
 Le appetibilità possono essere fisse o modificabili.
-\subsection{Massimo numero di intervalli disgiunti}
+\section{Massimo numero di intervalli disgiunti}
 \subsubsection{Problema}
 Dato un insieme di intervalli, trovare il massimo numero di intervalli disgiunti significa trovare un sottoinsieme costituito 
 da intervalli tutti disgiunti, tale che il numero di intervalli sia massimo.
@@ -787,21 +789,21 @@ La complessità è quella dell'ordinamento del passo 1 più quella della scansio
 \subsubsection{Correttezza}
 Definiamo le invarianti ($S$ è l'insieme di intervalli esaminati ad un passo intermedio $k$): 
 \begin{itemize}
-    \item \textbf{Max}: la sequenza $A_1,A_2,\dots,A_k$ di intervalli disgiunti scelti è, per l'insieme $S$, una \textbf{sequenza massimale}
-    \item \textbf{PrimaMax}: la sequenza $A_1,A_2,\dots,A_k$ è, fra le sequenze massimali, quella che finisce prima 
-    \item \textbf{PrimaVisti}: ogni intervallo $\in S$ termina prima della fine di qualunque intervallo $\notin S$
+    \item \textit{Max}: la sequenza $A_1,A_2,\dots,A_k$ di intervalli disgiunti scelti è, per l'insieme $S$, una \textit{sequenza massimale}
+    \item \textit{PrimaMax}: la sequenza $A_1,A_2,\dots,A_k$ è, fra le sequenze massimali, quella che finisce prima 
+    \item \textit{PrimaVisti}: ogni intervallo $\in S$ termina prima della fine di qualunque intervallo $\notin S$
 \end{itemize}
-L'invariante da dimostrare è \textbf{Max}.
+L'invariante da dimostrare è \textit{Max}.
 \begin{proof}
-    \textbf{Caso base}. Inizialmente, $S$ è l'insieme vuoto, la sequenza massimale per $S$ è la sequenza vuota. Tutte e 
+    \textit{Caso base}. Inizialmente, $S$ è l'insieme vuoto, la sequenza massimale per $S$ è la sequenza vuota. Tutte e 
     tre le invarianti sono vere.\\
-    \textbf{Passo}. Sia $A$ l'intervallo che termina prima tra quelli ancora da esaminare (ossia fra quelli $\notin S$).
+    \textit{Passo}. Sia $A$ l'intervallo che termina prima tra quelli ancora da esaminare (ossia fra quelli $\notin S$).
     Consideriamo allora l'insieme $S'\equiv S \cup \{A\}$ e cerchiamo di stabilire qual è per $S'$ la sequenza massimale 
-    (\textbf{Max}) che finisce prima (\textbf{PrimaMax}).\\
-    \textbf{Caso 1}: $A$ inizia \textbf{prima} della fine della sequenza $A_1,A_2,\dots,A_k$, quindi $A$ interseca $A_k$; quindi, 
+    (\textit{Max}) che finisce prima (\textit{PrimaMax}).\\
+    \textit{Caso 1}: $A$ inizia \textit{prima} della fine della sequenza $A_1,A_2,\dots,A_k$, quindi $A$ interseca $A_k$; quindi, 
     ogni sequenza avente $A$ come ultimo elemento non può avere più di $k$ elementi. Non inserendo $A$ nella soluzione, 
     l'invariante Max si mantiene.\\
-    \textbf{Caso 2}: $A$ inizia \textbf{dopo} la fine della sequenza $A_1,A_2,\dots,A_k$; allora, la sequenza $A_1,A_2,\dots,A_k,A$: 
+    \textit{Caso 2}: $A$ inizia \textit{dopo} la fine della sequenza $A_1,A_2,\dots,A_k$; allora, la sequenza $A_1,A_2,\dots,A_k,A$: 
     \begin{itemize}
         \item è per $S'$ una sequenza massimale, perchè una sequenza massimale per $S'$ non può avere più di $k+1$ elementi 
         \item è per $S'$ la sequenza massimale che finisce prima, perchè in $S'$ non ci sono sequenze massimali non includenti 
@@ -809,9 +811,9 @@ L'invariante da dimostrare è \textbf{Max}.
     \end{itemize}
     Anche in questo caso, le invarianti si mantengono. 
 \end{proof}
-\subsection{Algoritmo di Moore}
+\section{Algoritmo di Moore}
 \subsubsection{Problema dello scheduling e algoritmo risolvente}
-Una \textbf{sequenza di scheduling}, o semplicemente \textbf{scheduling}, è una sequenza di lavori $L_1,L_2,\dots,L_n$ che 
+Una \textit{sequenza di scheduling}, o semplicemente \textit{scheduling}, è una sequenza di lavori $L_1,L_2,\dots,L_n$ che 
 devono essere eseguiti uno dopo l'altro consecutivamente. L'algoritmo è greedy, l'appetibilità è data dalla scadenza. 
 Descrizione informale:
 \begin{enumerate}
@@ -837,37 +839,37 @@ Descrizione informale:
 \subsubsection{Correttezza}
 L'algoritmo di Moore è corretto, si dimostra per induzione.
 \begin{proof}
-    \textbf{Invariante}. Sia $S$ l'insieme di tutti i job finora esaminati:
+    \textit{Invariante}. Sia $S$ l'insieme di tutti i job finora esaminati:
     \begin{enumerate}
-        \item $Sol$ è uno \textbf{scheduling massimale} $L_1,L_2,\dots,L_k$ di job di $S$ che rispetta le scadenze, cioè 
+        \item $Sol$ è uno \textit{scheduling massimale} $L_1,L_2,\dots,L_k$ di job di $S$ che rispetta le scadenze, cioè 
         quello con il numero massimo di elementi 
         \item $Sol$ è, fra tutti gli scheduling massimali di job di $S$, quello di durata totale minima 
         \item $Sol$ è ordinato per tempi di scadenza crescenti
         \item ogni job non in $S$ ha una scadenza posteriore o uguale alle scadenze dei job in $S$ 
     \end{enumerate}
-    \textbf{Passo}. Sia $t_k$ l'istante di fine dello scheduling $Sol=L_1,L_2,\dots,L_k$. Sia $L$ il primo job non ancora 
+    \textit{Passo}. Sia $t_k$ l'istante di fine dello scheduling $Sol=L_1,L_2,\dots,L_k$. Sia $L$ il primo job non ancora 
     esaminato, cioè non in $S$, che ha scadenza prima di tutti gli altri job non esaminati. Siano $s$ la scadenza di $L$ 
     e $d$ la durata di $L$. Considerando l'insieme $S'=S\cup \{L\}$, si possono verificare due casi:
     \begin{enumerate}
         \item $L$ aggiunto ad $S$ è eseguibile entro la sua scadenza 
         \item $L$ non è eseguibile
     \end{enumerate}
-    \textbf{Caso 1}. Lo scheduling così ottenuto è uno scheduling massimale. $\{L\}$ ha cardinalità 1; quindi, se esistesse 
+    \textit{Caso 1}. Lo scheduling così ottenuto è uno scheduling massimale. $\{L\}$ ha cardinalità 1; quindi, se esistesse 
     uno scheduling per $S\cup \{L\}$ con più di $k+1$ elementi, vi sarebbe uno scheduling per $S$ con più di $k$ elementi,
     il che è assurdo. Inoltre $S\cup \{L\}$ è di durata minima.\\ 
-    \textbf{Caso 2}. Lo scheduling $L_1,L_2,\dots,L_k,L$ non è una soluzione. Se $L$ è il processo di durata massima, sostituendolo 
+    \textit{Caso 2}. Lo scheduling $L_1,L_2,\dots,L_k,L$ non è una soluzione. Se $L$ è il processo di durata massima, sostituendolo 
     ad un job già presente $S$, si otterrebbe uno scheduling di durata maggiore o uguale (violando punto 2). Se in $S$ 
     esiste un job $L_{max}$ di durata maggiore di $L$, eliminando $L_{max}$ ed aggiungendo $L$ ad $S$, si ottiene uno 
     scheduling di ancora $k$ elementi, di durata minore (minima).\\
     Quindi, $L_1,L_2,\dots,L_k$ è uno scheduling massimale e di durata minima.
 \end{proof}
-\subsection{Codici di Huffman}
+\section{Codici di Huffman}
 \subsubsection{Codifica}
-Una \textbf{codifica} associa un insieme di caratteri o simboli ad un insieme di altri elementi, detti \textbf{parole in codice}.
+Una \textit{codifica} associa un insieme di caratteri o simboli ad un insieme di altri elementi, detti \textit{parole in codice}.
 Le codifiche possono avere lunghezza fissa o variabile. La codifica deve essere non ambigua, cioè che nessuna codifica di 
 di un carattere sia prefisso di un'altra. Un codice binario prefisso può essere rappresentato tramite un albero binario 
 in cui le foglie rappresentano i caratteri ed i cammini dalla radice alle foglie rappresentano la codifica dei caratteri. 
-L'albero prende il nome di \textbf{albero di codifica}.
+L'albero prende il nome di \textit{albero di codifica}.
 \subsubsection{Codifica ottima}
 Il problema affrontato dall'algoritmo di Huffman è il seguente: dato un testo scritto secondo un certo alfabeto $C$, trovare 
 una codifica che sia minimale, cioè renda minima la lunghezza del testo codificato (è una tecnica di compressione). 
@@ -876,7 +878,7 @@ Una codifica a lunghezza fissa usa parole in codice tutte della stessa dimension
 $\lceil \log_2 n\rceil$ bit per rappresentare ogni parola in codice per un alfabeto di $n$ elementi.
 
 Un albero avente nodi interni con un solo figlio non è ottimale: può essere eliminato attaccando i suoi figli direttamente 
-al padre. Un albero binario in cui ogni nodo interno ha esattamente due figli si chiama \textbf{albero pieno}.
+al padre. Un albero binario in cui ogni nodo interno ha esattamente due figli si chiama \textit{albero pieno}.
 
 Per ottenere la maggior compressione possibile, i caratteri più frequenti devono avere le codifiche più corte, cioè comparire 
 a livelli più alti dell'albero.
@@ -895,7 +897,7 @@ codifica del testo è data da:
     B(T)=\Sigma_{c\in C}d_C\cdot n\cdot f(c)=n\cdot L(T)
 \end{equation*}
 
-L'algoritmo di Huffman è un'applicazione della tecnica greedy \textbf{con appetibilità modificabili}:
+L'algoritmo di Huffman è un'applicazione della tecnica greedy \textit{con appetibilità modificabili}:
 \begin{enumerate}
     \item Per ciascun carattere, crea un albero formato solo da una foglia contenente il carattere e la frequenza del carattere 
     \item Fondi i due alberi che hanno due frequenze minime e costruisci un nuovo albero che ha come frequenza la somma 
@@ -924,16 +926,16 @@ La complessità dell'algoritmo è $\mathcal{O}(\log n)$ se la coda di priorità 
 \subsubsection{Correttezza}
 L'algoritmo restituisce un albero di Huffman, che rende minima la lunghezza media di codifica.
 
-\textbf{Foresta di Huffman}. La foresta di Huffman per un alfabeto $C$ con funzione di frequenza $f$ è una foresta i 
+\textit{Foresta di Huffman}. La foresta di Huffman per un alfabeto $C$ con funzione di frequenza $f$ è una foresta i 
 cui elementi $T_1,T_2,\dots,T_n$ sono sottoalberi di un albero di Huffman $T$ per quell'alfabeto.
 
-\textbf{Invariante}. La foresta $\{T_1,T_2,\dots,T_n\}$ costruita dall'algoritmo al passo generico è una foresta di 
+\textit{Invariante}. La foresta $\{T_1,T_2,\dots,T_n\}$ costruita dall'algoritmo al passo generico è una foresta di 
 Huffman per $C$ e $f$, cioè esiste un albero di Huffman $T$ di cui gli alberi $T_1,T_2,\dots,T_n$ sono sottoalberi.
 
-\textbf{Caso base}. Prima dell'esecuzione del ciclo, l'invariante vale banalmente, in quanto gli alberi sono tutti 
+\textit{Caso base}. Prima dell'esecuzione del ciclo, l'invariante vale banalmente, in quanto gli alberi sono tutti 
 nodi singoli, cioè foglie corrispondenti ai caratteri dell'alfabeto $C$.
 
-\textbf{Passo}. Assumiamo che prima della k-esima iterazione del ciclo l'invariante valga, cioè che la foresta 
+\textit{Passo}. Assumiamo che prima della k-esima iterazione del ciclo l'invariante valga, cioè che la foresta 
 $F=\{T_1,T_2,\dots,T_n\}$ sia una foresta di Huffman per il dato alfabeto $C$. Mostriamo che dopo il (k+1)-esimo passo 
 dell'iterazione, che fonde i due alberi $T_a$ e $T_b$ aventi due frequenze minime in un nuovo albero $T_{ab}$, la nuova 
 foresta $F-\{T_a,T_b\}\cup\{T_{ab}\}$ è ancora una foresta di Huffman.
@@ -958,14 +960,14 @@ foresta $F-\{T_a,T_b\}\cup\{T_{ab}\}$ è ancora una foresta di Huffman.
     ha $T_{ab}$ come sottoalbero, è un albero di Huffman. Dunque, la foresta $F-\{T_a,T_b\}\cup\{T_{ab}\}$ è ancora una 
     foresta di Huffman.
 \end{proof}
-\section{Tecnica Greedy applicata ai grafi}
+\chapter{Tecnica Greedy applicata ai grafi}
 Il teorema della distanza nell'albero BFS visto per i grafi non pesati non vale per un grafo pesato, quindi $d[v]\neq\delta(s,v)$.
-\subsection{Algoritmo di Dijkstra}
+\section{Algoritmo di Dijkstra}
 L'algoritmo di Dijkstra è una visita BFS in cui la frangia è gestita come in un algoritmo greedy con appetibilità modificabili.
 L'appetibilità di un vertice $u$ è data da una stima della distanza tra $s$ e $u$ che l'algoritmo ha in un determinato istante.
 Inizialmente, tutti i vertici sono stimati a distanza $\infty$ da $s$, tranne $s$ stesso che ha distanza $d[s]=0$ da se 
 stesso. Ad ogni ciclo, scelgo un vertice $u$ da aggiungere all'albero tra quelli non ancora inseriti ma aggiungi dalla 
-ricerca, e scelgo quello con \textbf{distanza da $s$ stimata minima}.
+ricerca, e scelgo quello con \textit{distanza da $s$ stimata minima}.
 \begin{algorithm}[H]
     \caption{DIJKSTRA(G,W,s)}
     \begin{algorithmic}
@@ -995,9 +997,9 @@ ricerca, e scelgo quello con \textbf{distanza da $s$ stimata minima}.
     \end{algorithmic}
 \end{algorithm}
 \subsubsection{Miglioramenti}
-I nodi grigi sono gestiti con una \textbf{coda di priorità}. È possibile non distiguere nodi bianchi e grigi ed inserire 
-tutti nella coda fin dall'inizio, assegnando loro distanza infinita da $s$: i nodi neri sono detti \textbf{definitivi} e 
-quelli bianchi e grigi \textbf{non definitivi}. Inoltre, non è nemmeno necessario distinguere i nodi neri, poichè non saranno 
+I nodi grigi sono gestiti con una \textit{coda di priorità}. È possibile non distiguere nodi bianchi e grigi ed inserire 
+tutti nella coda fin dall'inizio, assegnando loro distanza infinita da $s$: i nodi neri sono detti \textit{definitivi} e 
+quelli bianchi e grigi \textit{non definitivi}. Inoltre, non è nemmeno necessario distinguere i nodi neri, poichè non saranno 
 in coda.
 \begin{algorithm}[H]
     \caption{DIJKSTRA CON PRIORITY QUEUE(G,W,s)}
@@ -1033,15 +1035,15 @@ la chiave di un vertice. La complessità è quindi: $\mathcal{O}(t_c+n*t_e+m*t_d
 
 La complessità totale dipende anche dalle complessità delle operazioni sulla coda:
 \begin{itemize}
-    \item con coda di priorità realizzata come sequenza \textbf{non ordinata}: $\mathcal{O}(n^2+m)$
-    \item con coda di priorità realizzata come sequenza \textbf{ordinata}: $\mathcal{O}(n+n*m)$
+    \item con coda di priorità realizzata come sequenza \textit{non ordinata}: $\mathcal{O}(n^2+m)$
+    \item con coda di priorità realizzata come sequenza \textit{ordinata}: $\mathcal{O}(n+n*m)$
 \end{itemize}
 \subsubsection{Versione di Johnson}
-La versione dell'algoritmo di Dijkstra con coda di priorità implementata come \textbf{heap} è chiamata algoritmo di Johnson.
+La versione dell'algoritmo di Dijkstra con coda di priorità implementata come \textit{heap} è chiamata algoritmo di Johnson.
 La complessità è $\mathcal{O}((m+n)\log n)$.
 \subsubsection{Correttezza}
 \begin{proprietà}[1]
-    Un sottocammino di un cammino minimo è un \textbf{cammino minimo}.
+    Un sottocammino di un cammino minimo è un \textit{cammino minimo}.
 \end{proprietà}
 \begin{proprietà}[2]
     Siano $S$ l'insieme di vertici già considerati dalla visita e $D$ l'insieme dei vertici ancora da considerare:
@@ -1065,11 +1067,11 @@ La complessità è $\mathcal{O}((m+n)\log n)$.
 \end{proprietà}
 Il predicato $\forall t \in S : d[t]=\delta(s,t)$ è un'invariante del ciclo while.
 \begin{proof}
-    \textbf{Caso base}. Il predicato è vero perchè all'inizion $S$ è vuoto.
+    \textit{Caso base}. Il predicato è vero perchè all'inizion $S$ è vuoto.
 
-    \textbf{Passo}. Dimostriamo che per il nuovo vertice $u$ estratto da $D$, $d[u]=\delta(s,u)$.
+    \textit{Passo}. Dimostriamo che per il nuovo vertice $u$ estratto da $D$, $d[u]=\delta(s,u)$.
 
-    \textbf{Caso 1}. Il vertice estratto da $D$ ha $d[u]\neq \infty$. Sia $\pi[u]=r\neq NULL$ per proprietà 2.3. Sappiamo 
+    \textit{Caso 1}. Il vertice estratto da $D$ ha $d[u]\neq \infty$. Sia $\pi[u]=r\neq NULL$ per proprietà 2.3. Sappiamo 
     allora che $r$ è nell'albero dei cammini minimi e che $d[u]=d[r]+W(r,u)$ (per proprietà 2.4).\\
     Supponiamo, per assurdo, che tra $s$ e $u$ esista un cammino di peso minore di $d[u]$: esso deve contenere un arco che 
     tra un vertice in $s$ e uno in $D$, poniamo siano $x$ il vertice in $S$ e $y$ quello in $D$. Questo cammino può essere 
@@ -1078,14 +1080,14 @@ Il predicato $\forall t \in S : d[t]=\delta(s,t)$ è un'invariante del ciclo whi
     perchè $u$ è stato estratto e ha $d[u]$ minimo.\\
     Quindi $W(s,\dots x,\dots y,\dots u)=d[y]+W(y\leadsto u)$ non può essere minore di $d[u]$.
 
-    \textbf{Caso 2}. Se $u$ è estratto con $d[u]=\infty$, allora (proprietà 3) non esiste alcun cammino tra $s$ e $u$.
+    \textit{Caso 2}. Se $u$ è estratto con $d[u]=\infty$, allora (proprietà 3) non esiste alcun cammino tra $s$ e $u$.
 \end{proof} 
 \subsubsection{Ulteriori ottimizzazioni}
 L'algoritmo si può ottimizzare nel caso serva solamente trovare un cammino minimo tra due nodi, $s$ e $t$:
 \begin{itemize}
-    \item Ogni volta che si estrae un nodo $u$ da $D$, si può controllare se \textbf{coincide con $t$} e terminare l'algoritmo 
+    \item Ogni volta che si estrae un nodo $u$ da $D$, si può controllare se \textit{coincide con $t$} e terminare l'algoritmo 
     \item Poichè l'algoritmo esegue una BFS, si vanno a calcolare prima tutti i cammini di lunghezza inferiore a $\delta(s,u)$:
-    si possono usare le \textbf{euristiche} per individuare i nodi più promettenti.
+    si possono usare le \textit{euristiche} per individuare i nodi più promettenti.
 \end{itemize}
 Dati $s$ e $t$, si può eseguire l'algoritmo contemporaneamente sul grafo $G$ a partire da $s$ e sul grafo trasposto $G^T$ 
 a partire da $t$, alternando i passi. Quando si ottengono un cammino minimo da $s$ ed uno da $t$ ad uno stesso nodo $v$,
@@ -1095,20 +1097,20 @@ Teniamo in memoria la lunghezza del migior cammino così trovato, inizialmente $
 un arco $(u,v)$ con nodo $u$ nero (in avanti) e nodo v nero (in indietro), se $d[u]+W(u,v)+d^T[v]<d$ si aggiorna $d$.
 Quando si estraggono un nodo $x$ (in avanti) e un nodo $y$ (in indietro) tali che $\delta(s,x)+\delta(y,t)>d$, allora il 
 cammino trovato di peso $d$ è il cammino minimo.
-\subsection{Minimo albero ricoprente}
+\section{Minimo albero ricoprente}
 \subsubsection{Definizione}
-Dato un grafo $G$ non orientato e connesso, un albero ricoprente è un \textbf{sottografo} $T\subseteq G$ tale che $T$ è 
+Dato un grafo $G$ non orientato e connesso, un albero ricoprente è un \textit{sottografo} $T\subseteq G$ tale che $T$ è 
 un sottografo connesso aciclico e $T$ contiene tutti i vertici di $G$.
 
-Dato un grafo $G$ connesso, non orientato e pesato, il \textbf{minimo albero ricoprente} (MAR) per $G$ è un albero ricoprente 
+Dato un grafo $G$ connesso, non orientato e pesato, il \textit{minimo albero ricoprente} (MAR) per $G$ è un albero ricoprente 
 in cui la somma dei pesi degli archi nell'albero è minima.
 \subsubsection{Lemma del taglio}
-Un \textbf{taglio} è una partizione dell'insieme $V$ di tutti i nodi del grafo in due parti non vuote, $S$ e $V-S$. Si dice 
-che un arco $(u,v)$ \textbf{attraversa il taglio} se i suoi estremi $u$ e $v$ appartengono uno ad una parte ed uno all'altra.
+Un \textit{taglio} è una partizione dell'insieme $V$ di tutti i nodi del grafo in due parti non vuote, $S$ e $V-S$. Si dice 
+che un arco $(u,v)$ \textit{attraversa il taglio} se i suoi estremi $u$ e $v$ appartengono uno ad una parte ed uno all'altra.
 
 Sia $A$ un insieme di archi appartenenti ad un MAR di un grafo $G$. Consideriamo un taglio non attraversato da alcun arco 
 di $A$; siano $S$ e $V-S$ le sue due parti. Sia $(u,v)$ l'arco di peso minimo fra tutti gli archi del grafo che attraversano 
-il taglio (chiamato \textbf{arco leggero}): allora $(u,v)$ appartiene a un MAR che estende $A$, cioè l'insieme $A\cup \{(u,v)\}$
+il taglio (chiamato \textit{arco leggero}): allora $(u,v)$ appartiene a un MAR che estende $A$, cioè l'insieme $A\cup \{(u,v)\}$
 è anch'esso un sottoinsieme di un MAR del grafo $G$. 
 
 \begin{proprietà}[1]
@@ -1154,7 +1156,7 @@ un arco alla volta si può quindi costruire un MAR ricoprente $G$.
     Togliendo $e'$ dal ciclo, si ottiene un albero $M'2$ diverso da $M2$; $M'2$ ha un peso minore di $M2$, fatto che contraddice 
     l'ipotesi iniziale.
 \end{proof}
-\subsection{Algoritmo di Prim}
+\section{Algoritmo di Prim}
 Nei MAR si cerca non il nodo più vicino alla radice, ma il nodo più vicino all'albero già costruito; l'appetibilità è 
 rappresentata dalla stima della distanza del nodo dall'albero di visita.
 
@@ -1198,35 +1200,35 @@ definitivi (non nell'albero).
 
 Invarianti:
 \begin{itemize}
-    \item \textbf{IS}: tutti gli archi dell'albero $S$ appartengono ad un qualche minimo albero ricoprente dell'intero 
+    \item \textit{IS}: tutti gli archi dell'albero $S$ appartengono ad un qualche minimo albero ricoprente dell'intero 
     grafo $G$
-    \item \textbf{ID}: per ogni nodo $x$ non definitivo, $d[x]$ è il peso dell'arco più leggero che collega $x$ ad un nodo 
+    \item \textit{ID}: per ogni nodo $x$ non definitivo, $d[x]$ è il peso dell'arco più leggero che collega $x$ ad un nodo 
     nero 
 \end{itemize}
 
 \begin{proof}
-    \textbf{Caso base}. Dopo la prima iterazione, c'è solo un nodo definitivo, $s$; l'albero $S$ non contiene nessun arco; 
+    \textit{Caso base}. Dopo la prima iterazione, c'è solo un nodo definitivo, $s$; l'albero $S$ non contiene nessun arco; 
     ogni nodo $x$ adiacente a $s$ ha distanza $d[x]$ uguale al peso dell'arco $(s,x)$ e ogni altro nodo ha distanza uguale 
-    a $\infty$. Quindi, \textbf{IS} e \textbf{ID} sono soddisfatti.
+    a $\infty$. Quindi, \textit{IS} e \textit{ID} sono soddisfatti.
 
-    \textbf{Passo}. Scegliamo un taglio che separi i nodi neri dagli altri: sicuramente non taglia nessun arco di $S$.
+    \textit{Passo}. Scegliamo un taglio che separi i nodi neri dagli altri: sicuramente non taglia nessun arco di $S$.
     Scegliamo $u$ con $d[u]$ minore tra i nodi non neri. $S$ è sottoinsieme di un MAR, e per il lemma del taglio $(y,u)$ 
     appartiene ad un MAR di $G$ che estende $S$ (IS si mantiene). Per ripristinare ID, basta controllare se il nuovo nodo 
     $u$ avvicina qualche suo adiacente ad $S$.
 \end{proof}
-\subsection{Algoritmo di Kruskal}
+\section{Algoritmo di Kruskal}
 \subsubsection{Introduzione}
 Considerando la definizione di MAR e la struttura generica di un algoritmo greedy, è possibile definire un algoritmo che 
 costruisce iterativamente un MAR, a partire dalla foresta vuota alla quale si aggiungono via via degli archi con i seguenti 
 criteri:
 \begin{itemize}
-    \item \textbf{Appetibilità}: l'appetibilità di un arco è inversamente proporzionale al suo peso 
-    \item \textbf{Criterio di ammissibilità}: posso aggiungere un arco alla soluzione provvisoria solo se non crea cicli 
-    \item \textbf{Criterio per riconoscere la soluzione}: l'albero costruito è una soluzione solo se è connesso 
+    \item \textit{Appetibilità}: l'appetibilità di un arco è inversamente proporzionale al suo peso 
+    \item \textit{Criterio di ammissibilità}: posso aggiungere un arco alla soluzione provvisoria solo se non crea cicli 
+    \item \textit{Criterio per riconoscere la soluzione}: l'albero costruito è una soluzione solo se è connesso 
 \end{itemize}
 \subsubsection{Controllo dei cicli con UnionFind}
 L'algoritmo mantiene una foresta di alberi ($A$) che man mano vengono fusi dall'aggiunta di archi. Si crea un ciclo se 
-viene aggiunto un arco tra due nodi che appartengono allo stesso albero. Si può usare la \textbf{UnionFind} per identificare 
+viene aggiunto un arco tra due nodi che appartengono allo stesso albero. Si può usare la \textit{UnionFind} per identificare 
 gli insiemi di vertici che già appartengono allo stesso albero. Ogni qualvolta si vuole aggiungere un arco $(u,v)$, di 
 considera find(u) e find(v): se sono uguali, $u$ e $v$ appartengono allo stesso albero.
 \begin{algorithm}
@@ -1259,10 +1261,10 @@ Nel secondo caso, $u$ e $v$ appartengono a due alberi distinti $T_1$ e $T_2$. Co
 arco di $A$, e che abbia $T_1$ e $T_2$ da parti opposte, tagliando l'arco $(u,v)$. L'arco $(u,v)$ è l'arco di peso minimo 
 fra tutti gli archi che attraversano il taglio. Quindi, per il lemma del taglio, sappiamo che $(u,v)\cup A$ è un sottoinsieme 
 di un MAR.
-\section{Programmazione dinamica}
-\subsection{Tecnica della programmazione dinamica}
+\chapter{Programmazione dinamica}
+\section{Tecnica della programmazione dinamica}
 \subsubsection{Memoizzazione}
-La \textbf{memoizzazione} consiste nel memorizzare i valori via via calcolati da un algoritmo in una struttura di supporto.
+La \textit{memoizzazione} consiste nel memorizzare i valori via via calcolati da un algoritmo in una struttura di supporto.
 È possibile applicare la tecnica della memoizzazione a tutte quelle funzioni che non cambiano comportamento, sugli stessi 
 input, nel tempo.
 \subsubsection{Massimo Sottoinsieme Indipendente}
@@ -1280,12 +1282,12 @@ Questo problema gode della proprietà della sottostruttura ottima.
 \begin{proof}
     Se $S_i$ è una soluzione ottima per $P_i$, allora sono possibili due casi.
 
-    \textbf{Caso 1}. Nel primo caso, $S_i$ è anche una soluzione ammissibile per il problema $P_{i-1}$, in quanto non contiene 
+    \textit{Caso 1}. Nel primo caso, $S_i$ è anche una soluzione ammissibile per il problema $P_{i-1}$, in quanto non contiene 
     $V_i$. Se non fosse ammissibile per $P_{i-1}$, esisterebbe una soluzione $S'_{i-1}$ con peso maggiore di $S_i$, ma tale 
     soluzione sarebbe una soluzione anche per $P_i$ e sarebbe migliore di $S_i$, contraddicendo l'ipotesi che $S_i$ sia 
     la soluzione ottima per $P_i$.
 
-    \textbf{Caso 2}. Nel secondo caso, $V_i$ fa parte di $S_i$, quindi $S'=S_i-\{V_i\}$ è una soluzione ottima per il problema 
+    \textit{Caso 2}. Nel secondo caso, $V_i$ fa parte di $S_i$, quindi $S'=S_i-\{V_i\}$ è una soluzione ottima per il problema 
     $P_{i-2}$. $V_{i-1}$ non può appartenere a $S_i$ per la condizione di indipendenza sulle soluzioni. Per il problema 
     $P_{i-2}$, $S'$ è una soluzione ottima: se non lo fosse, esisterebbe una soluzione $S''$ per $P_{i-2}$ di peso maggiore 
     di $S'$. Allora $S''\cup \{V_i\}$ sarebbe una soluzione per $P_i$ e avrebbe peso maggiore di $S_i$ (assurdo). 
@@ -1320,8 +1322,8 @@ La proprietà di sottostruttura ottima è fondamentale per poter esprimere le fu
         \Return $A[n]$
     \end{algorithmic}
 \end{algorithm}
-\subsection{Longest Common Subsequence}
-Data una sequenza $S:a_1,\dots,a_m$, una \textbf{sottosequenza} di $S$ è una qualsiasi sequenza ottenuta da un $S$ togliendo 
+\section{Longest Common Subsequence}
+Data una sequenza $S:a_1,\dots,a_m$, una \textit{sottosequenza} di $S$ è una qualsiasi sequenza ottenuta da un $S$ togliendo 
 alcuni elementi. La sottosequenza deve rispettare l'ordine degli elementi della sequenza originale.
 \subsubsection{Definizione del problema}
 Date due sequenze $S1$ e $S2$, trovare la più lunga sequenza $S3$ che è sottosequenza sia di $S1$ che di $S2$. Notatione:
@@ -1329,14 +1331,14 @@ $S3=lcs(S1,S2)$.
 \subsubsection{Sottostruttura ottima}
 Siano $S1:a_1,\dots,a_m$ e $S2:b_1,\dots,b_n$ e $S3:c_1,\dots,c_k$; sono possibili due casi.
 
-\textbf{Caso 1}. Nel primo caso, $a_m=b_n$. $a_m$ sarà contenuto in $S3$, e occuperà l'ultima posizione di $S3$; quindi 
+\textit{Caso 1}. Nel primo caso, $a_m=b_n$. $a_m$ sarà contenuto in $S3$, e occuperà l'ultima posizione di $S3$; quindi 
 $c_k=a_m=b_n$. Dato che gli ultimi elementi della sequenze iniziali già appartengono alla lcs, si possono non considerare
 nel confronto con il resto delle sequenze. Quindi $S3=lcs(S1_{m-1},S2_{n-1})+\{a_m\}$.
 
-\textbf{Caso 2}. Nel secondo caso, $a_m\neq b_n$. In questo caso, possiamo dure che $a_m$ o $b_n$ non saranno contenuti 
+\textit{Caso 2}. Nel secondo caso, $a_m\neq b_n$. In questo caso, possiamo dure che $a_m$ o $b_n$ non saranno contenuti 
 in $S3$. Quindi, $S3$ sarà la sequenza più lunga tra $lcs(S1-\{a_m\},S2)$ e $lcs(S1,S2-\{b_n\})$.
 \subsubsection{Struttura per memoizzazione}
-Per memorizzare la soluzione di tutti i sottoproblemi, si usa una \textbf{matrice} (LCS) di $m+1$ righe e $n+1$ colonne. La 
+Per memorizzare la soluzione di tutti i sottoproblemi, si usa una \textit{matrice} (LCS) di $m+1$ righe e $n+1$ colonne. La 
 casella $LCS[i,j]$ contiene la più lunga sottosequenza comune dei due segmenti iniziali di lunghezze rispettive $i$ e $j$.
 La casella 0-esima contiene la più lunga sottosequenza dei prefissi vuoti.
 \subsubsection{Ottimizzazioni}
@@ -1373,13 +1375,13 @@ semplicemente delle frecce per indicare come si sta costruendo $LCS[i,j]$, senza
 \subsubsection{Complessità}
 La costruzione della matrice ha costo $\mathcal{O}(mn)$, così come il suo popolamento. La ricostruzione della soluzione 
 ha costo $\mathcal{O}(m+n)$: in totale, $\mathcal{O}(mn)$.
-\subsection{Zaino 0-1}
+\section{Zaino 0-1}
 Simile al problema dello zaino frazionario, ma con oggetti non frazionabili.
 \subsubsection{Costruzione di algoritmi di programmazione dinamica}
 Passi da seguire per cotruire un algoritmo di programmazione dinamica:
 \begin{enumerate}
-    \item descrivere la \textbf{struttura dati} necessaria per la \textbf{memoizzazione}
-    \item definire i \textbf{casi base} e le loro soluzioni banali
+    \item descrivere la \textit{struttura dati} necessaria per la \textit{memoizzazione}
+    \item definire i \textit{casi base} e le loro soluzioni banali
     \item scrivere l'algoritmo che inizializzi la struttura di memoizzazione seguendo i casi base e successivamente la 
     popoli in maniera bottom-up; infine restituire la soluzione 
 \end{enumerate}
@@ -1429,24 +1431,24 @@ Per sapere quali oggetti appartengono alla soluzione, basta utilizzare una matri
         \Return $V[n,P]$
     \end{algorithmic}
 \end{algorithm}
-\section{UnionFind}
-\subsection{Definizione del problema}
+\chapter{UnionFind}
+\section{Definizione del problema}
 Il problema è mantenere una collezione di insiemi disgiunti sulla quale siano possobili le seguenti operazioni: 
 \begin{itemize}
-    \item \textbf{union(A,B)}: fonde gli insiemi $A$ e $B$ in un unico insieme $A \cup B$
-    \item \textbf{find(x)}: restituisce il nome dell'insieme contenente l'elemento $x$
-    \item \textbf{makeSet(x)}: crea il nuovo insieme $\{x\}$, avente $x$ come unico elemento
+    \item \textit{union(A,B)}: fonde gli insiemi $A$ e $B$ in un unico insieme $A \cup B$
+    \item \textit{find(x)}: restituisce il nome dell'insieme contenente l'elemento $x$
+    \item \textit{makeSet(x)}: crea il nuovo insieme $\{x\}$, avente $x$ come unico elemento
 \end{itemize}
 Gli insiemi rimangono sempre disgiunti. Per distinguere tra diversi insiemi, si può individuare un elemento rappresentante,
 cosicchè union(a,b) fonda i due insiemi rappresentati dagli elementi $a$ e $b$.
-\subsection{Implementazione}
+\section{Implementazione}
 2 tipi di approcci fondamentali:
 \begin{itemize}
-    \item privilegiare esecuzione efficiente dell'operazione di find (\textbf{QuickFind})
-    \item privilegiare esecuzione efficiente dell'operazione di union (\textbf{QuickUnion})
+    \item privilegiare esecuzione efficiente dell'operazione di find (\textit{QuickFind})
+    \item privilegiare esecuzione efficiente dell'operazione di union (\textit{QuickUnion})
 \end{itemize}
 \subsubsection{QuickFind}
-Gli approcci di tipo \textbf{QuickFind} utilizzano alberi con due livelli per realizzare la UnionFind. La radice di ogni 
+Gli approcci di tipo \textit{QuickFind} utilizzano alberi con due livelli per realizzare la UnionFind. La radice di ogni 
 albero contiene il rappresentante di un insieme, le foglie rappresentano gli elementi dell'insieme. Il rappresentante è 
 contenuto sia nella radice sia in una foglia.
 
@@ -1460,7 +1462,7 @@ Operazioni su QuickFind:
     puntatore al padre con un puntatore alla radice di $A$ e cancella la radice di $B$. $\mathcal{O}(n)$.
 \end{itemize}
 \subsubsection{QuickUnion}
-Gli approcci di tipo \textbf{QuickUnion} utilizzano alberi con più di 2 livelli per rappresentare le UnionFind. La radice 
+Gli approcci di tipo \textit{QuickUnion} utilizzano alberi con più di 2 livelli per rappresentare le UnionFind. La radice 
 di ogni albero contiene il rappresentante di un insieme. I nodi rappresentano gli elementi dell'insieme. Il rappresentante 
 è conenuto solamente nella radice.
 
@@ -1472,47 +1474,47 @@ Operazioni su QuickUnion:
     \item union(a,b): considera l'albero $A$ contenente $a$ e $B$ contenente $b$, rende la radice di $B$ figlio della radice 
     di $A$. Costo: $\mathcal{O}(1)$.
 \end{itemize}
-\subsection{Complessità e costo ammortizzato}
+\section{Complessità e costo ammortizzato}
 Senza bilanciamenti sull'albero, bisogna considerare il caso peggiore, $\mathcal{O}(n)$.
-Ciò che interessa è il costo totale delle operazioni, ossia il \textbf{costo ammortizzato}.
+Ciò che interessa è il costo totale delle operazioni, ossia il \textit{costo ammortizzato}.
 \subsubsection{Metodo dei crediti}
-Il \textbf{metodo dei crediti} viene usato per determinare il costo ammotizzato di una sequenza di operazioni, senza andare 
+Il \textit{metodo dei crediti} viene usato per determinare il costo ammotizzato di una sequenza di operazioni, senza andare 
 nel dettaglio. 1 credito vale $\mathcal{O}(1)$ passi di esecuzione. Le funzioni meno costose depositano crediti sugli oggetti,
 ed i crediti possono essere prelevati dalle funzioni più costose. Il costo ammortizzato è dato dalla somma di tutti i costi 
 diviso per il numero di operazioni.
 
 Vediamo $n$ makeSet e $n-1$ makeUnion analizzati con il metodo dei crediti:
 \begin{itemize}
-    \item \textbf{Numero massimo di cambi padre}. Ad ogni makeUnion, se una foglia cambia padre, il nuovo insieme che la
+    \item \textit{Numero massimo di cambi padre}. Ad ogni makeUnion, se una foglia cambia padre, il nuovo insieme che la
     contiene sarà grande almeno il doppio di quello di partenza. Quindi la foglia dopo $k$ cambi di padre apparterrà ad 
     un insieme di $2^k$ elementi. Siccome il numero totale di elementi è $n$, $2^k\leq n$, quindi $k\leq \log_2n$.
-    \item \textbf{Deposito crediti}. Assegniamo ad ogni makeSet un costo aggiuntivo di $\log_2n$ crediti. Con $n$ makeSet, 
+    \item \textit{Deposito crediti}. Assegniamo ad ogni makeSet un costo aggiuntivo di $\log_2n$ crediti. Con $n$ makeSet, 
     si accumulano $n\log_2n$ crediti.
-    \item \textbf{Costo union}. Ogni union consuma 1 credito per il costo dell'operazione d cambio del padre. Poichè i cambi 
+    \item \textit{Costo union}. Ogni union consuma 1 credito per il costo dell'operazione d cambio del padre. Poichè i cambi 
     di padre sono limitati a $\log_2n$ per foglia, si consumano un totale di $n\log_2n$ crediti.
 \end{itemize}
 Costo di $m$ find, $n$ makeSet e $n-1$ makeUnion: $\mathcal{O}(m+n\log_2n)$.
-\subsection{Bilanciamento su QuickFind}
+\section{Bilanciamento su QuickFind}
 Per ridurre il costo dell'operazione di union, si considera come insieme primario quello con cardinalità maggiore, e modificare 
-il padre delle foglie dell'altro insieme. Il valore \textbf{size(x)} memorizza la cardinalità dell'insieme $x$: quando 
+il padre delle foglie dell'altro insieme. Il valore \textit{size(x)} memorizza la cardinalità dell'insieme $x$: quando 
 viene svolta la union, si controlla size(x) per identificare l'insieme primario.
-\subsection{Bilanciamento su QuickUnion}
+\section{Bilanciamento su QuickUnion}
 Sono possibili 2 ottimizzazioni sulla QuickUnion:
 \begin{itemize}
-    \item \textbf{Union by rank}: nell'unione degli insiemi $A$ e $B$, rendiamo la radice dell'albero più basso figlia della 
+    \item \textit{Union by rank}: nell'unione degli insiemi $A$ e $B$, rendiamo la radice dell'albero più basso figlia della 
     radice dell'albero più alto 
-    \item \textbf{Union by size}: nell'unione degli insiemi $A$ e $B$, rendiamo la radice dell'albero con meno nodi figlia 
+    \item \textit{Union by size}: nell'unione degli insiemi $A$ e $B$, rendiamo la radice dell'albero con meno nodi figlia 
     della radice dell'albero con più nodi 
 \end{itemize}
 \subsubsection{QuickUnion by rank}
-Introduciamo un parametro \textbf{rank} che tenga conto dei livelli dell'albero. Quando facciamo una union, se 
+Introduciamo un parametro \textit{rank} che tenga conto dei livelli dell'albero. Quando facciamo una union, se 
 $rank(B)<rank(A)$, rendiamo la radice di $B$ figlio della radice di $A$; per $rank(A)<rank(B)$, viceversa.
 
 Dimostriamo che l'albero con radice $x$ ha almeno $2^{rank(x)}$ nodi.
 \begin{proof}
-    \textbf{Caso base}. $rank(A)=0$ ed un solo nodo. Allora $|A|=1\geq 2^0=2^{rank(A)}$
+    \textit{Caso base}. $rank(A)=0$ ed un solo nodo. Allora $|A|=1\geq 2^0=2^{rank(A)}$
 
-    \textbf{Passo}. Dopo ogni union:
+    \textit{Passo}. Dopo ogni union:
     \begin{itemize}
         \item se $rank(A)>rank(B)$: $|A\cup B|=|A|+|B|=2^{rank(A\cup B)}$
         \item se $rank(B)>rank(A)$: simmetrico al precedente 
@@ -1524,31 +1526,31 @@ Dimostriamo che l'albero con radice $x$ ha almeno $2^{rank(x)}$ nodi.
 Utilizziamo il parametro $size(x)=$numero di nodi dell'albero di cui $x$ è radice.
 Quando eseguiamo una union, se $size(B)\leq size(A)$ rendiamo la radice di $B$ figlio della radice di $A$, invece se 
 $size(B)<size(A)$ rendiamo la radice di $A$ figlio della radice di $B$, e scambiamo le due radici. Infine, $size(A)=size(A)+size(B)$.
-\subsection{Compressione nell'operazione find}
+\section{Compressione nell'operazione find}
 Le euristiche di compressione vengono applicate durante l'esecuzione di una find, ed hanno lo scopo di diminuire l'altezza
 dell'albero. Ne vediamo tre tipi:
 \begin{itemize}
-    \item \textbf{path compression}: ad ogni find prendiamo il reiferimento di ogni nodo radice e poi li facciamo diventare 
+    \item \textit{path compression}: ad ogni find prendiamo il reiferimento di ogni nodo radice e poi li facciamo diventare 
     figli dell'ultimo nodo radice
-    \item \textbf{path splitting}: rendo un nodo figlio di suo nonno
-    \item \textbf{path halving}: come path halving ma con un solo puntatore
+    \item \textit{path splitting}: rendo un nodo figlio di suo nonno
+    \item \textit{path halving}: come path halving ma con un solo puntatore
 \end{itemize}
 Combinando le euristiche di bilanciamento e compressione, una qualunque sequenza di $n$ makeSet, $m$ find e $n-1$ union 
 può essere eseguita in $\mathcal{O}((n+m)log^*)$.
-\section{Programmazione dinamica applicata ai grafi}
-\subsection{Algoritmo di Bellman-Ford}
+\chapter{Programmazione dinamica applicata ai grafi}
+\section{Algoritmo di Bellman-Ford}
 \subsubsection{Condizione di Bellman}
-Per ogni arco $(u,v)$ e per ogni vertice $s$ si ha $\delta(s,v)\leq \delta(s,u)+W(u,v)$, per la \textbf{disuguaglianza 
+Per ogni arco $(u,v)$ e per ogni vertice $s$ si ha $\delta(s,v)\leq \delta(s,u)+W(u,v)$, per la \textit{disuguaglianza 
 triangolare delle distanze}.
 \begin{lemma}
     Un arco $(u,v)$ appartiene ad un cammino minimo da $s$ a $v$ se e solo se $u$ è raggiungibile da $s$ e la condizione 
     di Bellman è soddisfatta con l'uguaglianza per $(u,v)$, cioè se vale $\delta(s,v)=\delta(s,u)+W(u,v)$.
 \end{lemma}
 \subsubsection{Tecnica del rilassamento}
-Consideriamo una \textbf{stima} $D(s,v)$ \textbf{per eccesso di} $\delta(s,v)$, che sia il peso di un cammino sul grafo 
+Consideriamo una \textit{stima} $D(s,v)$ \textit{per eccesso di} $\delta(s,v)$, che sia il peso di un cammino sul grafo 
 tra $s$ e $v$ (quindi, $D(s,v)\geq \delta(s,v)$).
 Supponiamo esista un arco $(u,v)$ per cui valga $D(s,v)>D(s,u)+W(u,v)$. Per rendere vera la disuguaglianza triangolare, 
-possiamo decrementare $D(s,v)$ con l'assegnazione $D(s,v)\gets D(s,u)+W(u,v)$: questa operazione è detta \textbf{rilassamento 
+possiamo decrementare $D(s,v)$ con l'assegnazione $D(s,v)\gets D(s,u)+W(u,v)$: questa operazione è detta \textit{rilassamento 
 dell'arco}.
 
 Applicando esaustivamente l'operazione di rilassamento, per grafi senza cicli negativi, $D(s,v)$ converge a $\delta(s,v)$.
@@ -1592,11 +1594,11 @@ $n-1$ iterazioni per trovare i cammini minimi da $s$ a tutti i vertici del grafo
 \subsubsection{Correttezza}
 Sia $\delta(s,v_k)$ a distanza da $s$ a $v_k$.
 
-Definiamo l'invariante \textbf{KPATH}: dopo la k-esima iterazione del ciclo esterno, si ha $d[v_k]=\delta(s,v_k)$ per ogni 
+Definiamo l'invariante \textit{KPATH}: dopo la k-esima iterazione del ciclo esterno, si ha $d[v_k]=\delta(s,v_k)$ per ogni 
 nodo $v_k$ per cui il cammino minimo da $s$ a $v_k$ è composto al più da $k$ archi.
 \begin{proof}
-    \textbf{Base}. per $k=0$, per il cammino da $s$ a $s$, $d[s]=0$ e $d[u]=\infty$ per tutti gli altri nodi $u$. 
-    \textbf{Passo}. Dimostriamo che KPATH sia vero anche dopo $k+1$ iterazioni. Sia $v_{k+1}$ un nodo il cui cammino minimo 
+    \textit{Base}. per $k=0$, per il cammino da $s$ a $s$, $d[s]=0$ e $d[u]=\infty$ per tutti gli altri nodi $u$. 
+    \textit{Passo}. Dimostriamo che KPATH sia vero anche dopo $k+1$ iterazioni. Sia $v_{k+1}$ un nodo il cui cammino minimo 
     $s\leadsto v_k\leadsto v_{k+1}$ è composto da $k+1$ archi. Sappiamo che $\delta(s,v_{k+1})=\delta(s,v_k)+W(v_k,v_{k+1})$
     e $d[v_k]=\delta(s,v_k)$. Quindi: $\delta(s,v_{k+1})=d[v_k]+W(v_k,v_{k+1})$.
 
@@ -1617,9 +1619,9 @@ tra tutti gli archi nei quali $u$ è stato raggiunto da un cammino minimo e $v$ 
 di rilassamento; invece l'algoritmo di Bellman-Ford sceglie $(u,v)$ tra tutti gli archi presenti in $G$.
 \subsubsection{Trovare cicli negativi}
 Se un cammino minimo contiene vertici ripetuti, vuol dire che nel grafo esiste un ciclo.
-Se il ciclo ha \textbf{peso positivo}, il cammino minimo è quello ottenuto percorrendolo una sola volta.
-Se il ciclo ha \textbf{peso 0}, viene rilevato il cammino minimo ottenuto percorrendo il ciclo una volta sola.
-Se il ciclo ha \textbf{peso negativo}, ogni volta che viene percorso viene trovato un cammino minimo più lungo e di peso 
+Se il ciclo ha \textit{peso positivo}, il cammino minimo è quello ottenuto percorrendolo una sola volta.
+Se il ciclo ha \textit{peso 0}, viene rilevato il cammino minimo ottenuto percorrendo il ciclo una volta sola.
+Se il ciclo ha \textit{peso negativo}, ogni volta che viene percorso viene trovato un cammino minimo più lungo e di peso 
 minore: per i cicli negativi non sarà mai possibile trovare una soluzione ottima.
 \begin{algorithm}
     \caption{BF-NEG(G,W,s)}
@@ -1666,14 +1668,14 @@ l'ordine topologico.
     \end{algorithmic}
 \end{algorithm}
 Ha complessità $\mathcal{O}(m+n)$.
-\subsection{Algoritmo di Floyd-Warshall}
+\section{Algoritmo di Floyd-Warshall}
 \subsubsection{Distanze e cammini minimi k-vincolati}
-Denotiamo i vertici del grafo come $v1,v2,\dots,v_n$. Per un $k$ fissato con $1\leq k\leq n$ definiamo: \textbf{cammino 
+Denotiamo i vertici del grafo come $v1,v2,\dots,v_n$. Per un $k$ fissato con $1\leq k\leq n$ definiamo: \textit{cammino 
 minimo k-vincolato} tra $x$ e $y$ (denotato con $\pi^k_{xy}$) il cammino che va da $x$ a $y$ di costo minimo tra tutti
-quelli che non contengono i vertici $\{v_{k+1},\dots,v_n\}$ e \textbf{distanza k-vincolata} (denotata con $d^k_{xy}$), 
+quelli che non contengono i vertici $\{v_{k+1},\dots,v_n\}$ e \textit{distanza k-vincolata} (denotata con $d^k_{xy}$), 
 che è il peso $W$ se $\pi^k_{xy}$ esiste, $\infty$ altrimenti.
 
-Un cammino minimo k-vincolato è un cammino minimo in un \textbf{grafo k-vincolato} $G_k$: varrà quindi la proprietà della 
+Un cammino minimo k-vincolato è un cammino minimo in un \textit{grafo k-vincolato} $G_k$: varrà quindi la proprietà della 
 sottostruttura ottima e sarà possibile applicare tecniche di programmazione dinamica. 
 
 
@@ -1682,7 +1684,7 @@ Per ogni $1\leq k\leq n$ e per ogni coppia $x,y$ definiamo l'equazione ricorsiva
     d^k_{xy}=min(d^{k-1}_{xy}, d^{k-1}_{xv_k}+d^{k-1}_{v_ky})
 \end{equation*}
 In poche parole, preso un $k$, si va a vedere se la concatenazione dei cammini minimi da $x$ a $v_k$ e da $v_k$ a $y$ ha 
-peso minore del cammino da $x$ a $y$ e si verifica la disuguaglianza triangolare: se \textbf{non} si verifica, si applica 
+peso minore del cammino da $x$ a $y$ e si verifica la disuguaglianza triangolare: se \textit{non} si verifica, si applica 
 un rilassamento facendo passare il cammino minimo attraverso $v_k$.
 Abbiamo due casi:
 \begin{itemize}
@@ -1749,35 +1751,35 @@ La distanza da un vertice da se stesso è riportata nella diagonale della matric
         \Return{PATH RECONSTRUCTION(P,x,P[x,y])+y}
     \end{algorithmic}
 \end{algorithm}
-\section{Teoria della complessità}
-\subsection{Definizione}
+\chapter{Teoria della complessità}
+\section{Definizione}
 La complessità di un problema (non di un algoritmo) è la complessità del migliore algoritmo che lo risolve, sia esso noto 
 oppure ipotizzato. 
 
 La complessità di un problema non dipende nè dal linguaggio di programmazione utilizzato, nè dal tipo di calcolatore (a 
-patto che sia un modello di calcolo \textbf{Turing completo}).
-\subsection{Problemi}
-Un \textbf{problema P} è una relazione del tipo 
+patto che sia un modello di calcolo \textit{Turing completo}).
+\section{Problemi}
+Un \textit{problema P} è una relazione del tipo 
 \begin{equation*}
     P\subseteq i\times S
 \end{equation*}
 Dove $I$ è l'insieme delle possibili istanze in ingresso ed $S$ è l'insieme delle possibili soluzioni del problema.
 Esistono diversi tipi di problemi:
 \begin{itemize}
-    \item \textbf{Problemi di decisione}: problemi che richiedono di verificare una certa proprietà sull'input.
-    \item \textbf{Problemi di ricerca}: data l'istanza di un problema, restituire una soluzione ammissibile.
-    \item \textbf{Problemi di ottimizzazione}: dat l'istanza di un problema, restituire una soluzione ottima secondo un 
+    \item \textit{Problemi di decisione}: problemi che richiedono di verificare una certa proprietà sull'input.
+    \item \textit{Problemi di ricerca}: data l'istanza di un problema, restituire una soluzione ammissibile.
+    \item \textit{Problemi di ottimizzazione}: dat l'istanza di un problema, restituire una soluzione ottima secondo un 
     determinato criterio.
 \end{itemize}
-\subsection{Classi di complessità}
-Una \textbf{classe di complessità} è un insieme di problemi che possono essere risolti usando le stesse risorse di calcolo.
+\section{Classi di complessità}
+Una \textit{classe di complessità} è un insieme di problemi che possono essere risolti usando le stesse risorse di calcolo.
 Dato $n$, che indica la dimensione dell'input, possiamo classificare i problemi in base al tempo o allo spazio richiesti:
 \begin{itemize}
-    \item \textbf{TIME(f(n))}: è l'insieme dei problemi che possono essere risolti in tempo $\mathcal{O}(f(n))$
-    \item \textbf{SPACE(f(n))}: è l'insieme dei problemi che possono essere risolti in spazio $\mathcal{O}(f(n))$
+    \item \textit{TIME(f(n))}: è l'insieme dei problemi che possono essere risolti in tempo $\mathcal{O}(f(n))$
+    \item \textit{SPACE(f(n))}: è l'insieme dei problemi che possono essere risolti in spazio $\mathcal{O}(f(n))$
 \end{itemize}
 \subsubsection{Classe P}
-Per semplicità, le classi di complessità sono raggruppate nelle cosiddette \textbf{classi unione}.
+Per semplicità, le classi di complessità sono raggruppate nelle cosiddette \textit{classi unione}.
 
 La classe $P$ è la classe dei problemi risolvibili in tempo polinomiale rispetto ad $n$.
 \begin{equation*}
@@ -1796,13 +1798,13 @@ La classe $EXPTIME$ è la classe dei problemi risolvibili in tempo esponenziale 
     EXPTIME=\bigcup^{\infty}_{c=0}TIME(2^{n^{c}})
 \end{equation*}
 Potendo fare al più un numero polinomiale di operazioni, e quindi anche di accessi in memoria, $P\subseteq PSPACE$.
-\subsection{Inclusione propria}
+\section{Inclusione propria}
 L'unica inclusione proria dimostrata è $P\subset EXPTIME$, ovvero esiste almeno un problema che non può essere risolto in 
 tempo polinomiale. Capire se $P\subset PSPACE$ e $PSPACE\subset EXPTIME$ sono problemi aperti.
 
 Introduciamo un problema appartenente a $PSPACE$ per cui non esistono algoritmi risolventi polinomiali, quello dell'
-\textbf{Espressione in Forma Normale Congiuntiva}: congiunzione di disgiunzioni (\textbf{clausole}) di variabili booleane
-(\textbf{letterali}). Ad esempio
+\textit{Espressione in Forma Normale Congiuntiva}: congiunzione di disgiunzioni (\textit{clausole}) di variabili booleane
+(\textit{letterali}). Ad esempio
 \begin{equation*}
     (x_1 \vee x_2 \vee x_3) \wedge (\overline{x_1}\vee \overline{x_3})
 \end{equation*}
@@ -1825,14 +1827,14 @@ Identifichiamo con $e(x_1,x_2,\dots,x_n)$ la formula.
 L'algoritmo ha complessità $\mathcal{O}(2^n)$. Al termine dell'esecuzione, $z_1,z_2,\dots,z_n$ è un'assegnazione che rende
 vera la formula.
 
-Un \textbf{certificato} è un oggetto $y$, dipendente dall'istanza $x$ e dal problema $P$, che possa giustificare 
+Un \textit{certificato} è un oggetto $y$, dipendente dall'istanza $x$ e dal problema $P$, che possa giustificare 
 $(x,1)\in P$ (per i problemi decisionali).
-Gli algoritmi possono essere riscritti in due fasi: fase di \textbf{costruzione} e fase di \textbf{verifica}.
-\subsection{Non determinismo}
+Gli algoritmi possono essere riscritti in due fasi: fase di \textit{costruzione} e fase di \textit{verifica}.
+\section{Non determinismo}
 Definiamo una funzione $indovina z\in\{0,1\}$, che può indovinare, in tempo costante, un giusto valore booleano: con questa 
 funzione, l'algoritmo precendente avrebbe complessità $\mathcal{O}(n+m)$, dove $m$ è il numero di clausole.
 
-Gli algoritmi sviluppati con funzioni di questo tipo sono detti \textbf{non deterministici}, perchè la loro computazione 
+Gli algoritmi sviluppati con funzioni di questo tipo sono detti \textit{non deterministici}, perchè la loro computazione 
 non è deterministica. La fase di verifica è deterministica.
 
 Chiamiamo $NTIME(f(n))$ la classe di problemi risolvibili da un algoritmo non deterministico in tempo $\mathcal{O}(f(n))$.
@@ -1845,7 +1847,7 @@ certificato deve occupare spazio polinomiale, quindi $NP\subseteq PSPACE$.
 
 Si sospetta, ma non è noto, che $P\subset NP$ e $NP\subset PSPACE$.
 Introduciamo un problema appartenente a $PSPACE$ ma che si sospetta non appartenere a $NP$, quello della 
-\textbf{Formula Booleana Quantificata}: è un espressione in forma normale congiuntiva preceduta da una serie di quantificatori 
+\textit{Formula Booleana Quantificata}: è un espressione in forma normale congiuntiva preceduta da una serie di quantificatori 
 universali ed esistenziali che legano tutte le variabili. Ad esempio, 
 \begin{equation*}
     \exists{x_1}\forall{x_2}\exists{x_3}\forall{x_4}(x_1 \vee x_2 \vee x_3) \wedge (\overline{x_1}\vee \overline{x_3}\vee \overline{x_4})
@@ -1872,7 +1874,7 @@ Identifichiamo con $e(x_1,x_2,\dots,x_n)$ la formula e $\xi_i x_i$ i quantificat
 L'algoritmo ha complessità $\mathcal{O}(2^n)$.
 
 Il certificato da verificare ha esso stesso dimensione esponenziale, così come la sua verifica.
-\subsection{P vs NP}
+\section{P vs NP}
 Il confine tra P e NP è quello più importante nella teoria della complessità: infatti, è quello che separa problemi "trattabili"
 da quelli "non trattabili". Troviamo un modo per confrontare i problemi.
 
@@ -1889,13 +1891,13 @@ Ad esempio, il problema del Ciclo Hamiltoniano ($P1$) è riconducibile polinomia
 
 Si possono definire le seguenti classi:
 \begin{itemize}
-    \item \textbf{Problemi NP-hard}: un problema decisionale $D$ si definisce NP-hard se ogni problema $Q\in NP$ è riconducibile
+    \item \textit{Problemi NP-hard}: un problema decisionale $D$ si definisce NP-hard se ogni problema $Q\in NP$ è riconducibile
     a $D$ in tempo polinomiale 
-    \item \textbf{Problemi NP-completi}: un problema decisionale $D$ si definisce NP-completo se è NP-hard ed appartiene 
+    \item \textit{Problemi NP-completi}: un problema decisionale $D$ si definisce NP-completo se è NP-hard ed appartiene 
     alla classe $NP$.
 \end{itemize}
-\subsection{Problemi NP-completi}
-Un problema NP-completo è quello dell'\textbf{Halt limitato}: dato un programma $X$ ed un intero $k$, verificare se esiste 
+\section{Problemi NP-completi}
+Un problema NP-completo è quello dell'\textit{Halt limitato}: dato un programma $X$ ed un intero $k$, verificare se esiste 
 un input per cui $X$ termina in al massimo $k$ passi.
 
 Appartiene ad $NP$ perchè la fase di verifica può essere effettuata in tempo polinomiale simulando $X(i)$ per $k$ passi.
@@ -1908,8 +1910,8 @@ costruire un programma $C'$ che va in loop ogniqualvolta la risposta di $C$ sia 
 L'halt limitato restituirà 1 se esistono dei dati per cui $C'$ termina in $p(n)$ passi, 0 altrimenti.
 
 Il problema dell'halt limitato è NP e NP-hard, quindi è NP-completo.
-\subsection{Problemi indecidibili}
-Esistono una serie di problemi definiti \textbf{indecidibili}: non solo non si conoscono algoritmi per risolverli, ma è 
+\section{Problemi indecidibili}
+Esistono una serie di problemi definiti \textit{indecidibili}: non solo non si conoscono algoritmi per risolverli, ma è 
 stato dimostrato che tali algoritmi non possono esistere, nemmeno utilizzando tempo e spazio infiniti.
 
 Il problema dell'halt è un problema indecidibile.
@@ -1929,14 +1931,14 @@ Se potessimo scrivere halt, potremmo scrivere un programma $G$ come:
     \end{algorithmic}
 \end{algorithm}
 $G(G)$ termina solo se $G(G)$ non termina, che è una contraddizione.
-\section{Algoritmi di approssimazione}
+\chapter{Algoritmi di approssimazione}
 È sempre possibile associare ad un problema di ottimizzazione un problema decisionale, che ci dica se una determinata soluzione 
-per un problema è ottima. Privilegiando l'efficienza a costo dell'ottimalità, si utilizzano \textbf{algoritmi di approssimazione}
+per un problema è ottima. Privilegiando l'efficienza a costo dell'ottimalità, si utilizzano \textit{algoritmi di approssimazione}
 tali per cui la soluzione restituita non è per forza ottimale, ma ha costo $C$ tale che:
 \begin{equation*}
     max\{\frac{C}{C^*},\frac{C^*}{C}\}\leq \rho(n)
 \end{equation*}
-\subsection{Copertura dei vertici}
+\section{Copertura dei vertici}
 Dato un grafo non orientato $G=(V,E)$, una copertura dei vertici è un sottoinsieme $V'\subseteq V$ tale che, se $(u,v)\in E$, 
 allora $u\in V'\vee v\in V'$.
 La dimensione di una copertura $V'$ è il numero di vertici che contiene. Il problema della copertura dei vertici consiste 
@@ -1956,7 +1958,7 @@ nel trovare $V'$ ottima (minimizzarla). Decidere se una certa copertura è ottim
 \end{algorithm}
 La complessità è $\mathcal{O}(n+m)$ se $G$ è rappresentato con liste di adiacenza.
 \subsubsection{Fattore di approssimazione}
-APPROX-COVER ha un fattore di approssimazione di 2; si dice che è \textbf{2-approssimato}.
+APPROX-COVER ha un fattore di approssimazione di 2; si dice che è \textit{2-approssimato}.
 \begin{proof}
     Sia $A$ l'insieme di archi $(u,v)$ scelti all'inizio di ogni ciclo. Per coprire gli archi in $A$, una copertura ottima 
     deve contenere almeno un vertice di ciascun arco in $A$. Due archi in $A$ non possono avere un vertice in comune, 
@@ -1967,8 +1969,8 @@ APPROX-COVER ha un fattore di approssimazione di 2; si dice che è \textbf{2-app
         |C|=2|A|\leq 2|C^*|
     \end{equation*}
 \end{proof}
-\subsection{Problema del commesso viaggiatore}
-Dato un grafo pesato, completo e non orientato bisogna trovare un \textbf{ciclo Hamiltoniano} di costo minimo. Il problema 
+\section{Problema del commesso viaggiatore}
+Dato un grafo pesato, completo e non orientato bisogna trovare un \textit{ciclo Hamiltoniano} di costo minimo. Il problema 
 di capire se una soluzione è ottima è esso stesso NP-completo, di conseguenza vengono usate tecniche di approssimazione,
 
 Il peso di un MAR è un limite inferiore per il peso di un circuito Hamiltoniano. Circumnavigando il MAR si ottiene un ciclo 
@@ -1985,8 +1987,8 @@ triangolare. È possibile utilizzare una DFS per passare subito dall'albero al c
     \end{algorithmic}
 \end{algorithm}
 L'algoritmo è 2-approssimato.
-\subsection{Ricerca locale}
-Una tecnica generale per trovare soluzioni buone è quella della \textbf{ricerca locale}. In un problem di ottimizzazione: 
+\section{Ricerca locale}
+Una tecnica generale per trovare soluzioni buone è quella della \textit{ricerca locale}. In un problem di ottimizzazione: 
 \begin{enumerate}
     \item si parte da una soluzione ammissibile $x$
     \item si calcolano tutte le soluzioni in un suo vicinato $N(x)$
@@ -1996,7 +1998,7 @@ Una tecnica generale per trovare soluzioni buone è quella della \textbf{ricerca
 Per utilizzare la ricerca locale dobbiamo essere in grado di generare almeno una soluzione e di definire un criterio per 
 generare in maniera efficiente un vicinato $N(x)$.
 \subsubsection{Ricerca locale per TSP}
-Tecnica dei \textbf{k-scambi}:
+Tecnica dei \textit{k-scambi}:
 \begin{enumerate}
     \item si genera un ciclo Hamiltoniano casuale 
     \item se ne cancellano $k$ archi non adiacenti e se ne aggiungono altri $k$ in modo da ricreare il ciclo 
