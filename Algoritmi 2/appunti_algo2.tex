@@ -233,12 +233,6 @@ in testa a $D$.
         \State $u \gets$ First(D)
         \If{esiste $v$ bianco adiacente ad $u$}
             \State color[$v$] $\gets$ gray
-        \algstore{5}
-    \end{algorithmic}
-\end{algorithm}
-\begin{algorithm}[h]
-    \begin{algorithmic}
-        \algrestore{5}
             \State $\pi[v] \gets u$
             \State \{visita $v$\}
             \State Add(D,v)
@@ -283,12 +277,6 @@ alla radice. La visita è realizzata usando la frangia come coda: quando un nodo
             \State $\pi[v] \gets u$
             \State \{visita $v$\}
             \State enqueue(D,v)
-            \algstore{6}
-    \end{algorithmic}
-\end{algorithm}
-\begin{algorithm}[h]
-    \begin{algorithmic}
-        \algrestore{6}
         \Else
             \State color[$v$] $\gets$ black
             \State dequeue(D)
@@ -489,7 +477,7 @@ degli adiacenti ad $u$. In quel momento, color[$v$] può essere:
     \begin{algorithmic}
         \State color[$u$] $\gets$ gray
         \For{ogni $v$ adiacente ad $u$}
-            \If{color[$v$ = white]}
+            \If{color[$v$] = white}
                 \State $\pi[v] \gets u$
                 \If{VISITA RICORSIVA CICLO(G,v)}
                     \State \textit{return} true
