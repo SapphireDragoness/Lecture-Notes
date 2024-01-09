@@ -656,7 +656,7 @@ presentare i seguenti casi:
     \item \textit{$y$ è discendente di $x$} in un albero della foresta DFS di $G$. Esiste un cammino da $x$ a $y$, ma non
     il contrario, quindi non esisterà un cammino da $x$ a $y$ in $G^T$ ($d[x]<d[y]<f[y]<f[x]$).
     \item \textit{$x$ e $y$ non sono uno discendente dell'altro} nella foresta DFS di $G$. Non può esistere nessun cammino 
-    da $y$ a $x$, altrimenti $x$ sarebbe nel sottoalbero di $y$. Quindi, non eeisterà il cammino da $x$ a $y$ in $G^T$ 
+    da $y$ a $x$, altrimenti $x$ sarebbe nel sottoalbero di $y$. Quindi, non esisterà il cammino da $x$ a $y$ in $G^T$ 
     ($d[y]<f[y]<d[x]<f[x]$).
 \end{enumerate}
 In entrambi i casi, ($f[x]>f[y]$), quindi nella seconda visita i vertici saranno considerati in ordine decrescente di tempo 
@@ -683,7 +683,7 @@ lemmi seguenti.
 \begin{proof}
     Dimostriamo che ogni discendente di $u$ in $A^T$ è anche un discendente di $u$ in un albero della foresta costruita 
     dalla DFS su $G$. La dimostrazione è fatta per assurdo.\\
-    Consideriamo un cammino sull'albero $A^T$ a aprtire dalla radice $u$; sia $v$ il primo vertice sul cammino per cui il 
+    Consideriamo un cammino sull'albero $A^T$ a partire dalla radice $u$; sia $v$ il primo vertice sul cammino per cui il 
     lemma non vale (cioè $v$ non è discendente di $u$ nella visita di $G$) e sia $w$ il suo predecessore sul cammino. 
     L'enunciato è valido per $w$: $d[u]\leq d[w]<f[w]\leq f[u]$.\\
     Siccome la visita DFS di $G^T$ considera i vertici in ordine decrescente di fine visita, vale $f[v]<f[u]$.
@@ -727,7 +727,7 @@ Il problema richiede di valorizzare $x_i$ per ogni $1\leq i \leq n$ in modo che 
 Un problema ha la proprietà della \textit{sottostruttura ottima} se una soluzione ottima del problema include le soluzioni 
 ottime dei suoi sottoproblemi.\\
 Se un problema di ottimizzazione gode delle proprietà della sottostruttura ottima, in genere può essere risolto con tecniche 
-di tipo \textit{greedy} i di \textit{programmazione dinamica}.
+di tipo \textit{greedy} e di \textit{programmazione dinamica}.
 
 Un problema gode della proprietà della \textit{scelta greedy} se è sempre possibile scegliere in esso una variabile decisionale, 
 attribuirle un valore ammissibile e localmente ottimo, toglierla dal problema ed ottenere un sottoproblema la cui soluzione, 
@@ -740,12 +740,12 @@ Passi di un algoritmo greedy:
 \begin{enumerate}
     \item scegli la variabile del problema con appetibilità maggiore 
     \item attribuisci ad essa il valore ammissibile più promettente a livello locale 
-    \item ottieni il sottoproblema risultante dall'eliminazione della variabile al punto 1
+    \item ottieni il sottoproblema isultante dall'eliminazione della variabile al punto 1
     \item se il problema è risolto, restituisci i valori delle variabili assegnati al punto 2, altrimenti vai al punto 1 
 \end{enumerate}
 Nella maggior parte dei casi, gli algoritmi greedy affrontano problemi dove, dato un insieme di elementi $A$, è necessario 
 selezionare un sottoinsieme $S$ di elementi ammissibile e ottimo.
-\begin{algorithm}
+\begin{algorithm}[H]
         \caption{GREEDY(A)}
     \begin{algorithmic}
         \State $S \gets$ insieme vuoto
@@ -954,7 +954,7 @@ Il teorema della distanza nell'albero BFS visto per i grafi non pesati non vale 
 L'algoritmo di Dijkstra è una visita BFS in cui la frangia è gestita come in un algoritmo greedy con appetibilità modificabili.
 L'appetibilità di un vertice $u$ è data da una stima della distanza tra $s$ e $u$ che l'algoritmo ha in un determinato istante.
 Inizialmente, tutti i vertici sono stimati a distanza $\infty$ da $s$, tranne $s$ stesso che ha distanza $d[s]=0$ da se 
-stesso. Ad ogni ciclo, scelgo un vertice $u$ da aggiungere all'albero tra quelli non ancora inseriti ma aggiungi dalla 
+stesso. Ad ogni ciclo, scelgo un vertice $u$ da aggiungere all'albero tra quelli non ancora inseriti ma aggiunti dalla 
 ricerca, e scelgo quello con \textit{distanza da $s$ stimata minima}.
 \begin{algorithm}[H]
     \caption{DIJKSTRA(G,W,s)}
@@ -974,12 +974,6 @@ ricerca, e scelgo quello con \textit{distanza da $s$ stimata minima}.
                     \EndIf
                 \EndIf 
             \EndFor 
-    \algstore{18}   
-    \end{algorithmic}
-\end{algorithm}
-\begin{algorithm}[t]
-    \begin{algorithmic}
-        \algrestore{18}
             \State $color[u]\gets$ black
         \EndWhile
     \end{algorithmic}
@@ -1049,13 +1043,13 @@ La complessità è $\mathcal{O}((m+n)\log n)$.
         $(\pi[u],u)$ costituisce un cammino da $s$ a $u$.\\
         Supponiamo, per assurdo, che tra $s$ e $u$ vi sia almeno un cammino $s\equiv v_1\rightarrow v_2 \rightarrow \dots \rightarrow v_{k-1} \rightarrow v_k \equiv u$
         e che $u$ venga estratto dalla coda con $d[u]=\infty$. $v_{k-1}$ è già stato estratto quindi 
-        $d[u]=d[v_k]=d[v_{k-1}]+W(v_{k-1},v_k)$. Ma $W(v_{k-1},v-k)<\infty$ e $d[u]=\infty$, quindi $d[v_{k-1}]=\infty$.
+        $d[u]=d[v_k]=d[v_{k-1}]+W(v_{k-1},v_k)$. Ma $W(v_{k-1},v_k)<\infty$ e $d[u]=\infty$, quindi $d[v_{k-1}]=\infty$.
         Questo può essere iterato per ciascun vertice del cammino, contraddicendo $d[s]=0$.
     \end{proof}
 \end{proprietà}
 Il predicato $\forall t \in S : d[t]=\delta(s,t)$ è un'invariante del ciclo while.
 \begin{proof}
-    \textit{Caso base}. Il predicato è vero perchè all'inizion $S$ è vuoto.
+    \textit{Caso base}. Il predicato è vero perchè all'inizio $S$ è vuoto.
 
     \textit{Passo}. Dimostriamo che per il nuovo vertice $u$ estratto da $D$, $d[u]=\delta(s,u)$.
 
