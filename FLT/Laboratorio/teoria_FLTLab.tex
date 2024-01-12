@@ -1,0 +1,74 @@
+\documentclass[11pt]{article}
+\usepackage[margin=.8in]{geometry}
+\usepackage[italian]{babel}
+\usepackage{graphicx}
+
+\title{Teoria laboratorio FLT}
+
+\begin{document}
+\section{Introduzione}
+\subsection{Sintassi e semantica}
+La definizione di un linguaggio di programmazione deve includere la specificazione della sua \textit{sintassi} (struttura)
+e \textit{semantiche} (significato). La sintassi definisce quali sequenze di caretteri sono ammesse.
+\subsection{Organizzazione di un compilatore}
+I compilatori generalmente svolgono i seguenti compiti:
+\begin{itemize}
+    \item \textit{analisi} del programma sorgente da compilare 
+    \item \textit{sintesi} del programma destinazione 
+\end{itemize}
+\begin{center}
+    \includegraphics{Screenshot 2024-01-12 111712.png}
+\end{center}
+Quasi tutti i compilatori moderni sono \textit{orientati alla sintassi}. I compilatori sintetizzano la struttura di un 
+programma in un \textit{abstract syntax tree} (AST), che omette dettagli superflui. Il parser costruisc l'AST usando 
+\textit{tokens}, i simboli elementari usati per definire la sintassi del linguaggio di programmazione. Il riconoscimento
+della struttura sintattica è una parte importante della \textit{analisi sintattica}.
+
+L'\textit{analisi semantica} esamina il significato (semantica) del programma, basandosi sulla sua struttura sintattica.
+
+Nella \textit{fase di sintesi}, i costrutti del linguaggio sorgente sono tradotti in una \textit{rappresentazione
+intermedia} (IR) del programma, anche se alcuni compilatori generano direttamente il codice di destinazione.
+\subsubsection{Scanner}
+Lo \textit{scanner} comincia l'analisi del programma sorgente leggendo carattere per carattere il testo in input, raggruppando 
+i singoli caratteri in token (identificatori, interi, parole riservate, delimitatori). I token vengono solitamente codificati 
+e passati al parser per l'analisi sintattica. Lo scanner svolge i seguenti compiti:
+\begin{itemize}
+    \item trasforma il programma in un flusso di token 
+    \item elimina informazioni superflue (come i commenti)
+    \item processa le direttive del compilatore
+\end{itemize}
+Le \textit{espressioni regolari} sono un metodo efficiente per descrivere i tokens.
+\subsubsection{Parser}
+Il parser è basato su specificazioni sintattiche formali come le grammatiche context-free. Legge i tokens e li raggruppa 
+in frasi a seconda della specificazione della sintassi.
+
+Il parser verifica che la sintassi sia corretta. Se incontra un errore di sintassi, riporta un messaggio di errore appropriato.
+Inoltre, può tentare di rimediare all'errore.
+\subsubsection{Type Checker}
+Il \textit{type checker} controlla la \textit{semantica statica} di ogni nodo dell'AST: verifica che il costrutto che ogni 
+nodo rappresenta sia legale e significativo. Se il costrutto è semanticmante corretto, il type checker decora il nodo 
+dell'AST aggiungendo informazioni di tipo.
+
+Il type checking dipende solamente dalle regole semantiche del linguaggio sorgente.
+\subsubsection{Symbol tables}
+Una \textit{symbol table} è un meccanismo che permette l'associazione di informazioni agli identificatori e la loro 
+condivisione nelle fasi di compilazione.
+\subsubsection{Generatore di codice}
+Il codice intermedio prodotto da un traduttore è mappato sulla macchina di destinazione da un \textit{generatore di 
+codice}.
+\section{Un semplice compilatore}
+\subsection{Definizione informale del linguaggio \textit{ac}}
+Definiamo \textit{ac} informalmente:
+\paragraph*{Tipi} In \textit{ac} esistono solo due tipi di dato: intero e float.
+\paragraph*{Keywords} In \textit{ac} esistono tre tipi di parole riservate: float, int e print.
+\paragraph*{Variabili} In \textit{ac} il nome della variabile è dichiarato dopo averne specificato il tipo.
+La maggior parte dei linguaggi di programmazine possiede regole che dettano la conversione di tipo: in \textit{ac}, la 
+conversione da intero a float avviene automaticamente.
+
+Il linguaggio di destinazione è \textit{dc}, una calcolatrice a stack che utilizza la notazione polacca inversa.
+\subsection{Definizione formale di \textit{ac}}
+Useremo una grammatica context-free per specificare la sintassi del linguaggio e espressioni regolari per specificare i 
+simboli del linguaggio.
+\subsubsection{Specifica della sintassi}
+
+\end{document}
