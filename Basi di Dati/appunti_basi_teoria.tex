@@ -108,6 +108,29 @@ vincolo. Sono presenti deu categorie di vincoli:
 I vincoli di tupla esprimono condizioni sui valori di ciascuna tupla, indipendentemente dalle altre tuple.
 \subsubsection{Chiavi}
 Una chiave è un insieme di attributi utilizzato per identificare univocamente le tuple di una relazione.
-Un insieme $K$ di attributi è \textit{superchiave} di una relazione $r$ se $r$ non contiene due tuple distinte $t_1$ e 
-$t_2$ con $t_1[K]=t_2[K]$
+Formalmente:
+\begin{itemize}
+    \item un insieme $K$ di attributi è \textit{superchiave} di una relazione $r$ se $r$ non contiene due tuple distinte 
+    $t_1$ e $t_2$ con $t_1[K]=t_2[K]$
+    \item $K$ è \textit{chiave} di $r$ se è una superchiave minimale di $r$, cioè non esiste un'altra superchiave $K'$ di 
+    $r$ che sia contenuta in $K$ come sottoinsieme proprio
+\end{itemize}
+Ciascuna relazione e ciascuno schema di relazione hanno sempre una chiave. Una relazione è un insieme e quindi è costituita
+da elementi fra loro diversi; di conseguenza, per ogni relazione $r(X)$, l'insieme $X$ di tutti gli attributi su cui è
+definita è senz'altro una superchiave per essa. O tale insieme è anche chiave, nel qual caso si conferma l'esistenza della 
+chiave stessa, oppure non è chiave, perchè esiste un'altra superchiave in esso contenuta.
+
+Il fatto che su ciascuno schema di relazione possa essere definita almeno una chiave garantisce l'accessibilità a tutti 
+i valori di una base di dati e la loro univoca identificabilità.
+\subsubsection{Chiavi e valori nulli}
+Su una delle chiavi, detta \textit{chiave primaria} si vieta la presenza di valori nulli; sulle altre, i valori nulli sono 
+generalmente ammessi.
+\subsubsection{Vincoli d'integrità referenziale}
+Un \textit{vincolo d'integrità referenziale} fra un insieme di attributi $X$ di una relazione $R_1$ e un'altra relazione 
+$R_2$ è soddisfatto se i valori su $X$ di ciascuna tupla dell'istanza di $R_1$ compaiono come valori della chiave (primaria)
+dell'istanza di $R_2$.
+
+Se la chiave di $R_2$ è unica e composta da un solo attributo $B$, il vincolo di integrità referenziale fra l'attributo 
+$A$ di $R_1$ e la relazione $R_2$ è soddisfatto se, per ogni tupla $t_1$ in $R_1$ per cui $t_1[A]$ non è nullo, esiste 
+una tupla $t_2$ in $R_2$ tale che $t_1[A_i]=t_2[B]$.
 \end{document}
