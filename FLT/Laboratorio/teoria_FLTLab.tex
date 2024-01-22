@@ -70,5 +70,71 @@ Il linguaggio di destinazione è \textit{dc}, una calcolatrice a stack che utili
 Useremo una grammatica context-free per specificare la sintassi del linguaggio e espressioni regolari per specificare i 
 simboli del linguaggio.
 \subsubsection{Specifica della sintassi}
+Il linguaggio \textit{ac} è specificato da una grammatica context-free (CFG), un insieme di \textit{produzioni}.
+
+La produzioni fanno riferimento a due tipi di simboli: i \textit{terminali} e \textit{non terminali}. Un terminale è un 
+simbolo della grammatica che non può essere riscritto.
+
+Una CFG descrive in maniera compatta e formale tutti i programmi che possono essere generati da un dato linguaggio di 
+programmazione. Per generare un programma, si inizia da uno speciale simbolo non terminale, detto \textit{assioma}, che 
+solitamente è il simbolo nella parte sinistra (LHS) della prima regola di produzione della grammatica. 
+
+La generazione procede rimpiazzando non terminali con altri non terminali o terminali, secondo le regole della grammatica.
+Il simbolo $\varepsilon$ rappresenta la \textit{stringa vuota}, che indica l'assenza di simboli nella parte sinistra di 
+una produzione. Il simbolo \$ rappresenta la fine dell'input.
+
+\subsubsection{Specifica dei tokens}
+La specificazione formale dei token di un linguaggio viene tipicamente compiuta con associando \textit{espressioni 
+regolari} ad ogni token.
+\subsection{Fasi del compilatore}
+\begin{enumerate}
+    \item Lo scanner legge il programma sorgente da un file di testo e produce un flusso di tokens. Le parole riservate 
+    vengono distinte da nomi di variabili.
+    \item Il parser processa i tokens, ne determina la validità sintattica e crea un AST. 
+    \item L'AST così creata viene attraversata per creare una symbol table. Questa tabella associa tipo e altre informazioni 
+    alle variabili usate nel programma sorgente.
+    \item L'AST viene attraversato per eseguire l'analisi semantica. L'analisi semantica decora o trasforma parti dell'AST 
+    man mano che il significato di tali parti diventa chiaro.
+    \item Infine, l'AST viene attraversato per generare la traduzione del programma sorgente.
+\end{enumerate}
+\subsection{Scanning}
+Il compito dello scanner è quello di trasformare un flusso di caratteri in un flusso di token. dove ogni token rappresenta 
+un'istanza di un simbolo terminale. Ogni token scandito dallo scanner possiede un \textit{tipo} e \textit{valore semantico}.
+\subsection{Parsing}
+Il parser controlla la validità del flusso di tokens. La \textit{discesa ricorsiva} è una delle più semplici tecniche di 
+parsing: ogni non terminale è associato ad una procedura di parsing che determina se il token nel flusso contiene una 
+sequenza di token derivabile da quel non terminale.
+\subsection{Abstract Syntax Trees}
+Lo scanner e il parser svolgono la fase di \textit{analisi sintattica} di un compilatore. L'AST contiene informazioni 
+essenziali derivate dall'albero di parsing.
+\subsection{Analisi semantica}
+Durante l'analisi semantica vengono svolte le seguenti operazioni:
+\begin{itemize}
+    \item le dichiarazioni e gli scope sono processati per costruire una \textit{symbol table}
+    \item i tipi definiti dal linguaggio e dall'utente sono esaminati per assicurarne la consistenza
+\end{itemize}
+\subsubsection{Symbol tables}
+La costruzione della symbol table è un'attività di processamento semantico durante la quale l'AST viene attraversato per 
+registrare tutti gli identificatori ed i loro tipi in una \textit{symbol table}.
+\subsubsection{Type checking}
+Il linguaggio \textit{ac} offre solo due tipi, intero e float, e tutti gli identificatori devono avere il loro tipo 
+dichiarato. Una volta che la symbol table è stata costruita, il tipo di ogni identificatore è conosciuto, e si può verificare 
+la consistenza dei tipi.
+
+Durante il type checking, l'AST viene attraversato dal basso verso l'alto, ed ad ogni nodo viene applicato il metodo 
+visitor appropriato:
+\begin{itemize}
+    \item Per le costanti e i simboli, il visitor imposta il tipo del modo basandosi su contenuti dello stesso.
+    \item Per nodi che computano valori, viene eventualmente effettuata conversione di tipo.
+    \item Per l'operazione di assegnamento, il visitor si assicura che il valore calcolato dal secondo nodo sia dello 
+    stesso tipo del primo nodo.
+\end{itemize}
+\subsection{Generazione del codice}
+L'ultimo compito del compilatore è la formulazione di codice che rappresenti le semantiche del programma sorgente. 
+Per \textit{ac}, il linguaggio di destinazione è \textit{dc}, una calcolatrice basata su stack. 
+
+La generazione del codice avviene attraversando l'AST, dalla radice alle foglie (top-down).
+\section{Scanning}
+\subsection{Espressioni regolari}
 
 \end{document}
