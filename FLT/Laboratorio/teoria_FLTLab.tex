@@ -2,6 +2,7 @@
 \usepackage[margin=.8in]{geometry}
 \usepackage[italian]{babel}
 \usepackage{graphicx}
+\usepackage{amsmath}
 
 \title{Teoria laboratorio FLT}
 
@@ -136,5 +137,83 @@ Per \textit{ac}, il linguaggio di destinazione è \textit{dc}, una calcolatrice 
 La generazione del codice avviene attraversando l'AST, dalla radice alle foglie (top-down).
 \section{Scanning}
 \subsection{Espressioni regolari}
+Le espressioni regolari sono un modo conveniente per specificare semplici insiemi di stringhe. Un insieme di stringhe 
+definito da espressioni regolari è detto \textit{insieme regolare}.
 
+Le stringhe vengono costruite dall'alfabeto $\Sigma$ tramite \textit{concatenazione}.
+\subsection{Automi a stati finiti e scanners}
+Un'\textit{automa a stati finiti} può essere usato per riconoscere i token specificati da un'espressione regolare. 
+Un'automa a stati finiti consiste in:
+\begin{itemize}
+    \item un insieme finito di \textit{stati}
+    \item un \textit{alfabeto}, $\Sigma$
+    \item un insieme di \textit{transizioni} da uno stato ad un altro, etichettati con i caratteri in $\Sigma$
+    \item uno \textit{stato iniziale}
+    \item un sottoinsieme degli stati detti \textit{finali}
+\end{itemize}
+\section{Grammatiche e parsing}
+\subsection{Grammatiche context-free}
+Formalmente, un \textit{linguaggio} è un insieme di strighe di lunghezza finita su un alfabeto. Una \textit{grammatica 
+context-free} è una rappresentazione compatta e finita di un linguaggio, definito dai seguenti:
+\begin{itemize}
+    \item un \textit{alfabeto dei terminali} $\Sigma$
+    \item un \textit{alfabeto dei non terminali} $V$
+    \item un'\textit{assioma} $S$
+    \item un insieme finito di produzioni $P$
+\end{itemize}
+Iniziando dall'assioma, i non terminali sono riscritti usando le regole di produzione finchè non rimangono solo terminali.
+Ogni riscrittura è un passo nella \textit{derivazione} della stringa risultante.
+\subsubsection{Derivazione sinistra e destra}
+Una derivazione che sceglie sempre il non terminale più a sinistra è detta \textit{derivazione sinistra}.
+Una derivazione che sceglie sempre il non terminale più a destra è detta \textit{derivazione destra}.
+\subsubsection{Albero di parsing}
+Una derivazione può essere rappresentata da un \textit{albero di parsing}: l'assioma rappresenta la radice, i nodi interni
+sono non terminali e le foglie sono terminali.
+\subsection{Algoritmi per l'analisi delle grammatiche}
+\subsubsection{Algoritmo First}
+Un insieme comunemente usato dai generatori di parser è \texttt{First($\alpha$)}. Questo è l'insieme di tutti i simboli 
+terminali che possono iniziare una frase derivabile dalla stringa di simboli grammaticali in $\alpha$. Formalmente,
+\begin{equation*}
+    \texttt{First($\alpha$)}=\{a\in\Sigma|\alpha\Rightarrow^*a\beta\}
+\end{equation*}
+\texttt{First($\alpha$)} è calcolato scandendo $\alpha$ da sinistra a destra. Se $\alpha$ inizia con il simbolo terminale
+$a$, allora $\texttt{First($\alpha$)}=\{a\}$. Se si incontra un simbolo non terminale $A$, allora devono essere consultate
+le produzioni di $A$.
+\subsubsection{Algoritmo Follow}
+Gli algoritmi per la costruzione di parser spesso richiedono di calcolare l'insieme di terminali che può seguire un non 
+terminale $A$. Ogni non terminale eccetto l'assioma deve avere un insieme di follow non vuoto. Formalmente,
+\begin{equation*}
+    \texttt{Follow($A$)}=\{b\in\Sigma|S\Rightarrow^+\alpha Ab\beta\}
+\end{equation*}
+\texttt{Follow($A$)} fornisce il contesto destro associato al non terminale $A$. 
+\section{Parsing Top-Down}
+\subsection{Grammatiche LL(k)}
+Passi per costruire un parser a discesa ricorsiva:
+\begin{itemize}
+    \item ad ogni non terminale $A$ viene associata una procedura di parsing
+    \item la procedura associata ad $A$ viene incaricata allo svolgimento di un passo della derivazione scegliendo e applicando
+    una delle produzioni di $A$
+    \item il parser sceglie la produzione appropriata per $A$ ispezionando i $K$ token successivi in input (l'insieme 
+    predict)
+\end{itemize}
+Generalmente, la scelta di produzione può essere determinata sui $k$ token successivi nell'input, per una costante $k$
+scelta a priori. Questi $k$ tokens sono detti \textit{lookahead} di un parser LL(k). Se è possibile costruire un parser 
+LL(k) per una CFG, allora la CFG è detta \textit{grammatica LL(k)}.
+
+Un parser LL(K) può controllare i $k$ tokens successivi e decidere quale produzione applicare. La funzione \texttt{Predict($p$)}
+considera la produzione $p$ e calcola l'insieme dei token che predicono l'applicazione della regola di produzione $p$.
+Consideriamo di dover effettuare il parsing della stringa $\alpha a\beta\in\Sigma^*$. Supponiamo che il parser abbia 
+costruito la derivazione $S\Rightarrow^*\alpha Ay_1\dots y_n$. A questo punto, $\alpha$ è stato abbinato e $A$ è il non 
+terminale più a sinistra nella derivazione. Quindi, dev'essere applicata almeno una produzione per $A$ per poter continuare 
+la derivazione sinistra. Poichè la stringa in input contiene una $a$ come prossimo token, il parsing deve continuare con 
+una produzione per $A$ che derivi $a$ come primo simbolo terminale.
+
+Esaminiamo l'insieme di produzioni:
+\begin{equation*}
+    P=\{p\in\texttt{ProduzioniPer($A$)}|a\in\texttt{Predict($p$)}\}
+\end{equation*}
+Si deve verificare una delle seguenti condizioni:
+\begin{itemize}
+    \item 
+\end{itemize}
 \end{document}
