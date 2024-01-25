@@ -2,6 +2,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage[italian]{babel}
 \usepackage{amsmath}
+\usepackage{amssymb}
 
 \title{Appunti Basi di Dati - Teoria}
 
@@ -106,7 +107,7 @@ vincolo. Sono presenti deu categorie di vincoli:
 \end{itemize}
 \subsection{Vincoli di tupla}
 I vincoli di tupla esprimono condizioni sui valori di ciascuna tupla, indipendentemente dalle altre tuple.
-\subsubsection{Chiavi}
+\subsection{Chiavi}
 Una chiave è un insieme di attributi utilizzato per identificare univocamente le tuple di una relazione.
 Formalmente:
 \begin{itemize}
@@ -122,10 +123,10 @@ chiave stessa, oppure non è chiave, perchè esiste un'altra superchiave in esso
 
 Il fatto che su ciascuno schema di relazione possa essere definita almeno una chiave garantisce l'accessibilità a tutti 
 i valori di una base di dati e la loro univoca identificabilità.
-\subsubsection{Chiavi e valori nulli}
+\subsection{Chiavi e valori nulli}
 Su una delle chiavi, detta \textit{chiave primaria} si vieta la presenza di valori nulli; sulle altre, i valori nulli sono 
 generalmente ammessi.
-\subsubsection{Vincoli d'integrità referenziale}
+\subsection{Vincoli d'integrità referenziale}
 Un \textit{vincolo d'integrità referenziale} fra un insieme di attributi $X$ di una relazione $R_1$ e un'altra relazione 
 $R_2$ è soddisfatto se i valori su $X$ di ciascuna tupla dell'istanza di $R_1$ compaiono come valori della chiave (primaria)
 dell'istanza di $R_2$.
@@ -133,4 +134,126 @@ dell'istanza di $R_2$.
 Se la chiave di $R_2$ è unica e composta da un solo attributo $B$, il vincolo di integrità referenziale fra l'attributo 
 $A$ di $R_1$ e la relazione $R_2$ è soddisfatto se, per ogni tupla $t_1$ in $R_1$ per cui $t_1[A]$ non è nullo, esiste 
 una tupla $t_2$ in $R_2$ tale che $t_1[A_i]=t_2[B]$.
+
+Nel caso generale, bisogna prestare attenzione al fatto che ciscuno degli attributi in $X$ deve corrispondere a un preciso 
+attributo della chiave primaria $K$ di $R_2$. Allo scopo, è necessario specificare un ordinamento sia nell'insieme $X$ sia 
+in $K$. Indicando gli attributi in ordine, $X=A_1 A_2 \dots A_p$ e $K=B_1 B_2 \dots B_p$, il vincolo è soddisfatto se per 
+ogni tupla $t_1$ in $R_1$ senza nulli su $X$ esiste una tupla $t_2$ in $R_2$ con $t_1[A_i]=t_2[B_i]$, per ogni $i$ compreso
+fra 1 e $p$.
+\chapter{Algebra e calcolo relazionale}
+\section{Algebra relazionale}
+L'algebra relazionale è un linguaggio procedurale, basato su concetti di tipo algebrico. Esso è costituito da un insieme 
+di operatori, definiti su relazioni e che producono ancora relazioni come risultati
+\subsection{Unione, intersezione, differenza}
+Le relazioni sono insiemi, quindi ha senso definire su di esse gli operatori insiemistici tradizionali di unione, differenza 
+e intersezione:
+\begin{itemize}
+    \item l'\textit{unione} di due relazioni $r_1$ e $r_2$ definite sullo stesso insieme di attributi $X$ è indicata con 
+    $r_1\cup r_2$ ed è una relazione ancora su $X$ contenente le tuple che appartengono a $r_1$ oppure a $r_2$, oppure 
+    ad entrambe 
+    \item l'\textit{intersezione} di $r_1(X)$ e $r_2(X)$ è indicata con $r_1\cap r_2$ ed è una relazione su $X$ contenente 
+    le tuple che appartengono sia a $r_1$ sia a $r_2$
+    \item la \textit{differenza} di $r_1(X)$ e $r_2(X)$ è indicata con $r_1 - r_2$ ed è una relazione su $X$ contenente 
+    le tuple che appartengono a $r_1$ e non appartengono ad $r_2$
+\end{itemize}
+\subsection{Ridenominazione}
+L'operatore di \textit{ridenominazione} cambia il nome degli attributi lasciando invariato il contenuto delle relazioni.
+
+Sia $r$ una relazione definita sull'insieme di attributi $X$ e sia $Y$ un altro insieme di attributi con la stessa cardinalità.
+Inoltre, siano $A_1 A_2 \dots A_k$ e $B_1 B_2 \dots B_k$ rispettivamente un ordinamento per gli attributi in $X$ e un 
+ordinamento per quello in $Y$. Allora la ridenominazione:
+\begin{equation*}
+    \rho_{B_1 B_2 \dots B_k\leftarrow A_1 A_2 \dots A_k}(r)
+\end{equation*}
+contiene una tupla $t'$ per ciascuna tupla $t$ in $r$, definita come segue: $t'$ è una tupla su $Y$ e $t'[B_i]=t[A_i]$, 
+per $i=1,\dots ,k$.
+\subsection{Selezione}
+La selezione produce un sottoinsieme di tuple su tutti gli attributi ("decomposizione orizzontale").
+
+L'operatore è denotato dal simbolo $\sigma$, al pedice del quale viene indicata la "condizione di selezione". Il risultato 
+contiene le tuple dell'operando che soddisfano la condizione di selezione.
+Le condizioni di selezione possono prevedere confronti fra attributi e confronti fra attributi e costanti, ottenute 
+combinando condizioni semplici con i connettivi logici $\wedge$, $\vee$ e $\lnot$.
+\subsection{Proiezione}
+La proiezione produce un risultato al quale contribuiscono tutte le tuple, ma su un sottoinsieme degli attributi ("decomposizione 
+orizzontale").
+\subsection{Join}
+Esistono due versioni del join: il join naturale e il theta-join.
+\subsubsection{Join naturale}
+Il \textit{join naturale} è un operatore che correla dati in relazioni diverse, sulla base di valori uguali in attributi 
+con lo stesso nome. Il risultato del join è costituito da una relazione sull'unione degli insiemi di attributi degli 
+operandi e le sue tuple sono ottenute combinando le tuple degli operandi con valori uguali sugli attributi comuni.
+
+In generale, un join naturale $r_1\Join  r_2$ di $r_1(X_1)$ e $r_2(X_2)$ è una relazione definita su $X_1 X_2$ come segue:
+\begin{equation*}
+    r_1\Join r_2=\{t\rightarrow X_1X_2|t[X_1]\in r_1\wedge t[X_2]\in r_2\}
+\end{equation*}
+\subsubsection{Join completi ed incompleti}
+Il join di $r_1$ e $r_2$ contiene un numero di tuple compreso fra 0 e $|r_1|\times|r_2|$. Inoltre:
+\begin{itemize}
+    \item se il join di $r_1$ e $r_2$ è completo, allora contiene almeno un numero di tuple pari al massimo tra $|r_1|$ 
+    e $|r_2|$
+    \item se $X_1\cap X_2$ contiene una chiave per $r_2$, allora il join di $r_1(X_1)$ e $r_2(X_2)$ contiene al più $|r_1|$
+    tuple 
+    \item se $X_1\cap X_2$ coincide con una chiave per $r_2$ e sussiste il vincolo di riferimento fra $X_1\cap X_2$ in 
+    $r_1$ e la chiave di $r_2$, allora il join $r_1(X_1)$ e $r_2(X_2)$ contiene esattamente $|r_1|$ tuple
+\end{itemize}
+\subsubsection{Join esterni}
+Questa variante del join prevede che tutte le tuple diano un contributo al risultato, eventualmente estese con valori 
+nulli ove non vi siano controparti opportune. Esistono tre varianti dell'operatore: il join esterno \textit{sinistro}, 
+che estende solo le tuple del primo operando, quello \textit{destro}, che estende solo le tuple del secondo operando, e 
+quello \textit{completo} che le estende tutte.
+\subsubsection{Semijoin}
+Questo operatore restituisce le tuple di una relazione che partecipano al join naturale di tale relazione con un'altra.
+L'operatore può essere espresso per mezzo del join e della proiezione.
+\subsubsection{Join n-ario, intersezione e prodotto cartesiano}
+Il join naturale è associativo e commutativo. Se $X_1=X_2$, il join coincide con l'intersezione. Se i set sono disgiunti, 
+il risultato del join sarà in \textit{prodotto cartesiano} delle due relazioni.
+\subsubsection{Theta-join e equi-join}
+Il \textit{theta-join} è un prodotto cartesiano seguito da una selezione.
+\subsection{Interrogazioni in algebra relazionale}
+Dato uno schema $R$ di base di dati, un'interrogazione è una funzione che, per ogni istanza $r$ di $R$, produce una relazione 
+su un dato insieme di attributi $X$.
+
+Prendendo come esempio lo schema:
+\begin{center}
+    \textbf{Impiegati}(\underline{Matr}, Nome, Età, Stipendio)\\
+    \textbf{Supervisore}(Capo, \underline{Impiegato})
+\end{center}
+si possono formulare le seguenti interrogazioni:
+\begin{itemize}
+    \item trovare matricola, nome ed età degli impiegati che guadagnano più di 40 mila euro
+    \begin{equation*}
+        \pi_{\textnormal{Matr,Nome,Età}}(\sigma_{\textnormal{Stipendio$>$40}}(\textnormal{Impiegati}))
+    \end{equation*}
+    \item trovare matricola e nome dei capi i cui impiegati guadagnano più di 40 mila euro 
+    \begin{align*}
+        \pi_{\textnormal{Matr,Nome}}((\textnormal{Impiegati}\Join_{\textnormal{Matr=Capo}}))(\pi_{\textnormal{Capo}}
+        (\textnormal{Supervisione}-\pi_{\textnormal{Capo}}(\textnormal{Supervisione}\Join_{\textnormal{Imp=Matr}}
+        \\\sigma_{\textnormal{Stip$\leq$40}}(\textnormal{Impiegati}))))
+    \end{align*}
+\end{itemize}
+\subsection{Viste}
+Possono esistere due tipi di relazioni derivate:
+\begin{itemize}
+    \item \textit{viste materializzate}: relazioni derivate effettivamente memorizzate nella base di dati 
+    \item \textit{relazioni virtuali}: relazioni definite per mezzo di funzioni, non memorizzate nella base di dati, ma 
+    utilizzabili nelle interrogazioni come se lo fossero
+\end{itemize}
+\section{Calcolo relazionale}
+Con il termine \textit{calcolo relazionale} si fa riferimento a una famiglia di linguaggi d'interrogazione, basati sul 
+calcolo dei predicati del primo ordine, che hanno la caratteristica di essere dichiarativi, cioè di specificare le proprietà 
+del risultato delle interrogazioni.
+\subsection{Calcolo di tuple con dichiarazioni di range}
+Le espressioni hanno la forma 
+\begin{equation*}
+    \{T|L|f\}
+\end{equation*}
+dove:
+\begin{itemize}
+    \item $T$ è la \textit{target list}, con elementi del tipo $x.Z$, con $x$ variabile e $Z$ attributo
+    \item $L$ è la \textit{range list}, che elenca le variabili libere della formula $f$ con i relativi range
+    \item $f$ è una formula 
+\end{itemize}
+
 \end{document}
