@@ -29,4 +29,12 @@ $K$ di $r$, cioè $X$ è superchiave per $r$.
 \subsubsection*{Cosa significa che una relazione si decompone senza perdita?}
 Una relazione $r$ si decompone senza perdita su due relazioni se l'insieme degli attributi comuni alle due relazioni è 
 chiave per almeno una delle relazioni composte.
+\subsubsection*{Cos'è una vista? Quali vantaggi ci sono ad utilizzare le viste? Cosa distingue le viste materializzate 
+da quelle virtuali?}
+Una vista, o relazione derivata, è una rappresentazione alternativa dei dati. Le viste permettono di semplificare la 
+fruizione della base di dati. 
+Le viste materializzate sono relazioni derivate memorizzate nella base di dati, mentre quelle virtuali sono relazioni 
+definite per mezzo di funzioni, non memorizzate nella base di dati ma utilizzabili nelle interrogazioni come se lo fossero.
+Le prime sono immediatamente disponibili, ma vanno aggiornate per mantenere il loro contenuto allineato con il resto della 
+base di dati, mentre le seconde devono essere ricalcolate ad ogni interrogazioni ma non presentano problemi di allineamento.
 \end{document}
