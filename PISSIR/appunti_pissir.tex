@@ -1,0 +1,34 @@
+\documentclass[11pt]{book}
+\usepackage[margin=.8in]{geometry}
+\usepackage[italian]{babel}
+
+\title{Appunti Probabilità e Statistica}
+
+\begin{document}
+\chapter*{Link Layer e LAN}
+\section*{Il link layer}
+I dispositivi che supportano un protocollo link-layer sono detti \textit{nodi}. I canali di comunicazione che connettono
+nodi adiacenti sono detti \textit{collegamenti}. Un nodo incapsula il datagramma ricevuto dal network layer sovrastante 
+in un \textit{link-layer frame} e lo trasmettono sul collegamento.
+\subsection*{I servizi forniti dal link layer}
+\subsubsection*{Incapsulazione}
+Quasi tutti i protocolli link-layer incapsulano i datagrammi ricevuti dal network layer prima di trasmetterli sul collegamento.
+Il frame è composto da un campo dati, dove viene inseito il datagramma, e degli header.
+\subsubsection*{Accesso al collegamento}
+Un protocollo di medium access control (MAC) specifica come il frame deve essere trasmesso sul collegamento. 
+\subsubsection*{Trasporto affidabile}
+Un protocollo di trasferimento affidabile garantisce che ogni frame raggiunga la sua destinazione senza errori.
+\subsubsection*{Individuazione e correzione degli errori}
+Il nodo mittente fornisce un meccanismo per individuare gli errori, che verranno poi corretti dal destinatario.
+\subsection*{Implementazione del link layer}
+Le funzionalità Ethernet sono integrate nella scheda madre o in un chip Ethernet. Il link layer è implementato su un chip 
+detto \textit{network adapter} o \textit{NIC}. 
+\section*{Individuazione e correzione degli errori}
+\subsection*{Controlli di parità}
+La forma più semplice di error detection è l'utilizzo di un bit di parità. Gli schemi di parità possono essere pari o dispari.
+Con uno schema di parità \textit{bidimensionale}, dove i bit sono disposti a matrice, è possibile identificare il bit 
+corrotto e correggerlo. Questo schema non può correggere due errori in un singolo pacchetto, ma li può individuare.
+\subsection*{CRC}
+I codici CRC (\textit{cyclic redundancy check}) possono essere visualizzati come polinomi i quali coefficienti sono i valori 
+della stringa di bit da inviare.
+\end{document}
