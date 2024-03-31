@@ -2,7 +2,7 @@
 \usepackage[margin=.8in]{geometry}
 \usepackage[italian]{babel}
 
-\title{Appunti Probabilità e Statistica}
+\title{Appunti PISSIR}
 
 \begin{document}
 \chapter*{Link Layer e LAN}
@@ -29,6 +29,10 @@ La forma più semplice di error detection è l'utilizzo di un bit di parità. Gl
 Con uno schema di parità \textit{bidimensionale}, dove i bit sono disposti a matrice, è possibile identificare il bit 
 corrotto e correggerlo. Questo schema non può correggere due errori in un singolo pacchetto, ma li può individuare.
 \subsection*{CRC}
-I codici CRC (\textit{cyclic redundancy check}) possono essere visualizzati come polinomi i quali coefficienti sono i valori 
-della stringa di bit da inviare.
+I codici CRC (\textit{cyclic redundancy check}) sono anche detti codici polinomiali in quanto è possibile considerare la 
+stringa da inviare come un polinomio i quali coefficienti sono i valori 0 e 1 della stringa di bit. I CRC possono individuare 
+$resto\leq$ bit errati consecutivi.
+\section*{Multiple access link}
+Esistono due tipi di collegamento. Il collegamento \textit{point to point} consiste in un solo mittente e un solo destinatario.
+Il collegamento \textit{broadcast} può avere più nodi mittenti e destinatari connessi allo stesso canale di broadcast. 
 \end{document}
