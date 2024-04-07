@@ -1,16 +1,17 @@
 \documentclass[11pt]{book}
 \usepackage[margin=.8in]{geometry}
 \usepackage[italian]{babel}
+\usepackage{amsmath}
 
 \title{Appunti PISSIR}
 
 \begin{document}
-\chapter{Link Layer e LAN}
-\section{Il link layer}
+\chapter{Livello collegamento e LAN}
+\section{Il livello collegamento}
 I dispositivi che supportano un protocollo link-layer sono detti \textit{nodi}. I canali di comunicazione che connettono
 nodi adiacenti sono detti \textit{collegamenti}. Un nodo incapsula il datagramma ricevuto dal network layer sovrastante 
 in un \textit{link-layer frame} e lo trasmettono sul collegamento.
-\subsection{I servizi forniti dal link layer}
+\subsection{I servizi forniti dal livello collegamento}
 \subsubsection{Incapsulazione}
 Quasi tutti i protocolli link-layer incapsulano i datagrammi ricevuti dal network layer prima di trasmetterli sul collegamento.
 Il frame è composto da un campo dati, dove viene inseito il datagramma, e degli header.
@@ -20,8 +21,8 @@ Un protocollo di medium access control (MAC) specifica come il frame deve essere
 Un protocollo di trasferimento affidabile garantisce che ogni frame raggiunga la sua destinazione senza errori.
 \subsubsection{Individuazione e correzione degli errori}
 Il nodo mittente fornisce un meccanismo per individuare gli errori, che verranno poi corretti dal destinatario.
-\subsection{Implementazione del link layer}
-Le funzionalità Ethernet sono integrate nella scheda madre o in un chip Ethernet. Il link layer è implementato su un chip 
+\subsection{Implementazione del livello collegamento}
+Le funzionalità Ethernet sono integrate nella scheda madre o in un chip Ethernet. Il livello collegamento è implementato su un chip 
 detto \textit{network adapter} o \textit{NIC}. 
 \section{Individuazione e correzione degli errori}
 \subsection{Controlli di parità}
@@ -94,10 +95,10 @@ I protocolli a turni permettono di ottenere buone prestazioni sia con carichi le
     dal token, la latenza e il fatto che il token rappresenta un potenziale punto di rottura.
 \end{itemize}
 \section{Switched Local Area Networks}
-Gli switch utilizzano indirizzi propri al link layer per inoltrare frame.
-\subsection{Indirizzamento nel link layer e ARP}
+Gli switch utilizzano indirizzi propri al livello collegamento per inoltrare frame.
+\subsection{Indirizzamento nel livello collegamento e ARP}
 \subsubsection{Indirizzi MAC}
-Le interfacce di rete degli host e dei router hanno indirizzi link layer, ma non gli switch. Un indirizzo link layer viene 
+Le interfacce di rete degli host e dei router hanno indirizzi livello collegamento, ma non gli switch. Un indirizzo livello collegamento viene 
 chiamato \textit{indirizzo MAC}. Gli indirizzi MAC sono di solito lunghi 6 bytes (48 bit) e sono espressi in motazione 
 esadecimale. Ogni interfaccia nella LAN ha un unico indirizzo MAC e un (localmente) unico indirizzo IP. Ogni interfaccia 
 possiede un unico indirizzo MAC perché questi sono controllati dalla IEEE. 
@@ -126,7 +127,7 @@ router e l'indirizzo MAC del router (via ARP). Allora:
 \end{itemize}
 \subsection{Ethernet}
 La LAN Ethernet originalmente utilizzava un bus coassiale per connettere i nodi, e i frame erano trasmessi in broadcast.
-Successivamente, il bus è stato rimpiazzato con uno switch, che a differenza dei router opera esclusivamente sul link layer.
+Successivamente, il bus è stato rimpiazzato con uno switch, che a differenza dei router opera esclusivamente sul livello collegamento.
 \subsubsection{Struttura di un frame Ethernet} 
 \begin{itemize}
     \item \textit{Preambolo}. Serve a sincronizzare le interfacce.
@@ -138,7 +139,7 @@ Successivamente, il bus è stato rimpiazzato con uno switch, che a differenza de
 \end{itemize}
 Ethernet è connectionless e non affidabile. 
 \subsection{Switch}
-Gli switch sono dispositivi operanti nel link layer. Sono trasparenti gli host e ai router nella sottorete. Gli switch, 
+Gli switch sono dispositivi operanti nel livello collegamento. Sono trasparenti gli host e ai router nella sottorete. Gli switch, 
 come i router, hanno dei buffer per contenere i frame in eccesso.
 \subsubsection{Forwarding e filtering}
 Il \textit{filtering} è la funzionalità degli switch che determina se un frame deve essere inoltrato o scartato. Il 
@@ -176,10 +177,114 @@ La tabella di uno switch viene riempita automaticamente, dinamicamente e autonom
     e continua a inviare frame in broadcast, uno switch può rilevare il problema e disconnettersi dall'interfaccia malfunzionante.
 \end{itemize}
 \subsection{VLAN}
-Le reti LAN tradizionali sono affette da tre problemi:
+Le reti LAN tradizionali non sono facilmente scalabili o portabili, ma le VLAN sì. Uno switch che supporta VLAN permette 
+di definire LAN virtuali su una singola LAN fisica. Gli host su una VLAN possono comunicare tra loro come se fossero solo 
+loro connessi a quello switch. 
+
+Nelle VLAN basate su porte, le porte dello switch sono divise in gruppi. Ogni gruppo costituisce una VLAN, e le porte in 
+ogni VLAN formano un dominio di broadcast. Per connettere due VLAN bisogna utilizzare un router.
+
+Una soluzione più scalabile per connettere due VLAN è detta \textit{VLAN trunking}. Una porta dello switch è designata 
+come porta per connettere due VLAN. Questa porta appartiene a tutte le VLAN, e i frame inviati a ogni VLAN sono inoltrati 
+su quel collegamento a un altro switch. I frame che passano per il trunk sono in uno speciale formato, detto 802.1Q. Questi 
+frame sono identici ai frame Ethernet standard, ma possiedono una \textit{tag VLAN} nell'header che contiene informazioni 
+circa la VLAN alla quale il frame appartiene.
+\section{Networking nei data center}
+\subsection{Architetture dei data center}
+I data center non sono solamente connessi a Internet, ma a dei loro network interni che connettono gli host tra loro. Gli 
+host nei data center sono chiamati \textit{blades}, impilati in rack. In cima ad ogni rack c'è uno switch, detto 
+\textit{Top of Rack} (TOR), che connette gli host nel rack tra di loro e con gli altri switch nel data center. Ogni host 
+nel rack ha un'interfaccia di rete che si connette al proprio TOR, e ogni TOR ha porte che possono essere connesse ad altri 
+switch.
+
+I data center supportano due tipi di traffico: il traffico tra client esterni e host interni e traffico tra host interni.
+Per gestire il primo, i data center utilizzano dei \textit{border router}, che connettono il data center con Internet.
+\subsubsection{Load balancing}
+Le richieste ricevute da un data center sono innanzitutto dirette a un load balancer che si occupa di distribuire le richieste 
+agli host. I grossi data center possiedono molti load balancer, ognuno dedicato a specifiche applicazioni cloud. Un tale 
+load balancer è spesso chiamato "layer-4 switch" in quanto basa le sue decisioni sul numero di porta e sull'indirizzo 
+IP del pacchetto. Al ricevimento di una richiesta, il load balancer la inoltra a uno degli host che gestisce l'applicazione.
+Il load balancer funziona anche come NAT, in quanto traduce l'IP pubblico della richiesta nell'IP interno e viceversa.
+\section{Il processamento di una richiesta}
+
+\chapter{Livello fisico}
+
+\chapter{Reti wireless e mobili}
+\section{Elementi delle reti wireless}
+Nelle reti wireless si possono identificare i seguenti elementi:
 \begin{itemize}
-    \item \textit{Nessuna isolazione del traffico}. 
-    \item \textit{Uso non efficiente degli switch}.
-    \item \textit{Gestione degli utenti}.
+    \item \textit{Host wireless}. 
+    \item \textit{Collegamenti wireless}. Un host si connette a una base statio o un altro host wireless tramite un collegamento 
+    wireless.
+    \item \textit{Base station}. Gestisce l'invio e la ricezione dei dati da e a un host wireless associato. Gli host associati 
+    con una base station operano in \textit{modalità infrastruttura}. Nelle \textit{reti ad hoc}, gli host non hanno un'
+    infrstruttura a cui connettersi.
 \end{itemize}
+Classificazione dei network wireless:
+\begin{itemize}
+    \item \textit{Single-hop, con infrastruttura}. Queste reti hanno una base station connessa a una rete più grande, e 
+    tutte le comunicazioni avvengono in uno solo wireless hop (4G LTE).
+    \item \textit{Single-hop, senza infrastruttura}. Non hanno base station connessa a una rete wireless (Bluetooth).
+    \item \textit{Multi-hop, con infrastruttura}. I nodi comunicano tra di loro prima di connettersi alla base station 
+    (wireless mesh networks).
+    \item \textit{Multi-hop,senza infrastruttura}. 
+\end{itemize}
+\section{Collegamenti wireless e caratteristiche}
+Problematiche dei collegamenti wireless:
+\begin{itemize}
+    \item \textit{Diminuzione della potenza di segnale}.
+    \item \textit{Interferenza da altre sorgenti}.
+    \item \textit{Propagazione multipath}.
+\end{itemize}
+Il \textit{signal-to-noise ratio} (SNR) è la misura relativa della potenza del segnale ricevuto e del suo rumore. È misurata 
+in decibel. Maggiore è il SNR, più facile diventa estrarre il segnale dal rumore di sottofondo.
+
+Per un dato sistema di modulazione, maggiore è il SNR, minore sarà il bit error rate (BER). Un mittente può incrementare 
+il SNR incrementando la potenza di trasmissione, ma ciò richiede più energia.
+
+Per un dato SNR, una tecnica di modulazione con un bit transmission rate maggiore avrà un BER maggiore.
+\subsubsection{CDMA}
+In un protocollo CDMA, ogni bit inviato viene codificato moltiplicandolo per un segnale (il codice) che varia molto più 
+velocemente (chipping rate) della sequenza di bit originale. Supponiamo che ogni bit trasmesso richieda uno slot di tempo 
+da un bit. Sia $d_i$ il valore del bit per lo slot $i-$esimo. Ogni slot è diviso in $M$ mini-slot. Il codice CDMA utilizzato 
+dal mittente consiste in una sequenza di $M$ valori.
+
+Per il $m-$esimo mini-slot del tempo di trasmissione del bit $d_i$, l'output del codificatore CDMA, $Z_{i,m}$, è pari a:
+\begin{equation*}
+    Z_{i,m}=d_i\cdot c_m
+\end{equation*}
+Il destinatario può recuperare la sequenza di bit originale calcolando:
+\begin{equation*}
+    d_i=\frac{1}{M}\sum_{m=1}^{M}Z_{i,m}\cdot c_m
+\end{equation*}
+Con più mittenti, il valore ricevuto dal destinatario è la somma dei bit trasmessi dagli $N$ mittenti in quel mini-slot:
+\begin{equation*}
+    Z^*_{i,m}=\sum_{s=1}^{N}Z^s_{i,m}
+\end{equation*}
+Se i codici sono scelti in maniera opportuna, ogni destinatario può utilizzare la seconda equazione per recuperare i dati
+ricevuti.
+\section{Reti WLAN 802.11}
+Lo standard IEEE 802.11 wireless LAN, detto anche WiFi, è lo standard più utilizzato. 
+\subsection{Architettura}
+Il blocco fondamentale dell'architettura 802.11 è il \textit{basic service set} (BSS). Un BSS contiene una o più stazioni 
+wireless e una base station centrale, detto \textit{access point} (AP). Ogni wireless station possiede un indirizzo MAC.
+\subsubsection{Canali e associazioni}
+Quando un amministratore installa un AP, gli assegna un \textit{service set identifier} (SSID) e un numero di canale. 802.11
+definisce 11 canali parzialmente sovrapposti. Due canali non si sovrappongono solo se sono separati da 4 o più canali.
+
+Per ottenere accesso a Internet, un dispositivo wireless deve associarsi con un AP. Un AP invia periodicamente dei 
+\textit{beacon frame} contenenti il proprio SSID e indirizzo MAC. Il dispositivo wireless scandisce gli 11 canali per 
+individuare i beacon frame. 
+
+Il processo di scnadire i canali è detto \textit{passive scanning}. Un dispositivo wireless può anche condurre \textit{active 
+scanning} inviando in broadcast un frame che viene ricevuto da tutti gli AP in range.
+
+Una volta scelto l'AP al quale collegarsi, il dispositivo invia un frame di richiesta di associazione all'AP, e questo 
+risponde con un frame di risposta. Una volta associato con un AP, il dispositivo invia un messaggio DHCP nella sottorete 
+tramite l'AP per ottenere un indirizzo IP.
+
+Per associarsi con un AP, il dispositivo potrebbe doversi autenticare. L'autenticazione può avvenire tramite indirizzo MAC 
+o username e password. In entrambi i casi, l'AP comunica con un server d'autenticazione.
+\subsection{Il protocollo MAC 802.11}
+
 \end{document}
