@@ -2,6 +2,7 @@
 \usepackage[margin=.8in]{geometry}
 \usepackage[italian]{babel}
 \usepackage{amsmath}
+\usepackage{graphicx}
 
 \title{Appunti PISSIR}
 
@@ -286,5 +287,125 @@ tramite l'AP per ottenere un indirizzo IP.
 Per associarsi con un AP, il dispositivo potrebbe doversi autenticare. L'autenticazione può avvenire tramite indirizzo MAC 
 o username e password. In entrambi i casi, l'AP comunica con un server d'autenticazione.
 \subsection{Il protocollo MAC 802.11}
+Il RLC frammenta e riassembla utilizzato da 802.11 è ad accesso casuale ed è chiamato \textit{CSMA/CA}.
+
+Quando una stazione di destinazione in una rete WLAN riceve un frame che intatto (il CRC è corretto), attende per un determinato
+lasso di tempo, detto \textit{short inter-frame spacing} (SIFS) e poi invia un frame di acknowledgement. Se il mittente 
+non riceve un ACK, ritrasmette il frame usando il protocollo CSMA/CA. Passi per inviare un frame:
+\begin{enumerate}
+    \item Se la stazione vede che il canale è vuoto, trasmette un frame dopo un certo lasso di tempo detto \textit{distributed
+    inter-frame space} (DIFS).
+    \item Altrimenti, la stazione sceglie un valore di backoff casuale e attende.
+    \item Quando il tempo scade, la stazione invia un frame e attende un ACK.
+    \item Se l'ACK viene ricevuto, la stazione mittente sa che il frame è arrivato a destinazione. Se ha un altro frame 
+    da trasmettere, ritorna al punto 2. Se l'ACK non viene ricevuto, ritorna al passo 2 scegliendo un tempo di backoff più
+    lungo.
+\end{enumerate}
+A differenza di CSMA/CD, CSMA/CA non invia frame se il DIFS non è terminato, anche se il canale è libero.
+\subsubsection{RTS e CTS}
+Per evitare il problema dei terminali nascosti, 802.11 permette alla stazione di utilizzare un frame \textit{request to
+send} (RTS) e un frame \textit{clear to send} (CTS) per riservare un canale. Quando un mittente vuole inviare un frame
+contenente dati, invia innanzitutto un frame RTS all'AP, indicando il tempo richiesto per trasmettere i dati e un frame 
+di ACK. Quando l'AP riceve un frame RTS, risponde inviando a tutti gli host (broadcast) un frame CTS. Questo frame previene 
+alle altre stazioni di trasmettere.
+\subsection{Il frame IEEE 802.11}
+È simile a un frame Ethernet.
+\subsubsection{Payload e CRC}
+Il payload consiste in un pacchetto ARP o un datagramma IP. I frame 802.11 includono un CRC a 32 bit.
+\subsubsection{Indirizzi}
+Il frame 802.11 ha 4 campi di indirizzi, ognuno dei quali può contenere un indirizzo MAC a 6 byte.
+\begin{itemize}
+    \item L'indirizzo 1 è l'indirizzo MAC della stazione di destinazione.
+    \item L'indirizzo 2 è l'indirizzo MAC della stazione mittente.
+    \item L'indirizzo 3 è l'indirizzo MAC dell'interfaccia router associata all'AP.
+    \item L'indirizzo 4 è utilizzato solo in modalità ad hoc.
+\end{itemize} 
+\subsubsection{Numeri di sequenza, durata e frame control}
+Il numero di sequenza garantisce reliable data transfer, permettendo al destinatario di distinguare tra un frame appena 
+trasmesso e una ritrasmissione. Il campo durata permette di riservare il canale per un certo periodo di tempo. Il frame 
+control contiene campi che descrivono il tipo di frame.
+\subsection{Mobilità nella stessa sottorete IP}
+Quando un host si muove nella stessa sottorete IP, il suo indirizzo IP rimane invariato. Gli switch sono in grado (grazie
+al self-learning) di ricordare quale porta può essere utilizzata per raggiungere quell'host.
+\subsection{Caratteristiche avanzate di 802.11}
+\subsubsection{Rate adaptation}
+Alcune implementazioni di 802.11 sono in grado di selezionare adattivamente la tecnica di modulazione, variando di conseguenza
+il SNR. Quando un host si allontana dalla base station, il SNR diminuisce e aumenta il BER: quando il BER diventa troppo 
+elevato, la stazione riduce il tasso di trasmissone per ridurlo.
+\subsubsection{Power management}
+Un nodo può annunciare all'AP la sua entrata nello stato di sleep. L'AP bufferizza i frame finché il nodo non si sveglia.
+Ciò permette al nodo di risparmiare energia.
+\subsection{Bluetooth}
+Le reti Bluetooth vengono anche chiamate \textit{wireless personal area networks} (WPAN). Operano nella banda radio 2.4 
+GHz; i canali sono gestiti con TDM, con frequenza di canale variabile. Le reti Bluetooth non possiedono infrastruttura:
+i nodi si organizzano in una rete di al più 8 elementi. Uno di questi elementi è detto \textit{master}, gli altri sono 
+\textit{client}. Il master determina il tempo per il cambio di slot e canale, controlla i dispositivi nella rete. Oltre 
+a 8 dispositivi attivi, ci possono essere fino a 255 dispositivi "parked", che si risvegliano secondo uno scheduling imposto 
+dal master.
+
+Quando un nodo master vuole formare una rete Bluetooth, deve innanzitutto determinare quali dispositivi si trovano nel 
+suo range (\textit{neighbor discovery}). Per farlo, il master invia in broadcast una serie di 32 messaggi di inquiry,
+ognuno un canale differente. I client ascoltano sui canali; una volta ricevuto un messaggio di inquiry, va in backoff 
+(per evitare collisioni con altri client) e risponde al master con un messaggio contenente l'ID del dispositivo. 
+
+Quando il master ha scoperto tutti i client, li invita nella sua rete. La seconda fase è detta \textit{Bluetooth paging}.
+Il master informa i client del pattern di frequency hopping che userà e il clock del mittente. Quando il client riceve le 
+informazioni, risponde con un ACK e il master li interroga usando il pattern scelto per assicurarsi che siano connessi alla
+rete. 
+\subsubsection{Standard ZigBee}
+È l'unico standard open source. Utilizza una topologia mesh, scalabile, in grado di coprire una vasta area con dispositivi 
+a basso consumo energetico.
+
+ZigBee prevede due tipi di indirizzi, uno a 64 per identificare il dispositivo univocamente e uno a 16 bit assegnato 
+a un dispositivo quando si associa alla rete. Nell'architettura ci sono tre tipi di nodi: il coordinatore PAN, che gestisce 
+la rete, i full function device, che funzionano come router, e i reduced function device che funzionano da endpoint.
+\section{Reti cellulari: 4G e 5G}
+Il termine cellulare si riferisce al fatto che la regione coperta da una rete cellulate è divisa in una serie di aree 
+geografiche, dette \textit{celle}. Ogni cella contiene una \textit{base station} che trasmette e riceve i segnali dai 
+dispositivi mobili presenti nella cella.
+\subsection{Reti cellulari 4G}
+Elementi di una rete 4G:
+\begin{itemize}
+    \item \textit{Dispositivi mobili}. Si connettono alla rete cellulare. Hanno un identificatore unico detto International 
+    Mobile Subscriber Identity (IMSI), memorizzato nella SIM. 
+    \item \textit{Base station}. Gestisce le risorse radio e i dispositivi mobili nella sua cella, coordinando l'autenticazione.
+    dei dispositivi e l'allocazione delle risorse.
+    \item \textit{Home Subscriber Server}. È un database che memorizza informazioni sui dispositivi nell'home network.
+    \item \textit{Serving Gateway (S-GW), Packet Data Network Gateway (P-GW) e altri}. S-GW e P-GW sono due router nel 
+    percorso tra il dispositivo mobile e l'Internet. P-GW svolge funzioni simili a un router gateway e fornisce servizi 
+    NAT.
+    \item \textit{Mobility Management Entity}. Il MME è un elemento del piano di controllo. Insieme a HSS, fornisce autenticazione 
+    dei dispositivi e gestisce il passaggio di cella.
+\end{itemize}
+\includegraphics[width=\textwidth]{Screenshot_2024-04-12_13-48-36.png}
+\subsection{Protocolli LTE}
+LTE suddivide il livello collegamento del dispositivo mobile in tre sottostrati:
+\begin{itemize}
+    \item \textit{Packet Data Convergence}. Questo strato si trova sotto IP. Il protocollo PDCP comprime e cifra i datagrammi 
+    IP.
+    \item \textit{Radio Link Control}. Il protocollo RLC frammenta e riassembla i datagrammi IP, e garantisce trasporto 
+    affidabile grazie al protocollo ARQ. 
+    \item \textit{Medium Access Control}. Il livello MAC gestisce lo scheduling delle trasmissioni e svolge controllo degli 
+    errori.
+\end{itemize}
+I dispositivi sono connessi alla base station da tunnel IP, definiti quando un dispositivo si collega alla rete. Ogni tunnel 
+ha un identificatore (TEID). Quando la base station riceve datagrammi dal dispositivo mobile, li incapsula utilizzando il 
+GPRS Tunneling Protocol, e li invia in segmenti UDP al Server Gateway all'altro estremo del tunnel.
+\subsection{Rete di accesso radio}
+LTE utilizza una combinazione di FDM e TDM per il canale downstream, detta orthogonal frequency division multiplexing (OFDM). 
+Ad ogni dispositivo mobile viene allocato uno o più time slots da 0.5 ms in uno o più canali. Lo scheduling delle trasmissioni 
+è determinato dagi algoritmi forniti dai fornitori di equipaggiamento LTE.
+\subsubsection{Collegamento alla rete}
+\begin{itemize}
+    \item \textit{Collegamento a una base station}. Il dispositivo mobile scandisce i canali in tutte le bande di frequenza 
+    per trovare un segnale di sincronizzazione inviato in broadcast da una base station. Una volta individuato, il dispositivo 
+    rimane sul canale e attende un secondo segnale di sincronizzazione. Il dispositivo ottiene ulteriori informazioni sulla 
+    base station. Con queste informazioni, il dispositivo può scegliere la base station migliore alla quale connettersi.
+    \item \textit{Autenticazione}. Il dispositivo rende noto alla rete la sua associazione con un determinato IMSI, autenticandosi 
+    con il MME.
+    \item \textit{Configurazione del percorso da dispositivo a PDN}. MME contatta il gateway PDN, il Serving gateway e la 
+    base station per stabilire i tunnel.
+\end{itemize}
+\subsubsection{Gestione dell'energia}
 
 \end{document}
