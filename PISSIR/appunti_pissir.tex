@@ -407,5 +407,34 @@ Ad ogni dispositivo mobile viene allocato uno o più time slots da 0.5 ms in uno
     base station per stabilire i tunnel.
 \end{itemize}
 \subsubsection{Gestione dell'energia}
+Un dispositivo mobile può trovarsi in due stati di sleep:
+\begin{itemize}
+    \item \textit{Light sleep}. Il dispositivo si risveglia periodicamente (ogni 100 msec) per controllare le trasmissioni
+    downstream.
+    \item \textit{Deep sleep}. Il dispositivo si risveglia periodicamente ogni 5 o 10 secondi.
+\end{itemize}
+\subsection{Rete cellulare globale}
+L'home network di un utente è collegato alle reti degli altri carrier mobili e a Internet tramite router gateway. Le reti 
+mobili sono connesse tra loro dall'Internet pubblico o da un Internet Protocol Packet eXchange (IPX) Network.
+\section{Gestione della mobilità}
+Se un dispositivo si muove dal suo access network, continuando a inviare datagrammi IP, la rete dovrà svolgere \textit{handover}.
+\subsection{Routing indiretto}
+\begin{enumerate}
+    \item I datagrammi sono inviati all'home network, indirizzati all'indirizzo permanente del dispositivo mobile da raggiungere.
+    \item Il gateway dell'home network intercetta i datagrammi, consulta HSS per determinare il visited network dove il 
+    dispositivo mobile risiede, li incapsula in un altro datagramma (lasciando quello originale intatto) e lo inoltra al 
+    gateway router del visited network.
+    \item Il visited network gateway router riceve il datagramma, lo decapsula e lo inoltra al dispositivo mobile.
+    \item Due opzioni:
+    \begin{enumerate}
+        \item Il datagramma geenerato dal dispositivo mobile viene spedito all'home gateway router e al corrispondente.
+        \item Il datagramma viene inviato direttamente al corrispondente dal visited network (\textit{local breakout}).
+    \end{enumerate}
+\end{enumerate}
+\subsection{Routing diretto}
+Il routing indiretto soffre del problema di triangle routing. Il direct routing supera l'inefficienza interrogando l'HSS
+dell'home network del dispositivo. Il corrispondente può così inviare diagrammi direttamente al gateway router del visited
+network.
+\subsection{Gestione della mobilità nelle reti 4G/5G}
 
 \end{document}
