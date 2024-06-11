@@ -21,4 +21,71 @@ di comunicazione. Ogni entità interessata ad accedere ad un servizio deve prima
 La confidenzialità è l'atto di proteggere i dati trasmessi dagli attacchi passivi. 
 \paragraph*{Integrità dei dati}
 Il principio di integrità è applicabile ad un flusso di dati
+
+\section{Crittografia}
+\subsection{Crittografia simmetrica}
+Crittografia con chiave comune e unica, a basso carico di elaborazione.
+\subsubsection{Algoritmi di crittografia simmetrica}
+\paragraph*{DES}
+Chiave a 56 bit + 8 di parità, se applicato 3 volte viene detto 3DES. 2DES è vulnerabile a un attacco di tipo known-plaintext
+detto meet in the middle.
+\paragraph*{IDEA}
+Chiave a 128 bit, blocco dati da 64 bit, utilizza XOR, addizione mod16 e moltiplicazione mod$2^{16}+1$.
+\paragraph*{RC2, RC4}
+Più veloci di DES, con chiave a lunghezza variabile e blocchi da 64 bit.
+\subsubsection{Applicazione algoritmi a blocchi}
+\paragraph*{ECB (Electronic Code Book)}
+Per cifrare dati in quantità superiore. Ogni blocco viene cifrato con lo stesso algoritmo separatamente. Sconsigliato 
+perché cifra allo stesso modo blocchi identici.
+\paragraph*{CBC (Cipher Block Chaining)}
+Per cifrare dati in quantità superiore. Richiede IV, XOR tra blocco cifrato precedente e blocco da cifrare, poi applicazione 
+algoritmo di cifratura.
+\paragraph*{Padding}
+Per cifrare dati in quantità inferiore. Aggiungo bit per riempire lo spazio vuoto. Alcuni tipi offrono controllo d'integrità,
+applicando padding a tutti i blocchi.
+\paragraph*{CTS (Cipher Text Stealing)}
+Per cifrare dati in quantità inferiore. L'ultimo blocco è riempito con byte del penultimo blocco, questi due blocchi 
+vengono scambiati durante la cifratura.
+\paragraph*{CTR (Counter mode)}
+Per cifrare dati in quantità inferiore. Accesso random al testo cifrato, usa algoritmo a blocchi per cifrare n bit alla 
+volta
+\subsubsection{Algoritmi stream}
+Operano su un flusso di dati senza richiederne la divisione in blocchi, tipicamente su un bit o byte.
+\paragraph*{Salsa20 e ChaCha20}
+Chiavi da 128 o 256 bit. Operazione base: add-rotate-xor su 32 bit. Effettuano 20 volte mixing su input.
+\subsubsection{Distribuzione chiavi}
+Per una comunicazione privata tra $n$ persone occorrono $\frac{n(n-1)}{2}$ chiavi. Avviene tramite algoritmi per scambio
+chiavi.
+\subsection{Crittografia asimmetrica}
+Le chiavi sono diverse e hanno funzionalità reciproca. È possibile generare un messaggio segreto per uno specifico destinatario 
+conoscendone solo la chiave pubblica.
+\subsubsection{Algoritmi a chiave pubblica}
+\paragraph*{DSA}
+Elevamento a potenza e logaritmo del risultato, utilizzato solo per firma digitale.
+\paragraph*{RSA}
+Può solo cifrare dati il cui valore sia inferiore al modulo pubblico. Funzionamento:
+\begin{enumerate}
+    \item modulo pubblico $n=pq$, con $p$ e $q$ primi, grandi e segreti
+    \item $\phi=(p-1)(q-1)$
+    \item esponente pubblico $e$ tale che $1<e<\phi$, $e$ coprimo $\phi$
+    \item esponente privato: $d=e^{-1}\phi$
+    \item chiave pubblica: $(n,e)$, chiave privata: $(n,d)$
+\end{enumerate}
+Solitamente le chiavi pubbliche hanno un $e$ che contiene solo due bit a 1 per ottimizzare le prestazioni.
+
+RSA è debole se vengono utilizzati esponenti piccoli, stesse chiavi per firma e cifratura. Per renderlo più forte, 
+aggiungere sempre del padding fresco prima di cifrare il messaggio e non firmare dati grezzi.
+\subsubsection{Distribuzione chaivi per crittografia asimmetrica}
+\paragraph*{Diffie-Hellman}
+Sfrutta la difficoltà di risoluzione del problema dell'algoritmo discreto. 
+\paragraph*{Curve ellittiche}
+Problema del logaritmo discreto sulla curva, più complesso, permette di avere chiavi più corte. Firma digitale: ECDSA, key
+agreement: ECDH, key distribution: ECIES.
+\subsection{Funzioni di hash e digest}
+\subsubsection{Digest}
+È un riassunto a lunghezza fissa del messaggio da proteggere. Deve essere veloce da calcolare, difficile da invertire e 
+non generare troppe collisioni (digest uguali). Un algoritmo di digest a $n$ bit è insicuro quando vengono generati più 
+di $2^{\frac{n}{2}}$ digest perché si ha una probabilità di collisione pari al 50\%.
+\subsubsection{Funzioni di hash}
+Dividono il messaggio in blocchi e applicano la funzione base per ottenere il valore di hash.
 \end{document}
