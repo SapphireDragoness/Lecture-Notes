@@ -1,6 +1,10 @@
 \documentclass[11pt]{article}
 \usepackage[margin=.8in]{geometry}
 \usepackage[italian]{babel}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 \title{Appunti Cybersecurity}
 
@@ -33,6 +37,8 @@ detto meet in the middle.
 Chiave a 128 bit, blocco dati da 64 bit, utilizza XOR, addizione mod16 e moltiplicazione mod$2^{16}+1$.
 \paragraph*{RC2, RC4}
 Più veloci di DES, con chiave a lunghezza variabile e blocchi da 64 bit.
+\paragraph*{AES}
+Ora si usa AES, con chiave fino a 256 bit e blocchi da almeno 128 bit.
 \subsubsection{Applicazione algoritmi a blocchi}
 \paragraph*{ECB (Electronic Code Book)}
 Per cifrare dati in quantità superiore. Ogni blocco viene cifrato con lo stesso algoritmo separatamente. Sconsigliato 
@@ -88,4 +94,764 @@ non generare troppe collisioni (digest uguali). Un algoritmo di digest a $n$ bit
 di $2^{\frac{n}{2}}$ digest perché si ha una probabilità di collisione pari al 50\%.
 \subsubsection{Funzioni di hash}
 Dividono il messaggio in blocchi e applicano la funzione base per ottenere il valore di hash.
+\subsubsection{KDF (Key Derivation Function)}
+Algoritmo che deriva una o più chiavi segrete da una password utilizzando una funzione pseudorandom.
+\subsubsection{MAC, MIC, MID}
+\begin{itemize}
+    \item MIC (Message Integrity Code): per garantire l'integrità dei messaggi con l0aggiunta di un codice
+    \item MAC (Message Authentication Code): fornisce autenticazione
+    \item MID (Message IDentifier): identificatore univoco per evitare attacchi di tipo replay
+\end{itemize}
+\subsubsection{Autenticazione tramite cifratura simmetrica}
+Si invia una copia cifrata dei dati, solo chi conosce la chiave può confrontare la copia con l'originale. Veriffica 
+l'integrità esatta ma raddoppia tempo e spazio.
+\subsubsection{Autenticazione tramite digest e cifratura simmetrica}
+Si invia un digest cifrato dei dati, solo chi conosce la chiave può confrontare il digest trasmesso con quello calcolato 
+sui dati ricevuti.
+\subsubsection{Autenticazione tramite keyed-digest}
+Si invia un digest calcolato non solo sui dati ma anche sulla chiave. Soluzione più veloce. Attaccabile scambiando l'ordine 
+dei blocchi.
+\paragraph*{HMAC}
+La funzione di hash prende in input un blocco da $b$ byte e genera un blocco da $l$ byte, con $b\geq l$.
+\paragraph*{CBC-MAC}
+Sfrutta un algoritmo di cifratura simmetrico a blocchi, in modalità CBC con IV nullo, prendendo come MAC la cifratura 
+dell'ultimo blocco. È sicuro solo per messaggi a lunghezza fissa.
+\subsubsection{Garantire integrità e riservatezza}
+\begin{enumerate}
+    \item authenticate-and-encrypt: si decifra prima di verificare l'integrità, vulnerabile a attacchi DoS 
+    \item authenticate-then-encypt: si decifra prima di verificare l'integrità, vulnerabile a attacchi DoS, sicura solo 
+    con CBC o cifratura stream
+    \item encrypt-then-authenticate: si può evitare di decifrare se il MAC è errato, sicura, bisogna includere nel MAC 
+    l'IV e gli algoritmi
+\end{enumerate}
+\subsubsection{Authenticated encryption}
+Unica opzione che garantisce riservatezza e autenticazione. Si usa una sola chiave e un solo algoritmo, più veloce, meno 
+errori nel combinare le funzioni. Crea IGE (Infinite Garble Extension), che causa errore su tutti i blocchi dopo quello 
+manipolato in caso di attacco.
+Confronto algoritmi AE:
+\begin{itemize}
+    \item GCM (Galois/Counter Mode): il più popolare, on-line (l'algoritmo agisce sull'input al momento senza averlo tutto)
+    single-pass AEAD, parallelizzabile
+    \item OCB 2.0 (Offset Codebook Mode): il più veloce, on-line single-pass AEAD
+    \item EAX (Encrypt then Authenticate then X(trans)late): on-line double-pass AEAD, lento ma piccolo
+    \item CCM (CTR mode with CBC-MAC): off-line double pass, il più lento
+\end{itemize}
+\paragraph*{AEAD (Authenticated Encryption with Associated Data)}
+Schema di AE che contiene dati associati non confidenziali, la cui integrità è protetta. Usata nell'header dei pacchetti rete.
+\subsubsection{Autenticazione tramite digest e cifratura asimmetrica}
+Si invia anche un digest, cifrato con la chiave privata del mittente. Solo chi conosce la chiave pubblica può confrontare 
+il digest trasmesso con quello calcolato sui dati ricevuti.
+\subsubsection{Firme RSA e funzioni hash}
+Una funzione di hash da usarsi in uno schema RSA deve essere resistente alle collisioni e difficile da invertire (quindi 
+da falsificare).
+\subsubsection{PKCS}
+Sono un gruppo di standard. PKCS \#1 definisce le primitive per l'uso di RSA: conversione e rappresentazione di grandi 
+numeri, algoritmi base di cifratura/decifratura, algoritmi base di firma e verifica. Queste primitive devono essere usate 
+per creare uno schema crittografico sicuro.
+\begin{itemize}
+    \item schemi di cifratura/decifratura: RSAES-OAEP, RSAES-PKCS 
+    \item schemi di firma/verifica (con appendice):
+\end{itemize}
+Gli schemi di firma sono detti con appendice perché non si cifrano i dati ma un loro riassunto (hash), RSA tratta direttamente 
+solo dati di dimensione minore del modulo pubblico $n$.
+\subsubsection{Autenticazione e integrità: analisi}
+Tramite segreto condiviso:
+\begin{itemize}
+    \item utile solo per il ricevente
+    \item non usabile come prova senza rivelare la chiave segreta
+    \item non usabile per il non ripudio
+\end{itemize}
+Tramite crittografia asimmetrica:
+\begin{itemize}
+    \item essendo lenta la si applica solo al digest 
+    \item usabile come prova formale
+    \item usabile per il non ripudio
+    \item equivale alla firma digitale
+\end{itemize}
+Con una sola chiave privata è possibile generare infinite firme digitali.
+\subsection{Prestazioni crittografiche}
+Le \href{https://www.cse.wustl.edu/~jain/cse567-06/ftp/encryption_perf/}{prestazioni} dipendono dalla CPU e dalla sua cache. Non sono un problema sul client, ma potrebbero esserlo sul server,
+ovviato con acceleratori crittografici.
+L'algoritmo più veloce è RC4, seguito da AES-128-CBC, DES-CBC e DES-EDE3-CBC. RSA 1024 è più lento di RSA 2048.
+\begin{enumerate}
+    \item lunghezza chiavi crittografia simmetrica: 80, hash: 160, lunghezza chiavi crittografia asimmetrica: 1248, 
+    ECC: 160 = attaccabile in poco tempo 
+    \item lunghezza chiavi crittografia simmetrica: 96, hash: 192, lunghezza chiavi crittografia asimmetrica: 1776, 
+    ECC: 192 = legacy
+    \item lunghezza chiavi crittografia simmetrica: 112, hash: 224, lunghezza chiavi crittografia asimmetrica: 2432, 
+    ECC: 256 = attaccabile a medio termine 
+    \item lunghezza chiavi crittografia simmetrica: 128, hash: 256, lunghezza chiavi crittografia asimmetrica: 3248, 
+    ECC: 160 = sicurezza a lungo termine
+    \item lunghezza chiavi crittografia simmetrica: 256, hash: 512, lunghezza chiavi crittografia asimmetrica: 15424, 
+    ECC: 512 = per ora inattaccabile senza computer quantistici
+\end{enumerate}
+\section{Certificati}
+È una struttura dati per legare in modo sicuro una chiave pubblica ad alcuni attributi. Tipicamente lega chiave a identità,
+è firmato in modo elettronico dall'emettitore, detto autorità di certificazione (CA). Ha una scadenza e può essere revocato.
+
+PKI: infrstruttura tecnica e organizzativa preposta alla creazione, distribuzione e revoca dei certificati a chiave pubblica.
+È composta da:
+\begin{itemize}
+    \item end entity: utente finale, umano o non umano 
+    \item CA: autorità fidata da uno o più utenti che crea e assegna certificati e CRL, firmandoli digitalmente
+    \item RA: componente opzionale che può essere utilizzata per alleggerire il carico di lavoro del CA, tipo verificare 
+    l'identità di una end entity 
+    \item repository: denota ogni metodo utilizzato per memorizzare i certificati e le CRL 
+    \item relying party: ogni entità che dipende dai dati in un certificato per prendere decisioni 
+\end{itemize}
+\begin{center}
+    \includegraphics[width=\textwidth]{PKI.png}
+\end{center}
+\subsection{Certificati X.509}
+Struttura: versione, numero di serie, algoritmo per la firma, richiedente, lasso di validità, soggetto, informazioni chiave
+pubblica, firma digitale.
+
+X.509 si basa sull'uso di crittografia a chiave pubblica e firme digitali. Lo standard non detta l'uso d uno specifico 
+algotitmo. Le informazioni contenute nel certificato sono firmate calcolando il valore di hash delle informazioni stesse 
+e generando una firma digitale utilizzando il valore di hash e la chiave privata della CA. Il certificato può poi essere  
+distribuito.
+
+Tutti gli utenti che sono a conoscenza della chiave pubblica del CA possono verificare la chiave pubblica dell'utente certificata.
+Nessuno oltre al CA può modificare il certificato senza essere scoperto.
+\subsection{Revoca dei certificati}
+Un certificato può essere revocato prima della sua scadenza naturale, su richiesta dei titolare o automaticamente dall'emettitore.
+Quando si valida una firma si deve verificare che il documento fosse valido all'atto della firma. La varifica è a carico 
+del ricevente, il relying party (RA).
+Meccanismi di revoca:
+\begin{itemize}
+    \item CRL (Certificate Revocation List): elenco dei certificati revocati, firmato dalla CA o da un delegato
+    \item OCSP (On-line Certificate Status Protocol): risposta puntuale su un singolo certificato, firmato dal server 
+\end{itemize}
+Struttura CRL X.509: versione, algoritmo di firma, richiedente, data di aggiornamento, elenco date revoche certificati, 
+firma digitale del CA.
+Le CRL sono firmate dalla CA che ha emesso i certificati e da una revokation authority delegata dalla CA.
+\subsubsection{X.509 versione 3}
+Raccoglie in un unico documento le modifiche necessarie a estendere le definizioni dei certificati e delle CRL. Esistono 
+estensioni di due tipi: pubbliche, ossia definite nello standard e quindi note a tutti, e private, uniche per una certa 
+comunità di utenti. Le estensioni sono aggiunte al formato del certificato.
+
+Un'estensione può essere definita critica o non critica. Nel processo di verifica devono essere rifiutati i certificati 
+che contengono un'estensione critica non riconosciuta; un'estensione non critica può essere ignorata se sconosciuta. Il
+differente trattamento è a carico di chi effettua la verifica: il Relying Party (RP).
+X.509v3 definisce 4 categorie di estensioni:
+\begin{itemize}
+    \item key and policy information
+    \item crtificate subject and certificate issuer attributes
+    \item certificate path constraints
+    \item CRL distribution points 
+\end{itemize}
+\paragraph*{Key and policy information}
+Key usage: identifica lo spazio delle applicazioni pper il quale la chiave pubblica può essere usata, può essere critica 
+o non critica, se è critica allora il certificato può essere usato solo per gli scopi la cui corrispondente opzione è definita.
+\paragraph*{Certificate subject and certificate issuer attributes}
+Subject alternative name: consente di usare diversi formalismo per identificare il possessore del certificato, critica se 
+il campo subject-name è vuoto.
+\paragraph*{Certificate path constraints}
+Basic constraints: indica se il soggetto del certificato può agire da autorità di certificazione, è possibile definire la 
+massima profondità dell'albero di certificazione, si consiglia di definirla come critica.
+
+Name constraints: solo per CA, fissa lo spazio dei nomi certificabili da una CA, specifica whitelist/blacklist.
+\paragraph*{CRL distribution points}
+Identifica il punto di distribuzione della CRL da usare come verifica della validità di un certificato.
+\paragraph*{Estensioni private}
+È possibile definire estensioni private, comuni a una certa comunità di utenti. Tra queste, PKIX Authotity Information Access:
+indica come accedere a informazioni e servizi della CA che ha emesso il certificato.
+\subsubsection{OCSP}
+Standard IETF-PKIX per verificare in linea se un certificato è valido (non revocato), è un'alternativa alle CRL. 
+Le risposte sono firmate dal server (non dalla CA) e il certificato del server non è verificabile con OCSP.
+Sono possibili risposte precalcolate, che diminuiscono carico sul server ma rendono possibili attacchi replay.
+Funzionamento:
+\begin{enumerate}
+    \item A e B hanno dei certificati rilasciati dalla CA 
+    \item A vuole connettersi con B e gli invia il certificato 
+    \item B crea una richiesta OCSP che contiene il numero di serie del certificato e lo invia alla CA 
+    \item il responder della CA controlla lo status del certificato nel suo database
+    \item se il certificato è valido, conferma la validità inviando una risposta a B 
+    \item B verifica la risposta della CA utilizzando la chiave pubblica della CA 
+    \item B si connette con A 
+\end{enumerate} 
+\paragraph*{Trusted Responder}
+Il server OCSP firma le risposte con una coppia chiave/certificato indipendente dalla CA per la quale sta rispondendo. Il 
+servizio è pagato dall'azienda o dagli utenti.
+\paragraph*{Delegated Responder} 
+Il server OCSP firma le risposte con una coppia chiave/certificato diversa in base alla CA per la quale sta rispondendo. Il 
+servizio è pagato dalla CA.
+\subsection{Applicazioni relative all'uso e memorizzazione dei certificati}
+\subsubsection{Timestamping}
+Prova della creazione dei dati prima di un certo istante di tempo. Regolata dalla TSA (Time-Stamping Authority). RFC-3161
+descrive il protocollo di richiesta e il formato della prova.
+Funzionamento:
+\begin{enumerate}
+    \item l'hash dei dati originali viene calcolato, a esso viene aggiunto il timestamp dato dal TSA e il suo risultato 
+    (hash A) viene calcolato
+    \item la firma del TSA viene verificata decifrandola con la chiave pubblica del TSA, producendo hash B 
+    \item hash A e B vengono confrontati 
+\end{enumerate}
+\subsubsection{PSE (Personal Security Environment)}
+Ogni utente dovrebbe proteggere la propria chiave privata e i certificati delle root CA fidate. Può essere sw o hw.
+\paragraph*{Smart-card crittografiche}
+Carte a chip a memoria e con capacità crittografiche autonome. È semplice realizzare card in grado di svolgere crittografia 
+simmetrica e complesso con quella asimmetrica. Dispongono di poca memoria.
+\paragraph*{HSM (HW Security Module)}
+Acceleratore crittografico per server, ha memoria protetta e capacità crittografiche autonome.
+\paragraph*{API di sicurezza}
+PKCS \#11 descrive le API per creare e manipolare i token crittografici. Può essere utilizzato in hw e sw.
+\subsection{Formati per documenti elettronici sicuri}
+\subsubsection{PKCS \#7 e CMS}
+PKCS \#7 è lo standard RSA per la busta sicura (posta elettronica), CMS è la sua evoluzione. Permette autenticazione. integrità, riservatezza 
+dei dati con algoritmi simmetrici o asimmetrici. Permette più firme su uno stesso oggetto e può includere certificati per 
+revocare la firma. È un formato ricorsivo.
+Gli algoritmi base sono:
+\begin{itemize}
+    \item digest: MD5, SHA-1
+    \item firma: RSA, DSA 
+    \item key management: DH, RSA, 3DES e PBKDF2
+    \item cifratura contenuto: 3DES-CBC, RC2-CBC
+    \item MAC: HMAC-SHA1
+\end{itemize}
+\subsubsection{Struttura CMS}
+CMS racchiude i due campi content type e content in contentInfo.
+\paragraph*{Tipi di contentType}
+\begin{itemize}
+    \item data: codifica di una generica sequenza di byte 
+    \item signedData: dati e firme digitali parallele 
+    \item envelopedData: dati cifrati e chiave cifrata per i destinatari 
+    \item authenticatedData: dati, MAC e chiave cifrata per i destinatari 
+    \item digestedData: dati e digest 
+    \item encryptedData: dati cifrati con algoritmo simmetrico
+\end{itemize}
+\subsubsection{PKCS \#10 (Certificate Signing Request)}
+Descrive il formato per la richiesta di un certificato, (CSR). La richiesta contiene: DN, chiave pubblica e attributi.
+\subsubsection{PKCS \# 12}
+Definisce un formato archivio per memorizzare oggetti crittografici in un solo file, consentendone il trasporto. Trasporta 
+una chiave privata e uno o più certificati, quindi l'identità digitale di un utente.
+\subsubsection{Documenti firmati}
+Un documento firmato può:
+\begin{enumerate}
+    \item essere avvolto nella firma
+    \item avvolgere la firma 
+    \item avere una firma separata 
+\end{enumerate}
+É possibile avere firme multiple. 
+\subsubsection{Electronic Signature (ES) Europea}
+Dati che sono logicamente associati con altri dati in formato elettronico che ne forniscono un mezzo di autenticazione.
+Una firma scannerizzata è una firma elettronica. È un concetto legale distinto dalle firme digitali.
+\paragraph*{AES (Advanced Electronic Signature)}
+È una ES che soddisfa i seguenti requisiti:
+\begin{itemize}
+    \item è in relazione univoca con il firmatario
+    \item consente di identificare il firmatario 
+    \item è creata usando strumenti che il firmatario può mantenere sotto il suo controllo 
+    \item è in relazione con i dati ai quali si riferisce in modo che ogni successiva modifica dei dati possa essere individuata 
+\end{itemize}
+\subsubsection{Qualified Certificate (QC)}
+Certificato che garantisce l'identità di una persona. Contiene:
+\begin{itemize}
+    \item l'indicazione che si tratta di un QC 
+    \item l'indicazione del certificatore e dello stato in cui è stato emesso 
+    \item indicazioni sulle limitazioni di utilizzo del certificato 
+    \item indicazioni sul limite delle transazioni commerciali effettuabili con quel certificato 
+\end{itemize}
+\paragraph*{Qualified Electronic Signature}
+È una AES apposta usando QC e dispositivi di firma sicuri. Ha valore legale equivalente alla firma autografa. 
+\subsubsection{Standard ETSI per firma elettronica}
+Si chiama CAdES (CMS Advanced Electronic Signature), è un formato di firma grezzo. Esistono anche XAdES e PAdES (per formati XML e PDF).
+ASiC (Associated Signature Containers) sono contenitori per associare documenti elettronici con firme detached.
+\section{Attacchi alle reti IP}
+IP non ha alcuna autenticazione degli indirizzi e i pacchetti non sono protetti. Sono quindi attaccabili tutti i protocolli 
+che utilizzano IP come trasporto.
+\subsection{Protezione DHCP}
+DHCP è un protocollo non autenticato, debole ad attacchi shadow server, che può sferrare DoS e MITM logici.
+Alcuni switch offrono DHCP snooping, che consentono risposte solo da porte affidabili, e IP guard che ammetono solo IP 
+ottenuti da DHCP. Si può anche usare HMAC-MD5 per autenticare i messaggi, ma è scarsamente adottato.
+\subsection{Sicurezza ICMP}
+è un protocollo di servizio per reti a pacchetto che si occupa di trasmettere informazioni riguardanti malfunzionamenti, 
+informazioni di controllo o messaggi tra i vari componenti di una rete. Privo di autenticazione, soggetto a smurfing e fraggle.
+\paragraph*{Smurfing}
+Attacco DDoS durante il quale un gran numero di pacchetti ICMP vengono inviati in broadcast su una rete. I dispositivi 
+sulla rete rispondono all'IP sorgente, che l'attaccante ha designato come IP della vittima.
+
+Per contrastare l'attacco, basta rifiutare il broadcast IP o identificare il responsabile con strumenti di network management.
+\paragraph*{Fraggle}
+Come smurfing ma con pacchetti UDP su porte 7 e 19.
+\subsection{ARP poisoning}
+ARP è utilizzato per scoprire l'indirizzo MAC di un nodo del quale si conosce l'indirizzo IP. Il risultato è memorizzato 
+nella tabella ARP. Con ARP poisoning si inseriscono dati falsi nella tabella per inviare dati ad altri dispositivi.
+\subsection{TCP SYN flooding}
+Vengono inviate multiple richieste con IP spoofing, saturando la tabella delle connessioni di rete fino a quando non vanno
+in timeout.
+
+Per difendersi:
+\begin{itemize}
+    \item abbassare il timeout, rischiando di eliminare client validi ma lenti
+    \item aumentare le dimensioni della tabella, aggirabile con più richieste 
+    \item usare un router come intercettatore o come controllore che uccide i collegamenti pendenti
+    \item SYN cookie, usa il numero di sequenza del pacchetto SYN-ACK per trasmettere cookie al client e riconoscere così 
+    i client che hanno già inviato il SYN senza memorizzare nulla sul server
+\end{itemize}
+\subsection{Sicurezza DNS}
+\paragraph*{DNS shadow server}
+Fa sniffing per intercettare le query e spoofing per generare risposte false.
+\paragraph*{DNS cache poisoning}
+La vittima fa query sul NS compromesso, che risponde inviando risposte anche a query non effettuate per sovrascrivere la 
+cache della vittima; oppure fornire risposta falsa per inserirla nella cache della vittima.
+\paragraph*{DNS flash crowd}
+Flooding di richieste su una vittima.
+\subsection{DNSsec}
+Fornisce protezione end-to-end tramite firme digitali create dagli amministratori dei server DNS e verificate dal software 
+di risoluzione del ricevente. Evita di doversi fidare dei NS intermedi.
+
+Le query stesse non sono firmate, e non esiste una root CA, non fornisce siurezza nel dialogo tra DNS client e server.
+\subsection{Sicurezza del routing}
+Poca sicurezza nell'accesso sistemistico ai router per la gestione e nello scmbio di tabelle di routing. È possibile attivare
+protezione con keyed-digest.
+\subsection{Protezione IP spoofing}
+Per proteggere dagli impostori interni e esterni. Si utilizzano filtri presenti nel router.
+\section{VPN}
+È una tecnica hw o sw per realizzare una rete privata utilizzando canali e apparati di trasmissione non affidabili. 
+\paragraph*{VPN tramite rete nascosta}
+Indirizzamento non standard per non essere raggiungibili da altre reti. Aggirabile se qualcuno scopre gli indirizzi usati,
+vulnerabile a sniffing.
+\paragraph*{VPN mediante tunnel}
+I router provvedono a incapsulare i pacchetti di rete all'interno di altri pacchetti. I router controllano l'accesso alle 
+reti tramite ACL (Access Control List).
+Se il pacchetto da trasmettere supera la massima dimensione consentita, deve essere frammentato.
+\paragraph*{VPN tramite tunnel IP sicuro}
+Prima di essere incapsulati i pacchetti di rete vengono protetti con MAC (integrità e autenticazione), cifratura (riservatezza)
+e numerazione (contro replay). Anche detta Secure VPN.
+\subsection{IPsec}
+Architettura IETF per fare sicurezza al livello 3 sia in IPv4 che in IPv6. Permette di creare VPN su reti non dfidate e 
+di fare sicurezza end-to-end.
+
+Definisce due formati particolari:
+\begin{itemize}
+    \item AH (Authentication Header): per integrità, autenticazione, protezione da replay
+    \item ESP (Encapsulating Security Payload): per riservatezza 
+\end{itemize}
+Usa il protocollo IKE (Internet Key Exchange) per lo scambio delle chiavi.
+\subsubsection{IPsec Security Association}
+Connessione logica unidirezionale protetta tra due sistemi IPsec. A ogni SA sono associabili caratteristiche di sicurezza 
+diverse, occorrono due SA per avere protezione completa in un canale bidirezionale.
+\subsubsection{Database locali IPsec}
+\begin{itemize}
+    \item SPD (Security Policy Database): contiene le security policy da applicare ai diversi tipi di comunicazione, configurato 
+    a priori oppure agganciato a un sistema automatico 
+    \item SAD (SA Database): elenco delle SA attive e delle loro caratteristiche
+\end{itemize}
+\subsubsection{Funzionamento di IPsec}
+\begin{enumerate}
+    \item il modulo IPsec riceve pacchetto IP e controlla quale policy applicare consultando la SPD 
+    \item ottiene le regole di sicurezza e crea/legge SA 
+    \item ottiene algoritmi e paramtretri dalla SAD 
+    \item il pacchetto IP è ora protetto da IPsec
+\end{enumerate}
+\paragraph*{IPsec in transport mode}
+Usato per fare sicurezza end-to-end, ossia usato dagli host, non dai gateway. È computazionalmente leggero ma non protegge 
+i campi variabili.
+\paragraph*{IPsec in tunnel mode}
+Usato per fare VPN, solitamente dai gateway. Protegge i campi variabili.
+\subsubsection{AH}
+Fornisce integrità (tramite funzione di hash) e autenticazione dei dati, protezione da replay attack (scartando pacchetti 
+vecchi). Utilizza HMAC. Opera sopra IP.
+\paragraph*{Processamento di un pacchetto con AH}
+\begin{enumerate}
+    \item in parallelo, si estrae AH e si normalizza il pacchetto 
+    \item si estrae ICV (dati di autenticazione) da AH
+    \item si estrae SPI (Security Parameters Index) da AH e lo si cerca nella SAD
+    \item si calcola il valore di autenticazione tramite algoritmi e parametri della SAD e pacchetto IP nornalizzato 
+    \item si confrontano i valori ricevuti da ICV e quelli calcolati per vedere se corrispondono
+\end{enumerate}
+\paragraph*{Normalizzazione per AH}
+\begin{itemize}
+    \item azzerare campo TTL/hop limit 
+    \item se il pacchetto contiene Routing Header: fissare il campo di destinazione all'indirizzo del destinatario finale, 
+    fissare il contenuto del RH e Address Index al valore che avrà a destinazione
+    \item azzerare tutte le operazioni che hanno bit C attivo 
+\end{itemize}
+\paragraph*{Funzionamento HMAC-SHA1-96}
+\begin{enumerate}
+    \item dato $M$ normalizzarlo generando $M'$
+    \item allineare a 160 bit $M'$ generando $M'p$
+    \item calcolare la base di autenticazione B=HMAC-SHA1$(K,M'p)$
+    \item ICV: 96 leftmost bit di $B$
+\end{enumerate}
+\subsubsection{ESP}
+Usa come meccanismo base DES-CBC, fornisce integrità e autenticazione, riduce la dimensione del pacchetto e risparmia una 
+SA.
+\paragraph*{ESP in transport mode}
+Usato dagli host, non dai gateway, non nasconde l'header.
+\paragraph*{ESP in tunnel mode}
+Usato solitamente dai gateway, nasconde anche gli header.
+\begin{center}
+    \includegraphics[width=\textwidth]{AHvsESP.png}
+\end{center}
+\subsubsection{Protezione da replay in IPsec}
+\begin{enumerate}
+    \item quando si crea una SA, il mittente inizializa il sequence number a 0
+    \item quando si invia un pacchetto, si incrementa il sequence number 
+    \item quando si raggiunge il sequence number $2^{32}-1$ si negozia un nuova SA
+\end{enumerate}
+Detta anche sliding window tecnique.
+\subsubsection{IPsec v3}
+AH è opzionale, ESP è obbligatorio. Supporto per multicast da singola sorgente e AEAD. Possiede ESN (Extended Sequence Number).
+\subsection{Comparazione metodi di sicurezza}
+\paragraph*{End-to-end security}
+IPsec è adottato a livello host tramite transport-mode SA. È computazionalmente leggero ma non protegge i campi variabili.
+\paragraph*{Basic VPN}
+Ipsec adottato a livello gateway, tunnel-mode SA. Protegge i campi variabili.
+\paragraph*{End-to-end security con VPN}
+Utilizza entrambe le sopra citate.
+\paragraph*{Secure gateway}
+Il primo host si connette direttamente alla WAN, il gateway che riceve il pacchetto indirizzato al secondo host è protetto 
+da IPsec, solo tunnel-mode SA.
+\paragraph*{Secure remote access}
+Come sopra, ma entrambi gli host utilizzano IPsec, quindi sia transport-mode che tunnel-mode SA.
+\subsubsection{IPsec key management}
+Componente fondamentale per IPsec, fornisce ai sistemi IPsec comunicanti le chiavi simmetriche necessarie per l'autenticazione 
+e/o la cifratura dei pacchetti. Le chiavi vengono distribuite OOB o automaticamente.
+\paragraph*{ISAKMP}
+Internet Security Association and Key Management Protocol, definisce le procedure necessarie per negoziare, stabilire, modificare 
+e cancellare la SA. Non indica il metodo da usare per lo scambio delle chiavi. Lo scambio è realizzato solitamente dal 
+protocollo OAKLEY.
+\paragraph*{IKE}
+Internet Key Exchange, crea una SA per proteggere lo scambio ISAKMP. Con questa SA protegge la negoziazione della SA richiesta 
+da IPsec, può essere riutilizzata più volte per negoziare altre SA IPsec.
+Modi di funzionamento:
+\begin{itemize}
+    \item main mode: 6 messaggi, protegge l'identità delle parti 
+    \item aggressive mode: 3 messaggi, non protegge identità
+    \item quick mode: 3 messaggi, negoziazione solo della SA IPsec 
+    \item new group mode: 2 messaggi 
+\end{itemize}
+Metodi di autenticazione: 
+\begin{itemize}
+    \item digital signature: non repudiation della negoziazione IKE 
+    \item PKE: protezione dell'identità in aggressive mode 
+    \item revised PKE: meno costoso, solo 2 operazioni a chiave pubblica 
+    \item pre-shared key: l'ID della contropart può essere solo il suo indirizzo IP 
+\end{itemize}
+\subsubsection{VPN concentrator}
+Apparecchiature special-purpose che fungono da terminatori di tunnel IPsec. Per accesso remoto di singoli client oppure 
+per creare VPN site-to-site. Prestazioni elevate.
+\subsection{Prestazioni IPsec}
+\begin{itemize}
+    \item router: CPU potente o acceleratore crittografico, non gestito in outsourcing 
+    \item firewall: CPU potente 
+    \item VPN concentrator: massima indipendenza dalle altre misure di sicurezza 
+\end{itemize}
+IPsec riduce il throughput di rete, perché i pacchetti hanno dimensione maggiore e si ha un maggior numero di pacchetti.
+
+IPsec è applicabile solo a pacchetti unicast, tra parti che hanno attivato la SA tramite chiavi condivise o certificati.
+\section{Firewall e IDS/IPS}
+\subsection{Firewall}
+\begin{itemize}
+    \item ingress firewall: collegamenti incoming, tipicamente per selezionare i servizi offerti dall'esterno
+    \item egress firewall: collegamenti outgoing, controllo dell'attività personale
+\end{itemize}
+Un firewall deve garantire un buon equilibrio tra sicurezza e funzionalità, puntando sulla sicurezza.
+Principi inderogabili:
+\begin{enumerate}
+    \item il FW deve essere l'unico punto di contatto della rete interna con quella esterna 
+    \item solo il traffico autorizzato può attraversare il FW 
+    \item il FW deve essere un sistema altamente sicuro esso stesso
+\end{enumerate}
+\paragraph*{Whitelisting}
+Tutto ciò che non è espressamente permesso è vietato. Fornisce maggiore sicurezza ma è più dfficile da gestire.
+\paragraph*{Blacklisting}
+Tutto ciò che non è espressamente vietato è permesso. Minore sicurezza rispetto al whitelisign, più facile da gestire.
+\subsection{Tecnologie di FW}
+\subsubsection{Packet filter}
+Storicamente disponibile sui roouter, effettua controlli sui soongoli pacchetti IP.
+
+Pro:
+\begin{itemize}
+    \item basso costo 
+    \item ottima scalabilità e prestazioni 
+\end{itemize} 
+Contro:
+\begin{itemize}
+    \item controlli pocco precisi, quindi più facile da ingannare 
+    \item arduo supportare servizi con porte allocate dinamicamente 
+    \item configurazione complessa 
+    \item difficile fare autenticazione degli utenti 
+\end{itemize}
+\subsubsection{Stateful packet filter}
+Simile al packet filter ma state-aware.  Riceve informazioni di stato dal livello trasporto e quello applicativo, distingue 
+le nuove connessioni da quelle già aperte.
+
+Migliori prestazioni rispetto al packet filter, ma comunque limitato.
+\subsubsection{Circuit-level gateway}
+FW non application-aware. Crea un circuito tra client e server a livello trasporto, ma non comprende i dati in trasporto,
+si limita a copiare tra le sue interfacce i segmenti TCP o i datagrammi UDP (se rispettano le regole di controllo accessi),
+deve riassemblare pacchetti IP quindi protegge da alcuni attacchi L3/L4.
+
+Rompe il modello client server per una specifica connessione:
+\begin{itemize}
+    \item i server sono più protetti: isola da attacchi che riguardano handshake TCP e frammentazione pacchetti IP 
+    \item può autenticare il client 
+\end{itemize}
+Rimangono limitazioni proprie al packet filter.
+\subsubsection{Application-level gateway}
+Composto da una serie di proxy che esaminano il contenuto dei pacchetti a livello applicativo. Può effettuare il mascheramento 
+o rinumerazione degli indirizzi IP interni e funzioni di autenticazione. 
+
+Pro:
+\begin{itemize}
+    \item regole più granulari rispetto a packet filter 
+    \item server più protetti 
+    \item può autenticare il client 
+\end{itemize}
+Contro:
+\begin{itemize}
+    \item ritardo nel supporto per le nuove applicazioni
+    \item consuma più risorse ed è più lento 
+    \item mancanza di trasparenza per i client 
+    \item può esporre il SO del FW ad attacchi 
+\end{itemize}
+Varianti: 
+\begin{itemize}
+    \item trasparent proxy: meno intrusivo per i client, più complesso 
+    \item strong application proxy: solo comandi/dati sono trasmessi
+\end{itemize}
+\subsubsection{HTTP proxy}
+Server HTTP che fa solo da front-end e poi passa le richieste a un server esterno.
+Pro:
+\begin{itemize}
+    \item cache delle pagine esterne per tutti gli utenti interni 
+    \item autenticazione e autorizzazione degli utenti interni 
+    \item possibili vari controlli 
+\end{itemize}
+\subsubsection{HTTP reverse proxy}
+Server HTTP che fa solo da front-end e poi passa le richieste a un server interno.
+Pro:
+\begin{itemize}
+    \item obfuscation del server 
+    \item acceleratore SSL 
+    \item load balancer 
+    \item web accelerator, cache di contenuti statici 
+    \item compressione 
+    \item spoon feeding: riceve dal server tutta una pagina creata dinamicamente e la serve poco alla volta al client 
+\end{itemize}
+\subsubsection{WAF (Web Application Firewall)}
+Modulo installato su proxy per filtrare il traffico applicativo, utilizza HTTP.
+\subsubsection{Local FW}
+Firewall installato direttamente sul nodo da difendere. È tipicamente un packet filter.
+
+Rispetto a un normale FW in rete può controllare i processi a cui è permesso aprire collegamenti verso altri nodi e ricevere 
+richieste di collegamento.
+\subsection{Architetture di FW}
+\subsubsection{Screening router (choke)}
+Router che filtra il traffico di rete, sia su livello IP che superiore. È economico ma insicuro. 
+\subsubsection{Application gateway (proxy)}
+Servizio che svolge il lavoro per conto di un applicativo, tipicamente con controllo d'accesso.
+\subsubsection{Dual-homed gateway}
+Sistema con due connessioni di rete e routing disabilitato. Facile da realizzare, è possibile mascherare la reten interna,
+ma richiede più hardware rispetto a screening router ed è poco flessibile.
+\subsubsection{Screened host gateway}
+Il router blocca traffico da interno a esterno e viceversa tranne se arriva dal o al bastion. Il bastion host ospita circuit
+o application gateway per controllare i servizi autorizzati.
+Pro:
+\begin{itemize}
+    \item maggiore flessibilità
+\end{itemize}
+Contro:
+\begin{itemize}
+    \item si possono mascherare solo gli host/protocolli che passano dal bastion 
+    \item è più costoso e complesso da gestire 
+    \item ricompare il problema del sigle-point-of-failure
+\end{itemize}
+\subsubsection{Screened subnet}
+Uno o più screening router sono utilizzati come firewall per definire tre diverse sottoreti: un router esterno separa la 
+rete esterna dalla rete di perimetro, e un router interno separa la rete di perimetro da quella interna. La rete di perimetro 
+è anche detta DMZ, e ospita i server che sono accessibili sia dalla rete interna che da quella esterna.
+Si può configurare il roouting in modo che la rete interna sia sconosciuta.
+
+Per motivi di costo e di semplicità di gestione spesso si omettono i router, incorporando le loro funzioni nel gateway.
+Anche noto come FW a tre gambe.
+\subsection{IDS e IPS}
+\subsubsection{IDS (Intrusion Detection System)}
+È un sistema per identificare individui che utilizzano un computer o una rete senza autorizzazione, esteso anche all'identificazione 
+di utenti autorizzati ma che violano i loro privilegi. Si basa sul fatto che il pattern di comportamento degli utenti non
+autorizzati si differenzia da quello degli utenti autorizzati.
+
+Gli IDS passivi utilizzano checksum crittografici e riconosciemnto di pattern, mentre quelli attivi fanno learning, monitoring 
+e reaction.
+
+Caratteristiche topologiche:
+\begin{itemize}
+    \item HIDS (Host-Based IDS): analisi dei log e attivazione di strumenti di monitoraggio interni al SO
+    \item NIDS (Network-Based IDS): attivazione di strumenti di monitoraggio del traffico di rete 
+\end{itemize}
+\subsubsection{SIV E LFM}
+\begin{itemize}
+    \item SIV: controlla i file di un nodo per rilevarne cambiamenti, ad esempio file di registro
+    \item LFM: controlla i file dei log e rileva pattern d'attacco 
+\end{itemize}
+\subsubsection{NIDS}
+Componenti: 
+\begin{itemize}
+    \item sensor: controlla traffico e log, attiva i security event rilevanti e interagisce con il sistema 
+    \item director: coordina i sensor e gestisce il security database 
+    \item IDS message system: consente la comunicazione sicura e affidabile tra i componenti dell'IDS
+\end{itemize}
+\subsubsection{IPS}
+Per velocizzare e automatizzare la risposta alle intrusioni, è IDS e FW dinamico distribuito. Non un prodotto ma una tecnologia.
+\section{Access control e audit}
+\subsection{Access control}
+Controllo di accesso: processo di concessione o negazione di richieste specifiche per ottenere e utilizzare informazioni 
+e i relativi servizi di elaborazione delle informazioni, e accedere a strutture specifiche.
+O anche processo mediante il quale l'uso delle risorse è regolato in base a una politica di sicurezza ed è consentito solo 
+da entità autorizzate in base a tale politica. 
+
+Un meccanismo di controllo dell'accesso avviene tra un utente e le risorse di sistema. Il sistema deve prima autenticare 
+un'entità in cerca d'accesso.
+
+L'access control dovrebbe permettere di specificare: chi è autorizzato, a che risorse, per quanto tempo, in quali giorni,
+con che modalità, eseguendo quale operazione.
+\subsubsection{Subjects, objects, actions}
+\begin{itemize}
+    \item un soggetto è un'entità in grado di accedere agli oggetti 
+    \item un oggetto è una risorsa a cui è controllato l'accesso 
+    \item un'azione descrive il modo e operazione con cui un soggetto può accedere a un oggetto 
+\end{itemize}
+\paragraph*{Subjects}
+Generalmente, il concetto di soggetto si identifica con quello di processo. Qualsiasi utente o applicazione ottiene effettivamente 
+l'accesso a un oggetto tramite un processo che rappresenta tale utente o applicazione. Il processo assume gli attributi 
+dell'utente, come i diritti d'accesso. Un soggetto è in genere ritenuto responsabile delle azioni che ha avviato e lascia 
+una traccia di controllo.
+\paragraph*{Objects}
+Entità utilizzata per contenere e/o ricevere informazioni. Ad esempio: record, file, pagine, directory, ma anche bit, porte 
+di comunicazione, ecc\dots
+
+Il numero e tipo di oggetti da proteggere da un sistema di controllo degli accessi dipende dall'ambiente in cu opera e dal 
+compromesso desiderato tra sicurezza e complessità.
+\paragraph*{Azioni}
+Azioni tipo: read, write, execute, delete, create, search.
+\subsubsection{Strategie di access control}
+\paragraph*{DAC (Discretionary Access Control)}
+Controlla l'accesso in base all'identità del richiedente e alle regole d'accesso (autorizzazioni) che indicano ciò che i
+richiedenti sono o non sono autorizzati a fare. È detta discrezionale perché un'entità potrebbe avere diritti d'accesso 
+che consentono all'entità, di sua spontanea volontà, di consentire a un'altra entità di accedere a qualche risorsa.
+
+Il proprietario del sistema può accedere liberamente alle risorse, e stabilisce quali utenti e gruppi possono accedervi.
+\begin{center}
+    \includegraphics[width=\textwidth]{DAC.png}
+\end{center}
+\paragraph*{MAC (Mandatory Access Control)}
+Controlla l'accesso in base al confronto delle etichette di sicurezza, che indicano quanto sono sensibili o critiche le 
+risorse di sistema, con le autorizzazioni di sicurezza, che indicano che le entità di sistema sono idonee ad accedere a 
+determinate risorse. È detta obbligatoria perché un'entità che dispone di autorizzazione per accedere a una risorsa non 
+può, di sua spontanea volontà, consentire a un'altra entità di accedere a quella risorsa. 
+\paragraph*{RBAC (Role-Based Access Control)}
+Controlla l'accesso in base aii ruoli che gli utenti hanno all'interno del sistema e sulle regole che stabiliscono a 
+quali accessi sono consentiti da utenti in determinati ruoli.
+
+Più efficiente di DAC, la dimensione della access matrix è in base ai ruoli e non agli utenti.
+\begin{center}
+    \includegraphics[width=\textwidth]{RBAC.png}
+\end{center}
+\paragraph*{ABAC (Attribute-Based Access Control)}
+Controlla l'accesso in base agli attributi dell'utente, la risorsa a cui accedere e le condizioni dell'ambiente attuale.
+\subsection{Audit}
+Il system audit è un'attività ordinaria per valutare le prestazioni del sistema, i controlli di sicurezza, ecc\dots 
+
+Il monitoring è un'attività ordinaria che tiene traccia di tutte le attività eseguite sul sistema, come il rilevamento delle 
+intrusioni e altre.
+
+Auding e monitoring sono le capacità di osservare gli eventi, comprendere le prestazioni e mantenere l'integrità del sistema.
+Queste operazioni vengono spesso eseguite registrando gli eventi nel file di registro ed esaminando tali file in un secondo 
+momento (logging).
+\subsubsection{Internal e external audit}
+\paragraph*{Internal audit}
+Viene eseguito dai revisiori all'interno dell'organizzazione. Scopi: identificare i rischi ogni volta che si presentano 
+in relazione a problemi di prestazioni, sicurezza e conformità. Inoltre tengono d'occhio ciò che viene fatto per mitigare 
+questi problemi con l'obiettivo di aiutare le organizzazioni a funzionare meglio.
+\paragraph*{External audit}
+Svolto da revisori all'esterno dell'organizzazione. Sono enti indipendenti, spesso contabili pubblici certificati.
+\begin{center}
+    \includegraphics[width=\textwidth]{external-internal audit.png}
+\end{center}
+\section{Tecniche e sistemi di autenticazione}
+\subsection{Autenticazione}
+Autenticazione: il processo che determina se qualcuno o qualcosa è qualcuno o qualcosa che dice di essere.
+
+Si autorizzano attori, come esseri umani, software o hardware.
+\subsubsection{Fattori di autenticazione}
+\paragraph*{Conoscenza}
+Qualcosa che solo l'utente conosce. Rischio: memorizzazione e dimostrazione/trasmissione.
+\paragraph*{Possesso}
+Qualcosa che l'utente possiede.  Rischi: l'autenticatore, per furto, clonazione, uso non autorizzato.
+\paragraph*{Essenza}
+Qualcosa che l'utente è. Rischi: contraffazione e privacy, non può essere rimpiazzato quando compromesso.
+\subsubsection{Autenticazione digitale}
+Entità logiche:
+\begin{itemize}
+    \item CSP (Credential Service Provider): emette o registra le credenziali utente, verifica e memorizza attributi associati 
+    \item verifier: esegue un protocollo di autenticazione per verificare il possesso di un autenticatore e credenziali 
+    \item RP (Relying Party): richiede e riceve un'asserzione di autenticazione dal verifier per certificare l'identità utente 
+\end{itemize}
+I ruoli possono essere distinti o combinati in una sola entità.
+\begin{center}
+    \includegraphics[width=\textwidth]{autenticazione digitale.png}
+\end{center}
+\subsection{Autenticazione basata su password ripetibili}
+Il segreto è la password dell'utente. 
+
+Il client genera e trasmette la prova, il server la memorizza e la valida. Due casi:
+\begin{itemize}
+    \item il server conserva le password in chiaro, il controllo d'accesso è verificare se ciò che è stato inserito e la 
+    password corrispondono 
+    \item il server conserva i digest delle password, il controllo d'accesso è verificare se ciò che è stato trasmesso e 
+    l'hash corrispondono 
+\end{itemize}
+Pro: semplice per l'utente, a condizione che ne abbia una sola.
+
+Contro: conservazione delle password, password indovinabili e validazione lato server.
+
+Altri problemi includono: pssword sniffing, attacchi ai database delle password, riuso password, attacchi MITM e cryptography
+ageing.
+\subsubsection{Attacchi}
+\paragraph*{Attacco dizionario}
+Se l'algoritmo di hash è noto, e gli hash delle password sono noti, allora è possibile fare un attacco dizionario, comparando
+hash noti con quelli delle password cifrate.
+\paragraph*{Rainbow table}
+Tecnica di trade-off per memorizzare e cercare una tabella. Utilizza una funzione di riduzione ($r:h\Rightarrow p$).
+Ogni riga rappresenta più password.
+
+Per generare la tabella, scelgo un set di password iniziali dell'insieme di password $P$, calcolo catene di hashing (alternando 
+funzione di riduzione e funzione di hashing) di lunghezza $k$ per ognuna, e conservo solo l'ultima password di ogni catena.
+Dato un valore hash $h$ da invertire, calcolo una catena cche inizia da $h$ applicando la funzione di riduzione e poi quella 
+di hash alternando. Se a un certo punto un valore corrisponde a uno dei valori finali della tabella, il valore iniziale 
+permette di ricreare la catena completa.
+
+Per proteggere le password da questi attacchi si usa il sale, valore diverso per ciascun utente, random e lungo. 
+\subsubsection{Autenticazione forte}
+\paragraph*{Definizione ECB}
+L'autenticazione forte è basata sull'uso di due o più fattori di autenticazione. Gli elementi selezionati devono essere 
+indipendenti. Almeno un elemento dovrebbe essere non riutilizzabile e non replicabile. La procedura di autenticazione deve
+proteggere la riservatezza dei dati di autenticazione.
+\paragraph*{Definizione PCI-DSS}
+Richiesta autenticazione a più fattori per accessi al Cardholder Data Environment(CDE): da rete, sempre dagli amministratori.
+\paragraph*{Altre definizioni}
+\begin{itemize}
+    \item un protocollo crittografico a sfida
+    \item una tecnica resistente a un ben definito insieme di attacchi 
+\end{itemize}
+\subsection{Sistemi di autenticazione a sfida}
+\subsubsection{Challenge-response authentication (CRA)}
+Una sfida viene inviata al claimant (utente che si vuole autenticare), che risponde con una soluzione calcolata usando un 
+qualche segreto e la sfida. Il verifier confronta la risposta con la soluzione calcolata tramite un segreto correlato al 
+claimant.
+
+La sfida deve essere non ripetibile per evitare attacchi replay. Di solito la sfida è un nonce (numero arbitrario utilizzabile 
+una volta sola) random. La funzione che calcola la soluzione deve essere non invertibile, altrimenti un ascoltatore sul canala può registrare il traffico e calcolare il 
+segreto del claimant. 
+\subsubsection{Sistemi a sfida simmetrici}
+Una sfida viene inviata al claimant, che risponde con il risultato di un calcolo che coinvolge il segreto condiviso con 
+il verifier. Il verifier effettua lo stesso calcolo e confronta il suo risultato con la risposta.
+
+Il segreto deve essere noto in chiaro al verifier, quindi è possibile fare attacchi contro la tabella degli id del verifier.
+SCRAM (Salted CRA Mechanism) risolve quest problema usando hash di password sul verifier.
+\subsubsection{Mutua autenticazione con protocolli a sfida simmetrici}
+
 \end{document}
