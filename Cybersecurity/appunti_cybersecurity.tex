@@ -773,9 +773,16 @@ Svolto da revisori all'esterno dell'organizzazione. Sono enti indipendenti, spes
 \end{center}
 \section{Tecniche e sistemi di autenticazione}
 \subsection{Autenticazione}
-Autenticazione: il processo che determina se qualcuno o qualcosa è qualcuno o qualcosa che dice di essere.
+\paragraph*{RFC-4949}
+È il processo di verificare l'affermazione che un sistema o una risorsa abbia un determinato valore. Affermazione è coppia 
+attrivuto valore, come username + password.
+\paragraph*{whatis.com}
+Il processo di determinare che qualcuno o qualoca sia chi o cosa dica di essere. Coinvolge sia utenti che processi/dispositivi.
+\paragraph*{NIST IR 7298}
+Verificare l'identità di un utente, processo, o dispositivo, spesso come prerequisito per accedere a risorse o infomazioni 
+in un sistema informativo.
 
-Si autorizzano attori, come esseri umani, software o hardware.
+Si autorizzano attori, come esseri umani, software o hardware (authN). Autorizzazione (cosa posso fare) != autenticazione.
 \subsubsection{Fattori di autenticazione}
 \paragraph*{Conoscenza}
 Qualcosa che solo l'utente conosce. Rischio: memorizzazione e dimostrazione/trasmissione.
@@ -794,6 +801,25 @@ I ruoli possono essere distinti o combinati in una sola entità.
 \begin{center}
     \includegraphics[width=\textwidth]{autenticazione digitale.png}
 \end{center}
+Inizialmente l'attore è un applicant, ossia un'entità che non si è mai registrato al servizio a cui vuole accedere. In questa 
+fase, l'applicant interagisce con il CSP, che registra l'applicant. Per registrarsi, l'applicant deve presentare le proprie 
+credenziali. Il CSP valida le credenziali e le memorizza. A questo punto, l'applicant diventa claimant presso quel servizio
+(servizio detto relying party). L'asserzione di autenticazione non è fatta direttamente al RP, ma al verifier, che dialoga 
+con il claimant tramite un protocollo di autenticazione. Quando il verifier riceve informazioni dia utenticazione dal claimant, 
+e le utilizza per dialogare con il CSP. Il CSP, avendo memorizzato in fase di registrazione gli attributi dell'applicant, 
+passa questi attributi al verifier che li userà per autenticare il claimant al RP. Se l'autenticazione avviene con successo,
+il verifier manda un'asserzione al RP e il claimant diventa subscriber.
+
+Passi per autenticazione:
+\begin{enumerate}
+    \item il verifier chiede autenticazione 
+    \item il claimant invia il proprio identificativo utente 
+    \item il verifier richiede una prova 
+    \item il claimant risponde inviando un segreto che solo lui può conoscere; il segreto non è trasmesso direttamente, 
+    il claimant applica una funzione $F$ che restituisce la prova della sua asserzione di autenticazione 
+    \item il verifier, che ha salvato il segreto, applica al segreto un'altra funzione $f$ e ottiene un altro risultato, che
+    viene confrontato con la prova ricevuta per stabilire se l'autenticazione ha avuto successo 
+\end{enumerate}
 \subsection{Autenticazione basata su password ripetibili}
 Il segreto è la password dell'utente. 
 
@@ -827,14 +853,15 @@ permette di ricreare la catena completa.
 Per proteggere le password da questi attacchi si usa il sale, valore diverso per ciascun utente, random e lungo. 
 \subsubsection{Autenticazione forte}
 \paragraph*{Definizione ECB}
-L'autenticazione forte è basata sull'uso di due o più fattori di autenticazione. Gli elementi selezionati devono essere 
+(internet banking) L'autenticazione forte è basata sull'uso di due o più fattori di autenticazione. Gli elementi selezionati devono essere 
 indipendenti. Almeno un elemento dovrebbe essere non riutilizzabile e non replicabile. La procedura di autenticazione deve
 proteggere la riservatezza dei dati di autenticazione.
 \paragraph*{Definizione PCI-DSS}
-Richiesta autenticazione a più fattori per accessi al Cardholder Data Environment(CDE): da rete, sempre dagli amministratori.
+(carte di credito) Richiesta autenticazione a più fattori (diversi) per accessi al Cardholder Data Environment(CDE). Obbligatorio per accesso 
+da reti untrusted o per gli amministratori.
 \paragraph*{Altre definizioni}
 \begin{itemize}
-    \item un protocollo crittografico a sfida
+    \item un protocollo crittografico a sfida (Handbook of Applied Cryptography)
     \item una tecnica resistente a un ben definito insieme di attacchi 
 \end{itemize}
 \subsection{Sistemi di autenticazione a sfida}
@@ -848,10 +875,384 @@ una volta sola) random. La funzione che calcola la soluzione deve essere non inv
 segreto del claimant. 
 \subsubsection{Sistemi a sfida simmetrici}
 Una sfida viene inviata al claimant, che risponde con il risultato di un calcolo che coinvolge il segreto condiviso con 
-il verifier. Il verifier effettua lo stesso calcolo e confronta il suo risultato con la risposta.
+il verifier. Il verifier effettua lo stesso calcolo e confronta il suo risultato con la risposta. Il segreto è condiviso 
+tra verifier e claimant. Spesso la funzione usata per il calcolo della risposta è una funzione di hash, perché più veloce.
+
 
 Il segreto deve essere noto in chiaro al verifier, quindi è possibile fare attacchi contro la tabella degli id del verifier.
-SCRAM (Salted CRA Mechanism) risolve quest problema usando hash di password sul verifier.
+SCRAM (Salted CRA Mechanism) risolve questo problema usando hash di password sul verifier.
 \subsubsection{Mutua autenticazione con protocolli a sfida simmetrici}
+Supponiamo che A e B vogliano autenticarsi mutualmente. L'identità è dichiarata esplicitamente solo da chi inizia lo scambio.
+\begin{enumerate}
+    \item A si pressenta a B, esplicitando la sua identità 
+    \item per autenticare A, B invia ad A una sfida $S_b$ (la sfida è in chiaro)
+    \item A utilizza una funzione $f$ di cifratura o hashing per rispondere alla sfida; nel farlo, utilizza un segreto 
+    condiviso con B, in questo caso una chiave simmetrica $K_{ab}$; nel frattempo, A invia anche la propria sfida, $S_a$
+    \item B verifica localmente, grazie alla risposta ricevuta, se l'autenticazione ha avuto successo 
+    \item B risponde alla sfida $S_a$ utilizzando la chiave $K_{ab}$
+\end{enumerate} 
+Alcuni di questi passaggi possono essere accorpati.
+\begin{enumerate}
+    \item A invia la richiesta e la sfida allo stesso momento 
+    \item B risponde inviando la sua sfida e la risposta 
+    \item A risponde con la risposta alla sfida di B
+\end{enumerate}
+Questo metodi di autenticazione non sono robusti perché vulnerabili ad attacchi. 
+\begin{enumerate}
+    \item un attaccante M, senza conoscere la chiave simmetrica, può comunque fingere di essere uno delle due entità che 
+    si vogliono autenticare 
+    \item M si presenta come A, inviando una sfida a B 
+    \item B risponde alla sfida cifrando la risposta con la propria chiave 
+    \item M riceve le informazioni e scarta la parte cifrata, catturando la sfida $C_b$ (è in chiaro, solo la risposta è 
+    cifrata)
+    \item M appre una seconda connesione verso B, trasmettendo la sfida ricevuta da B come sfida 
+    \item B risponde alla sfida con un'altra sfida, cifrando la risposta con la stessa chiave 
+    \item M riceve la risposta e la ritorna a B 
+\end{enumerate}
+In poche parole, utilizzo l'altra parte per generare la risposta a una sfida anche se non conosco la chiave di cifratura.
+\subsubsection{Sistemi a sfida asimmetrici}
+Più forte, richiede cifratura asimmetrica (il claimant deve avere coppia chiave pubblica/privata). 
+\begin{enumerate}
+    \item il claimant invia un certificato contenente id e chiave pubblica 
+    \item il verifier invia una sfida calcolata utilizzando la chiave pubblica del certificato del claimant su un nonce 
+    random $X$ 
+    \item il claimant decifra la sfida utilizzando la propria chiave privata e invia la risposta al verifier 
+    \item il verifier verifica che la risposta ottenuta sia equivalente al nonce random inviato  
+\end{enumerate}
+Il sistema è sicuro perché solo il claimant possiede la giusta chiave privata per decifrare il messaggio inviato dal verifier.
 
+Sistema robusto, non richiede memorizzazione di segreti sul verifier, ma la procedura è lenta e il verifier deve verificare 
+che il certificato sia valido.
+
+Firma involontaria da parte del claimant: il verifier potrebbe inviare come sfida non la cifratura di nonce e chiave, ma 
+l'hash di un certificato o documento elettronico; il claimant, fidandosi del server, usa la sua chiave privata per cifrare 
+la sfida, creando quindi la firma digitale di quel documento.
+\subsection{OTP}
+In fase di autenticazione, la password utilizzata è sempre diversa.
+
+Pro:
+\begin{itemize}
+    \item password valida solo una volta per il protocollo di autenticazione 
+    \item immune allo sniffing
+\end{itemize}
+
+Contro:
+\begin{itemize}
+    \item soggetto a attacchi MITM, il verifier deve autenticare 
+    \item difficile fornire password ai subscriber, le password sono molte e si possono esaurire 
+    \item l'inserimento della password è difficile 
+\end{itemize}
+Per fornire le OTP si possono utilizzare password precalcolate o applicativi software.
+\subsubsection{Sistema S/KEY}
+Prima implementazione di OTP.
+\begin{enumerate}
+    \item al momento della sottoscrizione, il claimant fornisce un segreto iniziale $S$, come una passphrase 
+    \item applica una funzione di hash sul segreto ottenendo l'OTP $P_1$
+    \item applica nuovamente la funzione di hash su $P_1$ ottenendo $P_2$
+    \item il processo di hashing viene ripetuto fino a ottenere $P_n$
+    \item l'utente ora ha $n$ OTP salvate a lato del claimant
+    \item il verifier memorizza solo l'ultima password della sequenza, $P_n$
+    \item quando il verifier deve autenticare il claimant, chiederà la password $P_{n-1}$
+    \item il claimant invia la password $P_{n-1}$ e il verifier verifica, con funzione di hash, di aver ottenuto $P_n$
+    \item $P_n$ viene scartata, e alla prossima autenticazione verrà svolta la stessa operazione ma con la password successiva,
+    fino all'esaurimento delle password 
+\end{enumerate}
+Il sistema richiede che la passphrase (pp) sia lunga almeno 8 caratteri. La pp viene concatenata con un seed inviato dal 
+server, il che permette di utilizzare la stessa pp su server diversi (basta cambiare seme).
+
+Le password sono lunghe 64 bit, compromesso tra sicurezza e complessità. Per semplificare l'inserimento di queste password, 
+si è creato un vocabolario inglese di 2048 parole dal quale si possono pescare le password.
+
+Contro delle OTP:
+\begin{itemize}
+    \item scomode da utilizzare 
+    \item scomode per accedere ai serivizi con autenticazione ripetuta 
+    \item costose se basate su autenticatori hw 
+    \item non possono essere utilizzate da processi solo da esseri umani 
+    \item è necessario un generatore di buone password random 
+    \item problemi legati alla trasmissione all'utente 
+\end{itemize}
+Con autenticatori hw, problemi legati al DoS e al social engineering.
+\subsubsection{TOTP}
+Le OTP possono essere generate a partire dal tempo e dal segreto del claimant. 
+Quando l'utente deve identificarsi nei confronti del verifier, il claimant non pesca da un insieme di OTP precalcolato, 
+ma la calcola sul momento utilizzando:
+\begin{itemize}
+    \item segreto condiviso con il verificatore, $S_{id}$
+    \item l'istante temporale in cui la password viene calcolata 
+\end{itemize}
+Richiede un calcolo locale al claimant, e sincronizzazione tra clock del claimant e del verifier (altrimenti avrebbero 
+un seed diverso). Un attacco efficace è la disincronizzazione dei clock. Viene consentita una minima finestra di disincronizzazione per evitare errori.  
+
+A differenza di OTP, a lato verifier viene memorizzato il segreto condiviso, quindi è attaccabile.
+
+Esempio (RSA SecurID):
+\begin{enumerate}
+    \item il claimant invia al verifier, in chiaro: user (id), PIN ($S_{id}$), token-code calcolato a partire da seed e 
+    dall'istante di tempo 
+    \item il verifier, in base a user e PIN verifica contro tre possibili token-code: quello con riferimento temporale 
+    corrente, precedente e futuro (finestra temporale d'errore)
+\end{enumerate}
+È possibile che il claimant invii al verifier un token code speciale, il duress code, che fa scattare un allarme nel caso 
+il claimant si trovi sotto minaccia.    
+
+Per comunicare con questo protocollo, claimant e verifier devono installare due componenti ACE (Access Control Engine).
+\subsubsection{Event-baesd OTP}
+Usa un contatore intero monotonico $C$ come input oltre al seed: $p(ID, C)=h(C,S_{id})$
+Il contatore viene incrementato dal claimant ogni volta che è necessario creare una nuova OTP.
+
+Vantaggi rispetto a TOTP:
+\begin{itemize}
+    \item possibile fare autenticazioni a raffica, con serve aspettare il lasso di tempo della finestra d'errore 
+    \item è possibile precalcolare OTP (intercettabile da un attaccante)
+\end{itemize}
+È possibile che ci siano disincronizzazioni.
+\subsubsection{OOB OTP}
+L'OTP è generata lato verifier e trasmessa al claimant tramite un canale diverso rispetto a quello con cui stanno comunicando.
+\begin{enumerate}
+    \item alla richiesta di autenticazione, il claimant invia al verifier l'identificativo utente e un segreto
+    \item il verifier utilizza i dati ricevuti per generare dati di autenticazione, ossia l'OTP 
+    \item l'OTP viene trasmessa su un canale diverso
+    \item il claimant riceve l'OTP e la trasmette sul canale utilizzato per comunicare con il verifier 
+\end{enumerate}
+L'OTP da claimant a verifier va trasmesso in maniera sicura, ad esempio con cifratura, per evitare MITM
+\subsubsection{2/MFA}
+Utilizzo di più di un fattore di autenticazione per proteggere il verifier e aumentare la forza dell'autenticazione. Ad 
+esempio, PIN+OTP. È rischioso se non ci sono meccanismi di protezione su unlock multipli.
+\subsection{Zero-knowledge proof (ZKP)}
+Una parte, prover, dimostra all'altra, verifier, che una certa affermazione è vera, senza fornire altre informazioni (ad 
+esempio, senza password).
+
+Esempio concreto: caverna di Ali Babà
+\begin{enumerate}
+    \item A deve identificarsi nei confronti di B 
+    \item A entra nella grotta, può prendere due strade 
+    \item B entra nella grotta, non sa che strada abbia preso A 
+    \item B chiede ad A di uscire da una delle due strade 
+    \item se A non conosce la parola magica, non può passare da una strada sbarrata dalla porta 
+    \item in ogni caso, A non trasmette mai a B la propria password  
+\end{enumerate}
+Problema: A è già dalla parte giusta. Soluzione: ripetere più volte la prova.
+
+Nel concreto, conoscena del logaritmo discreto con un certo valore.
+\subsubsection{ZKPP}
+Molti algoritmi, spesso associati a stabilire una chiave segreta condivisa, in modo da poter fornire mutua autenticazione 
+e channel binding. Per stabilire una chiave, si utilizzano gli algoritmi PAKE.
+\subsection{Autenticazione biometrica}
+Assicurarsi di star interagendo con esseri umani, ad esempio tramite impronte digitali, ecc\dots
+
+Problemi:
+\begin{itemize}
+    \item FAR (False Acceptance Rate)
+    \item FRR (False Rejection Rate)
+    \item accettazione psicologica
+    \item privacy
+    \item insostituibile 
+    \item mancanza di standard 
+\end{itemize}
+FAR e FRR visualizzabile come sovrapposizione di due curve gaussiane.
+\subsection{Kerberos}
+Realizzato per autenticazione da remoto. Caratterizzato dall'esistenza di una terza parte fidata, (TTP) che autentica un 
+claimant nei confronti del servizio. Questa possiede il segreto condiviso con il claimant e crea una struttura dati, detta 
+ticket, che il claimant utilizza per autorizzarsi al servizio. 
+
+Il ticket è una struttura dati che il claimant non è in grado di interpretare, generata dalla TTP e che verifica il claimant 
+al server.
+
+Termini chiave: 
+\begin{itemize}
+    \item realm: dominio di Kerberos, insieme di sistemi che utilizzano Kerberos come sistema di autenticazione 
+    \item credenziale: user.instance@realm
+\end{itemize}
+
+Flusso di autenticazione con Kerberos:
+\begin{enumerate}
+    \item ogni realm ha un authentication server, che possiede tutti i segreti degli utenti del realm, il suo compito è 
+    generare un ticket speciale detto Ticket Granting Ticket (TGT)
+    \item il TGT permette al client di autenticarsi a un Ticket Granting Server (TGS)
+    \item il TGS consente al client di autenticarsi nei confronti di uno specifico server applicativo 
+\end{enumerate}
+Il ticket è cifrato con una chiave simmetrica, $K_s$, che deve essere la chiave del server rispetto a cui ci si sta autenticando.
+Contiene:
+\begin{itemize}
+    \item id del server
+    \item id del client 
+    \item indirizzo del client  
+    \item timestamp 
+    \item durata 
+    \item chiave $K{s,c}$ che permette la comunicazione cifrata tra client e server 
+\end{itemize}
+L'autenticatore è un'altra struttura dati che viene cifrata con la chiave $K{s,c}$ e contiene solo client id e indirizzo 
+e timestamp. Serve per autenticare il client nei confronti di chi dovrà fornire il servizio.
+
+Richiesta di TGT:
+\begin{enumerate}
+    \item il client interagisce con l'authentication server trasmettendo il suo identificativo e quello del servizio con 
+    cui deve interagire (il TGS)
+    \item l'AS manda un messaggio, cifrato con la chiave simmetrica del client, contenente
+    \begin{itemize}
+        \item $K_{c,TGS}$ utilizzata per la comunicazione sicura tra client e TGS
+        \item TGT, cifrato con $K_{TGS}$, la chiave del TGS 
+    \end{itemize}
+\end{enumerate}
+Richiesta del ticket:
+\begin{enumerate}
+    \item il client invia al TGS l'id del server con il quale intende comunicare, il TGT e l'autenticatore, che è cifrato 
+    con $K_{c,TGS}$
+    \item il TGS estrae il vero ticket, che solo lui può decifrare, e il contenuto dell'autenticatore, controllando che 
+    la validità temporale dettata dal timestamp e le corrispondenze tra id siano validi 
+    \item il TGS invia al client un messaggio (ticket) cifrato con la chiave simmetrica condivisa tra TGS e client, contenente 
+    \begin{itemize}
+        \item il ticket per il servizio al quale il client vuole autenticarsi, cifrato con la chiave del servizio
+        \item una chiave simmetrica $K_{c,s}$ per la comunicazione sicura tra client e server 
+    \end{itemize} 
+\end{enumerate}
+Uso del ticket:
+\begin{enumerate}
+    \item il ticket ricevuto dal TGS viene inviato al servizio insieme all'autenticatore, il tutto cifrato con $K_{c,s}$ 
+    \item il servizio decifra il ticket, confronta i dati ricevuti e, fidandosi del TGS, autentica il client 
+    \item il servizio invia al client il timestamp dell'autenticatore + 1 cifrato con $K_{c,s}$, dando la prova di essere 
+    stato in grado di decifrare il messaggio del client 
+\end{enumerate}
+\subsubsection{Single sign-on}
+Fornire all'utente un'unica credenziale con cui autenticarsi per tutte le operazioni su qualunque sistema.
+\paragraph*{SSO fittizio}
+Password diverse in un file unico.
+\paragraph*{SSO vero}
+Tipo Kerberos, le applicazioni devono essere modificate per supportarlo.
+\subsection{FIDO}
+Autenticazione asimmetrica forte, prevede 2FA e autenticazione biometrica.
+Flusso di autenticazione:
+\begin{enumerate}
+    \item in fase di autenticazione è generata una coppia di chiavi pubblica/privata tramite sistema biometrico 
+    \item la chiave pubblica è trasmessa al server 
+    \item per effettuare il login, l'utente utilizza autenticazione biometrica per sbloccare la chiave privata 
+    \item la chiave privata viene utilizzata per la firma digitale del testo che viene poi trasmesso al server 
+    \item il server verifica la firma con la chiave pubblica 
+\end{enumerate}
+Non vi è nessuna terza parte a cui fare affidamento (a differenza di Kerberos), e a lato server non vengono conservati 
+segreti. Immune al phishing perché la risposta non può essere riutilizzata. Generando una coppia di chiavi a ogni accesso, 
+non esiste tracciabilità tra servizi diversi usati dallo stesso utente.
+\section{Sicurezza delle applicazioni di rete}
+\subsection{Sicurezza di messaggio}
+Le proprietà di sicurezza (autenticazione, integrità, segretezza) sono contenute nel messaggio. 
+
+Pro: garantisce il non ripudio.
+
+Contro: richiede modifica delle applicazioni, protocollo di sicurezza apposito per comunicare con altre applicazioni.
+
+Due applicazioni dovrebbero condividere solo il canale logico (socket).
+\subsection{Sicurezza di canale}
+I messaggi generati non posseggono già le proprietà di sicurezza, queste sono garantite dal canale di comunicazione. 
+
+Pro: non richiede modifica alle applicazioni.
+
+Contro: non garantisce il non ripudio. 
+
+Il livello sessione è quello ideale per implementare le funzioni di sicurezza, ma non esiste nel modello TCP/IP. È stato 
+proposto un nuovo livello di sessione sicura: si svincola lo sviluppo del protocollo dallo sviluppo dell'applicazione e 
+garantisce interoperabilità tra applicazioni.
+\subsubsection{SSL}
+Fornisce:
+\begin{itemize}
+    \item autenticazione obbligatoria del server e opzionale del client 
+    \item riservatezza dei messaggi
+    \item integrità e autenticazione dei messaggi 
+    \item protezione da replay e filtering 
+\end{itemize}
+SSL lavora a livello di sessione quindi è applicabile a tutti i protocolli basati su TCP.
+
+La peer authentication viene garantita durante la fase di handshake di SSL svolto all'apertura del canale. Il server si 
+autentica presentando la sua chiave pubblica (certificato X.509) e subendo una sfida asimmetrica implicita. L'autenticazione 
+del client è opzionale, ma quando avviene è una sfida esplicita.
+
+L'autenticazione e integrità dei dati avviene mediante il calcolo di un MAC (keyed-digest).
+
+La protezione da attacchi replay e filtering avviene tramite il calcolo di un MID, che identifica il numero di sequenza 
+dei dati.
+
+La riservatezza è garantita tramite generazione dal client di una session key usata per la cifratura simmetrica dei dati.
+La chiave viene comunicata al server o concordata tramite crittografia a chiave pubblica (RSA, DH).
+
+\subsubsection{Flusso di operazione di SSL}
+\begin{enumerate}
+    \item il browser vuole connettersi a un indirizzo web 
+    \item server e browser negoziano le configurazioni di sicurezza (quali chiavi e algoritmi utilizzare, ecc\dots)
+    \item peer authentication del server tramite certificato 
+    \item opzionalmente, quella del browser 
+    \item viene aperto il canale sicuro SSL  
+\end{enumerate}
+Per evitare di rinegoziare a ogni connessione i parametri crittografici, il server SSL può offrire un session identifier.
+Se il client presenta un session id valido, il server apre subito il canale SSL.
+\subsubsection{Architettura protocollare con SSL}
+Si hanno gli header del livello 3 e 4, e un SSL record protocol che fornisce alcune informazioni sul contenuto del messaggio.
+Dopo l'header, 4 alternative:
+\begin{itemize}
+    \item dati di livello applicativo 
+    \item protocollo di handshake SSL che realizza la negoziazione dei parametri 
+    \item SSL change cipher spec protocol, da un lato permette di comunicare l'intenzione di voler iniziare un canale 
+    sicuro, dall'altro cambiare protocollo di cifratura 
+    \item SSL alert protocol, per gli avvisi 
+\end{itemize}
+Generazione di un messaggio SSL:
+\begin{enumerate}
+    \item i dati applicativi (es generati da HTTP) vengono frammentati 
+    \item i frammenti sono compressi 
+    \item su ogni frammento viene calcolato un MAC per integrità e identificazione 
+    \item applicazione di padding per successiva cifratura 
+    \item aggiunta header di SSL record protocol 
+\end{enumerate}
+Contenuti dell'header SSL:
+\begin{itemize}
+    \item intero senza segno che rappresenta il tipo di dati che contiene: 20 (change cipher spec), alert (21), handshake (22), appdata (23)
+    \item intero senza segno per la versione 
+    \item bit della lunghezza dei dati 
+\end{itemize}
+\paragraph*{Calcolo MAC}
+Si utilizza una funzione di digest (come SHA-1) che richiede:
+\begin{itemize}
+    \item chiave concordata all'inizio della sessione 
+    \item sequence number, intero a 64 bit mai trasmesso ma calcolato implicitamente 
+\end{itemize}
+Calcolo MAC:
+\begin{enumerate}
+    \item il MAC viene generato a partire dai dati compressi, chiave e numero di sequenza
+    \item la cifratura simmetrica si applica sull'insieme di dati compressi, MAC e padding 
+    \item 
+\end{enumerate}
+È authenticate-then-encrypt.
+\subsubsection{Protocollo di handshake}
+Serve per:
+\begin{itemize}
+    \item concordare la coppia di algoritmi per la confidenzialità e integrità 
+    \item scambiare numeri casuali tra client e server per la successiva generazione di chiavi 
+    \item stabilire chiave simmetrica 
+    \item negoziare session-id 
+    \item scambiare i certificati  
+\end{itemize}
+Processo per la generazione di parametri crittografici:
+\begin{enumerate}
+    \item viene generato un segreto condiviso con algoritmo a chiave pubblica (pre-master secret)
+    \item dal pre-master secret, client e server ricavano il master secret, che è comune a tutte le sessioni, e tiene conto del client randome e server random della prima connessione 
+    \item per ogni singola connessione, client e server avranno chiavi per MAC, chiavi per cifrare e IV diversi per ogni 
+    connessione  
+\end{enumerate}
+\subsubsection{Meccanismi effimeri per generazione delle chiavi}
+Una volta ottenuto un certificato X.509, è possibile generare una chiave simmetrica tramite DH effimero. Questo garantisce 
+perfect forward secrecy, ossia la chiave privata del server viene utilizzata solo per firma, per evitare che chi la conosca 
+possa decifrare tutte le sessioni. 
+\subsubsection{Scambio delle credenziali}
+\begin{enumerate}
+    \item client hello e server hello, vengono negoziati i parametri crittografici
+    \item il server invia il suo certificato, un'eventuale richiesta di certificato del client e eventuale server key exchange 
+    \item autenticazione del client con certificato (opzionale), scambio chiave simmetrica usata come parametro per future 
+    comunicazioni 
+    \item la comunicazione termina con un messaggio di change cipher spec e finished
+\end{enumerate}
+\paragraph*{Client hello}
+Contiene
+\begin{itemize}
+    \item versione di SSL preferita dal client 
+    \item 28
+\end{itemize}
 \end{document}
