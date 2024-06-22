@@ -27,6 +27,15 @@ La confidenzialità è l'atto di proteggere i dati trasmessi dagli attacchi pass
 Il principio di integrità è applicabile ad un flusso di dati
 
 \section{Crittografia}
+\paragraph*{Principio di Kerchoffs}
+Se le chiavi:
+\begin{itemize}
+    \item sono tenute segrete 
+    \item sono gestite da sistemi fidati 
+    \item sono di lunghezza adeguata
+\end{itemize}
+Allora non importa che gli algoritmi di crittografia siano tenuti segreti, anzi è meglio siano pubblici in modo da essere 
+studiati.
 \subsection{Crittografia simmetrica}
 Crittografia con chiave comune e unica, a basso carico di elaborazione.
 \subsubsection{Algoritmi di crittografia simmetrica}
@@ -1246,13 +1255,169 @@ possa decifrare tutte le sessioni.
     \item client hello e server hello, vengono negoziati i parametri crittografici
     \item il server invia il suo certificato, un'eventuale richiesta di certificato del client e eventuale server key exchange 
     \item autenticazione del client con certificato (opzionale), scambio chiave simmetrica usata come parametro per future 
-    comunicazioni 
+    comunicazioni (client key exchange)
     \item la comunicazione termina con un messaggio di change cipher spec e finished
 \end{enumerate}
 \paragraph*{Client hello}
 Contiene
 \begin{itemize}
     \item versione di SSL preferita dal client 
-    \item 28
+    \item 28 byte pseudorandom (client random)
+    \item id della sessione (0 per nuova sessione)
+    \item elenco delle cipher suite (algo di scambio chiavi, algo di cifratura simmetrico, algo di hash per il MAC) supportate dal client 
+    \item metodi di compressione supportati dal client 
 \end{itemize}
+Hello del server simile, ma con suo random e algo supportati.
+\paragraph*{Certificate del server}
+Contiene il certificato del server con l'indirizzo del server. Può essere utilizzato per firma o cifratura. Se è solo per 
+firma sarà necessaria una fase di server key exchange.
+\paragraph*{Certificate Request (opzionale)}
+Richiesta del certificato del client, specifica la lista delle CA che il server ritiene fidate.
+\paragraph*{Server key exchange (opzionale)}
+Non sempre presente, contiene chiave pubblica del server, firmato dal server stesso. Serve solo nel caso in cui il server 
+ha certificato RSA solo per firma, usa DH anonimo per pre-master secret o problemi di export. È l'unico messaggio con 
+firma esplicita del server.
+\paragraph*{Certificate del client}
+Trasporta il certificato per la client authentication. Il certificato deve essere stato emesso da una delle CA fidate elencate 
+dal server nel messaggio di certificate request.
+\paragraph*{Client key exchange}
+Con questo si va a concordare la chiave simmetrica. Potrebbe contenere pre-master secret cifrato con la chiave pubblica 
+del server o la parte pubblica di DH.
+\paragraph*{Certificate verify}
+Nel caso l'autenticazione del client fosse richiesta, si ha la risposta alla sfida simmetrica esplicita. Il client calcola 
+un hash su tutti i messaggi precedenti e lo firma con la chiave privata del client. Solo in caso di client authentication.
+\paragraph*{Change cipher spec}
+Provoca l'aggiornamento degli algoritmi da usare nella connessione e fa parte di un protocollo specifico, non dell'exchange.
+\paragraph*{Finished}
+Primo messaggio protetto con algoritmi negoziati, autentica tutto lo scambio. Contiene un MAC calcolato su tutti i messaggi 
+di handshake precedenti tramite l'uso del master secret. 
+
+Come il server vince la sfida implicita:
+\begin{enumerate}
+    \item il server ha trasmesso il suo certificato 
+    \item il certificato potrebbe essere stato utilizzato per cifrare il pre-master secret nel messaggio di client key exchange 
+    \item il server dovrà quindi usare la sua chiave privata per decifrarlo (è stato cifrato con RSA)
+    \item il pre-master secret viene utilizzato per derivare le varie chiavi che saranno utilizzate per il messaggio di finished
+    e quelli successivi
+\end{enumerate}
+\subsubsection{Casi}
+\paragraph*{No chiave effimera, no client auth}
+Il server invia la sua chiave pubblica insieme al certificato, quindi il client cifra il pre-master secret con la chiave 
+del server e la trasmette nel client key exchange. 
+\paragraph*{NO chiave effimera, client auth}
+Il server richiede il certificato al client. Il client invia certificato e certificate verify, la risposta alla sfida 
+simmetrica esplicita che contiene hash di tutti i messaggi precedentemente inviati.
+\paragraph*{Chiave effimera, no client auth}
+Certificato del server utilizzato solo per firma, server invia server key exchange che contiene chiave RSA firmata con chiave
+privata del server. Il client key exchange conterrà o il pre-master secret o l'esponente DH cifrati con la chiave RSA 
+trasmessa durante il server key exchange.
+\subsubsection{Scambio dati e chiusura canale}
+Quando il canale deve essere chiuso, si usa il protocollo di alert. 
+\begin{enumerate}
+    \item il client invia un messaggio del tipo LAST-1 alert close notify 
+    \item il server risponde chiudendo la connessione 
+\end{enumerate}
+\subsubsection{Ripresa di una sessione}
+Il client utilizza un session id != 0, ignorando autenticazione e scambio chiavi.
+\subsubsection{Problemi di SSL-2}
+\begin{itemize}
+    \item chiave troppo corta (40 bit), stessa lunghezza della chiave di cifratura 
+    \item MAC debole
+    \item il MAC era calcolato sui byte di padding ma non sulla sua lunghezza 
+    \item handshake non autenticato, quindi un attaccante avrebbe potuto cambiare le ciphersuite per forzare l'uso di cifratura debole 
+\end{itemize}
+Soluzioni di SSL-3:
+\begin{itemize}
+    \item usa chiavi da 128 bit 
+    \item usa HMAC 
+    \item cambia ordine di MAC e padding 
+    \item handshake autenticato 
+\end{itemize}
+Ha inoltre introdotto compressione dei dati e possibilità di rinegoziare connessione.
+\subsection{TLS}
+È SSL ma standardizzato, enfasi su algoritmi di cifratura a hashing standard, non proprietari. 
+\subsubsection{TLS e server virtuali}
+Allo stesso IP sono associati diversi nomi logici. Soluzioni:
+\begin{itemize}
+    \item certificato collettivo (wildcard): chiave privata condivisa tra tutti i server, trattato in modo diverso da ogni 
+    browser
+    \item certificato con elenco di server in subjectAltName: chiave privata condivisa tra tutti i server, occorre riemettere 
+    un certificato a ogni aggiunta o cancellazione di server 
+    \item utilizzo di estensioni 
+\end{itemize}
+\paragraph*{Estensione ALPN}
+Il protocollo applivativo è negoziato tramite il TLS stesso per velocizzare la creazione di una connessione. Si aggiunge 
+header ALPN negli hello.
+\subsubsection{DTLS}
+TLS ma appoggiato a UDP. In competizione con IPsec e sicurezza applicativa.
+\subsubsection{Downgrade TLS}
+Il client invia la versione più alta supportata, il server notifica al client la versione sa usare (la più alta in comune).
+
+Downgrade insicuro: alcuni server non mandano la risposta corretta ma chiudono la connessione, il client tenta con un numero 
+di versione inferiore.
+
+Attacco: l'attaccante invia una falsa risposta al server per forzare downgrade fino a raggiungere una versione vulnerabile.
+
+Prevenzione: Fallback Signaling Cipher Suite Value, segnala al server che si sta tentando di connettersi un SSL più vecchio.
+\subsection{Sicurezza di HTTP}
+\subsubsection{HTTP digest authentication}
+Obsoleto. Viene calcolato, lato client, un keyed digest MD5 applicato su un primo hash contenente username, dominio e password, 
+e un secondo hash contenente metodo e URI. La risposta è MD5 sul primo hash, il secondo e un nonce.
+\subsubsection{HTTP e SSL}
+Due alternative:
+\begin{itemize}
+    \item TLS then HTTP 
+    \item HTTP then TLS 
+\end{itemize}
+Non sono scelte equivalenti, impatta su FW e IDS.
+
+Tramite client authentication è possibile identificare l'utente che ha aperto un canale. 
+\subsubsection{HSTS}
+Estensione di HTTPS, il server HTTP indica che la sua interazione con il client deve avvenire solo tramite HTTPS. Evita 
+downgrade di protocollo, la sua scadenza può essere rinnovata a ogni accesso. 
+\subsubsection{HPKP}
+Il sito HTTPS specifica il digest della propria chiave pubblica e/o una o più CA della propria catena. Il client prende 
+nota e rifiuta di collegarsi a un sito con chiave diversa.
+\subsection{Sistemi di pagamento elettronico}
+Architettura di pagamento via web:
+\begin{enumerate}
+    \item il merchant offre un servizio
+    \item il cardholder effettua ordine 
+    \item ricevuto l'ordine, il merchant fa una redirect al POS virtuale 
+    \item il POS virtuale invia una richiesta di dati della carta al cardholder (su TLS)
+    \item il cardholder invia i dati (su TLS)
+    \item il POS invia i dati della carta al payment network per validarli 
+    \item se i dati sono validi, il POS riceve OK e invia OK al merchant 
+\end{enumerate}
+\subsubsection{PCI DSS}
+Richiesto da tutte le carte di credito per transazioni Internet. 
+\paragraph*{requisiti}
+Per costruire e mantenere una rete protetta:
+\begin{itemize}
+    \item installare e mantenere una configurazione con FW per proteggere i dati dei titolari delle carte 
+    \item non usare password di sistema predefinite o altri parametri di sicurezza impostati dai fornitori 
+\end{itemize}
+Per proteggere i titolari delle carte:
+\begin{itemize}
+    \item proteggere i dati dei titolari delle carte memorizzati 
+    \item cifrare i dati dei titolari delle cate quando trasmessi su reti pubbliche 
+\end{itemize}
+Rispettare un programma per la gestione delle vulnerabilità:
+\begin{itemize}
+    \item usare e aggiornare l'antivirus
+    \item sviluppare e mantenere applicazioni e sistemi protetti 
+\end{itemize}
+Implementare misure forti per il controllo degli accessi:
+\begin{itemize}
+    \item limitare l'accesso ai dati dei titolari delle carte solo se effettivamente indispensabili per lo svolgimento 
+    dell'attività commerciale 
+    \item dare un id univoco a ogni utente del SI 
+    \item limitare la possibilità di accesso fisico ai dati dei titolari delle carte 
+\end{itemize}
+Monitorare e testare le reti con regolarità:
+\begin{itemize}
+    \item monitorare e tenere traccia di tutti gli accessi effettuati alle risorse di rete e ai dati dei titolari 
+    \item eseguire test periodici 
+\end{itemize}
+Adottare una politica di sicurezza.
 \end{document}
